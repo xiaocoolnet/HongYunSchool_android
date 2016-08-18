@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cn.xiaocool.baseApp.fragment.ThirdFragment">
+
+    <include layout="@layout/title_bar"></include>
+    <!-- TODO: Update blank fragment layout -->
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <ListView
+            android:id="@+id/trend_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</LinearLayout>
