@@ -37,6 +37,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import cn.xiaocool.hongyunschool.R;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 
 
@@ -285,7 +286,8 @@ public class ImageDetailActivity extends Activity implements View.OnClickListene
             public Object instantiateItem(ViewGroup container, int position) {
                 ImageView ims = new ImageView(ImageDetailActivity.this);
                 ims.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                final String imagesUrl = "" + imgsList.get(position);
+
+                final String imagesUrl = NetConstantUrl.IMAGE_URL + imgsList.get(position);
                 if (imagesUrl != null && !imagesUrl.equals("")) {
                     imageLoader.displayImage(imagesUrl, ims, options);
                 }

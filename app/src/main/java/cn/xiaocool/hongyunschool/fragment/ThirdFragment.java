@@ -13,12 +13,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaocool.hongyunschool.R;
-import cn.xiaocool.hongyunschool.bean.Classevents;
-import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseFragment;
-import cn.xiaocool.hongyunschool.utils.CommonAdapter;
-import cn.xiaocool.hongyunschool.utils.JsonParser;
-import cn.xiaocool.hongyunschool.utils.ViewHolder;
 
 
 /**
@@ -57,26 +52,7 @@ public class ThirdFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        VolleyUtil.VolleyGetRequest(mActivity, "http://wxt.xiaocool.net/index.php?g=apps&m=index&a=GetMicroblog&schoolid=1&classid=1&type=1", new
-                VolleyUtil.VolleyJsonCallback() {
-                    @Override
-                    public void onSuccess(String result) {
-                        if (JsonParser.JSONparser(mActivity, result)) {
-                            swipLayout.setRefreshing(false);
-                            trendList.setAdapter(new CommonAdapter<Classevents>(mActivity, JsonParser.UserParser(result), R.layout.message_myhomework) {
-                                @Override
-                                public void convert(ViewHolder holder, Classevents classevents) {
-                                    holder.setText(R.id.myhomework_title, classevents.getTitle());
-                                }
-                            });
-                        }
-                    }
 
-                    @Override
-                    public void onError() {
-
-                    }
-                });
     }
 
     @Override

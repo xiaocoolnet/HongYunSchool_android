@@ -12,12 +12,7 @@ import android.widget.ListView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaocool.hongyunschool.R;
-import cn.xiaocool.hongyunschool.bean.Classevents;
-import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseFragment;
-import cn.xiaocool.hongyunschool.utils.CommonAdapter;
-import cn.xiaocool.hongyunschool.utils.JsonParser;
-import cn.xiaocool.hongyunschool.utils.ViewHolder;
 
 
 /**
@@ -40,40 +35,13 @@ public class FirstFragment extends BaseFragment {
     @Override
     protected void initEvent() {
         super.initEvent();
-        swipLayout.setColorSchemeResources(R.color.white);
-        swipLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.themeColor));
-        swipLayout.setProgressViewOffset(true, 10, 100);
-        swipLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                initData();
-            }
-        });
+
     }
 
     @Override
     public void initData() {
 
-        VolleyUtil.VolleyGetRequest(mActivity, "http://wxt.xiaocool.net/index.php?g=apps&m=teacher&a=getactivitylist&userid=605&classid=1", new
-                VolleyUtil.VolleyJsonCallback() {
-                    @Override
-                    public void onSuccess(String result) {
-                        if (JsonParser.JSONparser(mActivity, result)) {
-                            swipLayout.setRefreshing(false);
-                            listview.setAdapter(new CommonAdapter<Classevents>(mActivity, JsonParser.UserParser(result), R.layout.message_myhomework) {
-                                @Override
-                                public void convert(ViewHolder holder, Classevents classevents) {
-                                    holder.setText(R.id.myhomework_title, classevents.getTitle());
-                                }
-                            });
-                        }
-                    }
 
-                    @Override
-                    public void onError() {
-
-                    }
-                });
     }
 
     @Override

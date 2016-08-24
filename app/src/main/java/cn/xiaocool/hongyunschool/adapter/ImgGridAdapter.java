@@ -1,18 +1,19 @@
 package cn.xiaocool.hongyunschool.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-
 import java.util.ArrayList;
 
 import cn.xiaocool.hongyunschool.R;
-import cn.xiaocool.hongyunschool.utils.LogUtils;
+import cn.xiaocool.hongyunschool.activity.ImageDetailActivity;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
+import cn.xiaocool.hongyunschool.utils.ImgLoadUtil;
 
 
 /**
@@ -24,7 +25,6 @@ public class ImgGridAdapter extends BaseAdapter {
     private LayoutInflater mLayoutInflater;
     private ArrayList<String> mWorkImgs;
     private Context mContext;
-    private DisplayImageOptions options;
 
 
     public ImgGridAdapter(ArrayList<String> workImgs, Context context) {
@@ -51,7 +51,7 @@ public class ImgGridAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         MyGridViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new MyGridViewHolder();
@@ -62,8 +62,20 @@ public class ImgGridAdapter extends BaseAdapter {
         } else {
             viewHolder = (MyGridViewHolder) convertView.getTag();
         }
-        LogUtils.d("weixiaotong-GridAdaper", mWorkImgs.get(position));
-//        imageLoader.displayImage(NetBaseConstant.NET_CIRCLEPIC_HOST+ mWorkImgs.get(position), viewHolder.imageView,options);
+        ImgLoadUtil.display(NetConstantUrl.IMAGE_URL+mWorkImgs.get(position), viewHolder.imageView);
+        viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(mContext, ImageDetailActivity.class);
+                intent.putStringArrayListExtra("Imgs", mWorkImgs);
+                intent.putExtra("position",position);
+                intent.putExtra("type", "4");
+                mContext.startActivity(intent);
+            }
+        });
+
+
         return convertView;
     }
 

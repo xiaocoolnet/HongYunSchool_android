@@ -11,16 +11,32 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import cn.xiaocool.hongyunschool.bean.Classevents;
+
+public class JsonResult {
+
+    private String result;
 
 
-public class JsonParser {
-    public JsonParser() {
+
+    public static <T> List<T> JsonParser(String result) {
+        String data = "";
+        try {
+            JSONObject json = new JSONObject(result);
+            data = json.getString("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new Gson().fromJson(data, new TypeToken<List<T>>() {
+        }.getType());
+    }
+
+    public JsonResult() {
         throw new UnsupportedOperationException("cannot be instantiated");
     }
 
     /**
      * 判断返回成功失败
+     *
      * @param context
      * @param result
      * @return
@@ -40,17 +56,6 @@ public class JsonParser {
             flag = false;
         }
         return flag;
-    }
-
-    public static List<Classevents> UserParser(String result) {
-        String data = "";
-        try {
-            JSONObject json = new JSONObject(result);
-           data=  json.getString("data");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return new Gson().fromJson(data, new TypeToken<List<Classevents>>() {}.getType());
     }
 
 

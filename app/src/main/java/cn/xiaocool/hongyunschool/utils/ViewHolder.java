@@ -8,6 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import cn.xiaocool.hongyunschool.adapter.ImgGridAdapter;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
+import cn.xiaocool.hongyunschool.view.NoScrollGridView;
+
 /**
  * Created by Administrator on 2016/8/12 0012.
  */
@@ -75,9 +83,56 @@ public class ViewHolder {
         return this;
     }
 
+    /**
+     * 设置时间的text
+     * @param viewId
+     * @param text
+     * @return
+     */
+    public ViewHolder setTimeText(int viewId,String text){
+        Date date = new Date();
+        date.setTime(Long.parseLong(text)*1000);
+        TextView tv = getView(viewId);
+        tv.setText(new SimpleDateFormat("yyyy-MM-dd hh-mm").format(date));
+        return this;
+    }
+
+    /**
+     * 设置图片Resource
+     * @param viewId
+     * @param resId
+     * @return
+     */
     public ViewHolder setImageResource(int viewId,int resId){
         ImageView view = getView(viewId);
         view.setImageResource(resId);
+        return this;
+    }
+
+
+    public ViewHolder setItemImages(Context mContext,int oneview,int gridview,ArrayList<String> images){
+        ImageView view = getView(oneview);
+        NoScrollGridView gv = getView(gridview);
+
+        if (images.size()>0){
+            if (images.size()>1){
+                view.setVisibility(View.GONE);
+                gv.setVisibility(View.VISIBLE);
+                gv.setAdapter(new ImgGridAdapter(images, mContext));
+
+            }else if (images.size()==1&&!images.get(0).equals("null")&&!images.get(0).equals("")){
+                view.setVisibility(View.VISIBLE);
+                gv.setVisibility(View.GONE);
+                ImgLoadUtil.display(NetConstantUrl.IMAGE_URL+images.get(0),view);
+            }
+
+
+
+        }else {
+            view.setVisibility(View.GONE);
+            gv.setVisibility(View.GONE);
+        }
+
         return this;
     }
 }
