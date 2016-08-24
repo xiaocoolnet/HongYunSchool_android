@@ -6,7 +6,6 @@
     <dimen name="fab_margin">16dp</dimen>
 
 
-
     <!--字体尺寸-->
     <dimen name="font_title_main">16sp</dimen>
     <dimen name="font_title_minor">14sp</dimen>

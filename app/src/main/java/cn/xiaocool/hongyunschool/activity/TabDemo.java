@@ -20,7 +20,7 @@ public class TabDemo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.tab_demo);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         PagerSlidingTabStrip tab = (PagerSlidingTabStrip) findViewById(R.id.tab);
