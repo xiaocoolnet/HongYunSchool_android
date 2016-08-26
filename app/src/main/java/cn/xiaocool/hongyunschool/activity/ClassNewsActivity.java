@@ -45,7 +45,7 @@ public class ClassNewsActivity extends BaseActivity {
         setRightImg(R.drawable.icon_load_ing).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(ClassNewsActivity.class);
+                startActivity(AddClassNewsActivity.class);
                 ToastUtil.Toast(getBaseContext(),"发布");
 
             }
