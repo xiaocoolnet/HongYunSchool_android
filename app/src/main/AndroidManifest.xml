@@ -82,12 +82,21 @@
         <activity android:name=".activity.SchoolNewsActivity" />
         <activity android:name=".activity.ClassNewsActivity" />
         <activity android:name=".activity.SchoolAnnounceActivity" />
-        <activity android:name=".activity.MessageActivity"></activity>
-        <activity android:name=".activity.ImageDetailActivity"/>
+        <activity android:name=".activity.MessageActivity" />
+        <activity android:name=".activity.ImageDetailActivity" />
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.AddressActivity" />
-        <activity android:name=".activity.MyIntegrationActivity"></activity>
-        <activity android:name=".activity.SystemNewsActivity"></activity>
+        <activity android:name=".activity.MyIntegrationActivity" />
+        <activity android:name=".activity.SystemNewsActivity" />
+        <activity android:name=".activity.AddSchoolNewsActivity" />
+        <activity android:name=".activity.ChooseReciverActivity" />
+        <activity android:name=".activity.WebListActivity" />
+        <activity android:name=".activity.FivePublicActivity" />
+        <activity android:name=".activity.FivePublicDetailActivity" />
+        <activity android:name=".activity.WebKeChengActivity" />
+        <activity android:name=".activity.ParentMessageActivity" />
+        <activity android:name=".activity.AddParentMessageActivity" />
+        <activity android:name=".activity.AddMessageActivity"></activity>
     </application>
 
 </manifest>

@@ -18,19 +18,19 @@
         <RadioButton
             android:textColor="@color/main_tab_bottom_text"
             android:id="@+id/main_tab_sort"
-            android:drawableTop="@drawable/main_home_selector"
+            android:drawableTop="@drawable/main_second_selector"
             android:text="@string/main_second_name"
             style="@style/main_foot_tab_rb" />
         <RadioButton
             android:textColor="@color/main_tab_bottom_text"
             android:id="@+id/main_tab_quick"
-            android:drawableTop="@drawable/main_home_selector"
+            android:drawableTop="@drawable/main_third_selector"
             android:text="@string/main_third_name"
             style="@style/main_foot_tab_rb" />
         <RadioButton
             android:textColor="@color/main_tab_bottom_text"
             android:id="@+id/main_tab_mine"
-            android:drawableTop="@drawable/main_home_selector"
+            android:drawableTop="@drawable/main_four_selector"
             android:text="@string/main_four_name"
             style="@style/main_foot_tab_rb" />
     </RadioGroup>
