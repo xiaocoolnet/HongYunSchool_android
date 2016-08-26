@@ -13,6 +13,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
+import cn.xiaocool.hongyunschool.activity.ClassNewsActivity;
+import cn.xiaocool.hongyunschool.activity.MessageActivity;
+import cn.xiaocool.hongyunschool.activity.SchoolAnnounceActivity;
 import cn.xiaocool.hongyunschool.activity.SchoolNewsActivity;
 import cn.xiaocool.hongyunschool.utils.BaseFragment;
 
@@ -43,7 +46,7 @@ public class SecondFragment extends BaseFragment {
 
     @Override
     public void initData() {
-
+        secondTopName.setText("消息");
     }
 
     @Override
@@ -61,10 +64,13 @@ public class SecondFragment extends BaseFragment {
                 startActivity(new Intent(mActivity, SchoolNewsActivity.class));
                 break;
             case R.id.second_rl_class_news:
+                startActivity(new Intent(mActivity, ClassNewsActivity.class));
                 break;
             case R.id.second_rl_school_announce:
+                startActivity(new Intent(mActivity, SchoolAnnounceActivity.class));
                 break;
             case R.id.second_rl_message:
+                startActivity(new Intent(mActivity, MessageActivity.class));
                 break;
         }
     }

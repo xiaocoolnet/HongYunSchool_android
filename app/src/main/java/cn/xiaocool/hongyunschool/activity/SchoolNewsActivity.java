@@ -2,6 +2,7 @@ package cn.xiaocool.hongyunschool.activity;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -21,6 +22,7 @@ import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 
 public class SchoolNewsActivity extends BaseActivity {
@@ -39,8 +41,19 @@ public class SchoolNewsActivity extends BaseActivity {
         setContentView(R.layout.activity_school_news);
         ButterKnife.bind(this);
         schoolNewsList = new ArrayList<>();
+        setTopName("学校消息");
+        setRightImg(R.drawable.icon_load_ing).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(AddSchoolNewsActivity.class);
+                ToastUtil.Toast(getBaseContext(),"发布");
+
+            }
+        });
         settingRefresh();
     }
+
+
 
     /**
      * 设置
@@ -80,6 +93,7 @@ public class SchoolNewsActivity extends BaseActivity {
      * @param result
      */
     private void setAdapter(String result) {
+        schoolNewsList.clear();
         schoolNewsList.addAll(getBeanFromJson(result));
         if (adapter != null) {
             adapter.notifyDataSetChanged();
@@ -107,11 +121,33 @@ public class SchoolNewsActivity extends BaseActivity {
             images.add(datas.getPicture().get(i).getPicture_url());
         }
 
+        //判断已读和未读
+
+        final ArrayList<SchoolNews.ReceiverBean> notReads = new ArrayList<>();
+        final ArrayList<SchoolNews.ReceiverBean> alreadyReads = new ArrayList<>();
+        if (datas.getReceiver().size()>0){
+            for (int i=0;i<datas.getReceiver().size();i++){
+                if (datas.getReceiver().get(i).getRead_time()==null||datas.getReceiver().get(i).getRead_time().equals("null")){
+                    notReads.add(datas.getReceiver().get(i));
+                }else {
+                    alreadyReads.add(datas.getReceiver().get(i));
+                }
+            }
+        }
+
         holder.setText(R.id.item_sn_content, datas.getMessage_content())
         .setTimeText(R.id.item_sn_time,datas.getMessage_time())
         .setText(R.id.item_sn_nickname,datas.getSend_user_name())
-        .setItemImages(this,R.id.item_sn_onepic,R.id.item_sn_gridpic,images);
+        .setItemImages(this,R.id.item_sn_onepic,R.id.item_sn_gridpic,images)
+        .setText(R.id.item_sn_read,"总发" + datas.getReceiver().size()+" 已读"+alreadyReads.size()+" 未读"+notReads.size());
 
+        //进入已读未读界面
+        holder.getView(R.id.item_sn_read).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtil.showShort(SchoolNewsActivity.this,"进入已读未读!");
+            }
+        });
     }
 
     /**
