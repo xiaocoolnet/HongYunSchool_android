@@ -18,6 +18,7 @@ import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.activity.AddressActivity;
 import cn.xiaocool.hongyunschool.activity.MyIntegrationActivity;
+import cn.xiaocool.hongyunschool.activity.PersonalInfoActivity;
 import cn.xiaocool.hongyunschool.activity.SettingActivity;
 import cn.xiaocool.hongyunschool.activity.SystemNewsActivity;
 import cn.xiaocool.hongyunschool.utils.BaseFragment;
@@ -86,8 +87,9 @@ public class FourFragment extends BaseFragment {
             case R.id.fragment_four_iv_setting:
                 context.startActivity(new Intent(context, SettingActivity.class));
                 break;
-            //修改头像
+            //个人信息
             case R.id.fragment_four_iv_avatar:
+                context.startActivity(new Intent(context, PersonalInfoActivity.class));
                 break;
             //服务购买
             case R.id.fragment_four_rl_service:

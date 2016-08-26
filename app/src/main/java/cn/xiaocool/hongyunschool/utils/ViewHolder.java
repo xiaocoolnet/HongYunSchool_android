@@ -93,7 +93,7 @@ public class ViewHolder {
         Date date = new Date();
         date.setTime(Long.parseLong(text)*1000);
         TextView tv = getView(viewId);
-        tv.setText(new SimpleDateFormat("yyyy-MM-dd hh-mm").format(date));
+        tv.setText(new SimpleDateFormat("yyyy-MM-dd  HH:mm").format(date));
         return this;
     }
 
@@ -106,6 +106,12 @@ public class ViewHolder {
     public ViewHolder setImageResource(int viewId,int resId){
         ImageView view = getView(viewId);
         view.setImageResource(resId);
+        return this;
+    }
+
+    public ViewHolder setImageByUrl(int viewId,String url){
+        ImageView view = getView(viewId);
+        ImgLoadUtil.display(NetConstantUrl.IMAGE_URL+url,view);
         return this;
     }
 
