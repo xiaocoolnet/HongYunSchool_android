@@ -74,11 +74,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.TESActivity"
-            android:label="@string/title_activity_tes"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.Main2Activity" />
         <activity android:name=".activity.SchoolNewsActivity" />
         <activity android:name=".activity.ClassNewsActivity" />
         <activity android:name=".activity.SchoolAnnounceActivity" />
@@ -97,13 +92,13 @@
         <activity android:name=".activity.ParentMessageActivity" />
         <activity android:name=".activity.AddParentMessageActivity" />
         <activity android:name=".activity.AddMessageActivity"></activity>
-        <activity android:name=".activity.MyIntegrationActivity" />
-        <activity android:name=".activity.SystemNewsActivity" />
         <activity android:name=".activity.TestLayoutActivity" />
         <activity android:name=".activity.PersonalInfoActivity" />
         <activity android:name=".activity.ChangePswActivity" />
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.ForgetPswActivity"></activity>
+        <activity android:name=".activity.AddClassNewsActivity"></activity>
+        <activity android:name=".activity.AddSchoolAnnounceActivity"></activity>
     </application>
 
 </manifest>
