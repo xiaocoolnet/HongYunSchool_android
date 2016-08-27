@@ -54,6 +54,7 @@ public class AddMessageActivity extends BaseActivity {
     private final int REQUEST_CODE_CAMERA = 1000;
     private final int REQUEST_CODE_GALLERY = 1001;
     private static final int ADD_KEY = 101;
+    private GalleryFinalUtil galleryFinalUtil;
     private String id;
     private Handler handler = new Handler() {
         @Override
@@ -77,7 +78,7 @@ public class AddMessageActivity extends BaseActivity {
         ButterKnife.bind(this);
         mPhotoList = new ArrayList<>();
         photoWithPaths = new ArrayList<>();
-
+        galleryFinalUtil = new GalleryFinalUtil(9);
         setTopName("公告消息");
         setRight();
         setAddImgGrid();
@@ -121,11 +122,11 @@ public class AddMessageActivity extends BaseActivity {
 
                         switch (index) {
                             case 0:
-                                GalleryFinalUtil.openAblum(AddMessageActivity.this, mPhotoList, REQUEST_CODE_GALLERY, mOnHanlderResultCallback);
+                                galleryFinalUtil.openAblum(AddMessageActivity.this, mPhotoList, REQUEST_CODE_GALLERY, mOnHanlderResultCallback);
                                 break;
                             case 1:
                                 //获取拍照权限
-                                if (GalleryFinalUtil.openCamera(AddMessageActivity.this, mPhotoList, REQUEST_CODE_CAMERA, mOnHanlderResultCallback)) {
+                                if (galleryFinalUtil.openCamera(AddMessageActivity.this, mPhotoList, REQUEST_CODE_CAMERA, mOnHanlderResultCallback)) {
                                     return;
                                 } else {
                                     String[] perms = {"android.permission.CAMERA"};
@@ -290,7 +291,7 @@ public class AddMessageActivity extends BaseActivity {
                 boolean cameraAccepted = grantResults[0]== PackageManager.PERMISSION_GRANTED;
                 if(cameraAccepted){
                     //授权成功之后，调用系统相机进行拍照操作等
-                    GalleryFinalUtil.openCamera(AddMessageActivity.this, mPhotoList, REQUEST_CODE_CAMERA, mOnHanlderResultCallback);
+                    galleryFinalUtil.openCamera(AddMessageActivity.this, mPhotoList, REQUEST_CODE_CAMERA, mOnHanlderResultCallback);
                 }else{
                     //用户授权拒绝之后，友情提示一下就可以了
                     ToastUtil.showShort(this, "已拒绝进入相机，如想开启请到设置中开启！");

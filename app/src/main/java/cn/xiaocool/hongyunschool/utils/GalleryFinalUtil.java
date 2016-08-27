@@ -24,17 +24,22 @@ import cn.xiaocool.hongyunschool.R;
  */
 public class GalleryFinalUtil {
 
+    private int picMax;
     private final int REQUEST_CODE_CAMERA = 1000;
     private final int REQUEST_CODE_GALLERY = 1001;
     private static FunctionConfig functionConfig;
 
-    public static void init(Context context,ArrayList<PhotoInfo> mPhotoList){
+    public GalleryFinalUtil(int picMax) {
+        this.picMax = picMax;
+    }
+
+    public void init(Context context,ArrayList<PhotoInfo> mPhotoList){
         FunctionConfig.Builder functionConfigBuilder = new FunctionConfig.Builder();
         cn.finalteam.galleryfinal.ImageLoader imageLoader;
         PauseOnScrollListener pauseOnScrollListener = null;
         imageLoader = new PicassoImageLoader();
         pauseOnScrollListener = new PicassoPauseOnScrollListener(false, true);
-        functionConfigBuilder.setMutiSelectMaxSize(9);
+        functionConfigBuilder.setMutiSelectMaxSize(picMax);
         functionConfigBuilder.setEnableEdit(false);
         functionConfigBuilder.setRotateReplaceSource(true);
         functionConfigBuilder.setEnableCamera(true);
@@ -62,7 +67,7 @@ public class GalleryFinalUtil {
 
     }
 
-    public static void openAblum(Context context,ArrayList<PhotoInfo> mPhotoList,int key,GalleryFinal.OnHanlderResultCallback mOnHanlderResultCallback){
+    public  void openAblum(Context context,ArrayList<PhotoInfo> mPhotoList,int key,GalleryFinal.OnHanlderResultCallback mOnHanlderResultCallback){
 
         init(context,mPhotoList);
         GalleryFinal.openGalleryMuti(key, functionConfig, mOnHanlderResultCallback);
@@ -70,7 +75,7 @@ public class GalleryFinalUtil {
 
     }
 
-    public static boolean openCamera(Context context,ArrayList<PhotoInfo> mPhotoList,int key,GalleryFinal.OnHanlderResultCallback mOnHanlderResultCallback){
+    public  boolean openCamera(Context context,ArrayList<PhotoInfo> mPhotoList,int key,GalleryFinal.OnHanlderResultCallback mOnHanlderResultCallback){
         init(context, mPhotoList);
 
 

@@ -10,7 +10,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -24,20 +23,19 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.activity.ImageDetailActivity;
-import cn.xiaocool.hongyunschool.activity.LoginActivity;
+import cn.xiaocool.hongyunschool.activity.PostTrendActivity;
 import cn.xiaocool.hongyunschool.bean.Trends;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseFragment;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.PopInputManager;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 import cn.xiaocool.hongyunschool.view.CommentPopupWindow;
@@ -96,7 +94,7 @@ public class ThirdFragment extends BaseFragment {
 
                     @Override
                     public void run() {
-                        ToastUtil.showShort(context,"上拉加载");
+                        ToastUtil.showShort(context, "上拉加载");
                         fragmentThirdSrlTrend.setLoading(false);
                     }
                 }, 1000);
@@ -106,7 +104,7 @@ public class ThirdFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        VolleyUtil.VolleyGetRequest(context, "http://wxt.xiaocool.net/index.php?g=apps&m=index&a=GetMicroblog&userid=664&classid=1&schoolid=1&type=1&beginid=0", new
+        VolleyUtil.VolleyGetRequest(context, "http://wxt.xiaocool.net/index.php?g=apps&m=index&a=GetMicroblog&userid=681&classid=1&schoolid=1&type=1&beginid=0", new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
                     public void onSuccess(String result) {
@@ -183,52 +181,51 @@ public class ThirdFragment extends BaseFragment {
         });
         //显示评论
         ListView lv_comment = holder.getView(R.id.trend_item_lv_comment);
-        lv_comment.setAdapter(new CommonAdapter<Trends.CommentBean>(context,datas.getComment(),R.layout.item_trend_comment) {
+        lv_comment.setAdapter(new CommonAdapter<Trends.CommentBean>(context, datas.getComment(), R.layout.item_trend_comment) {
             @Override
             public void convert(ViewHolder holder, Trends.CommentBean commentBean) {
-                holder.setImageByUrl(R.id.item_trend_comment_iv_avatar,commentBean.getAvatar())
-                        .setText(R.id.item_trend_comment_tv_name,commentBean.getName())
-                        .setText(R.id.item_trend_comment_tv_content,commentBean.getContent())
-                        .setTimeText(R.id.item_trend_comment_tv_time,commentBean.getComment_time());
+                holder.setImageByUrl(R.id.item_trend_comment_iv_avatar, commentBean.getAvatar())
+                        .setText(R.id.item_trend_comment_tv_name, commentBean.getName())
+                        .setText(R.id.item_trend_comment_tv_content, commentBean.getContent())
+                        .setTimeText(R.id.item_trend_comment_tv_time, commentBean.getComment_time());
             }
         });
         //评论按钮
-        holder.getView(R.id.trend_item_ll_comment).setOnClickListener(new View.OnClickListener() {
+        holder.getView(R.id.trend_item_iv_comment).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                commentPopupWindow = new CommentPopupWindow(context, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        switch (v.getId()) {
-                            case R.id.tv_comment:
-                                if (commentPopupWindow.ed_comment.getText().length() > 0) {
-                                    ToastUtil.showShort(context,"评论事件");
-                                    commentPopupWindow.dismiss();
-                                    commentPopupWindow.ed_comment.setText("");
-                                } else {
-
-                                    Toast.makeText(context, "发送内容不能为空", Toast.LENGTH_SHORT).show();
-                                }
-                                break;
-                        }
-                    }
-                });
-                final EditText editText = commentPopupWindow.ed_comment;
-                commentPopupWindow.showAtLocation(fragmentThirdSrlTrend, Gravity.BOTTOM, 0, 0);
-                editText.setFocusable(true);
-                editText.setFocusableInTouchMode(true);
-                editText.requestFocus();
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    public void run() {
-                        InputMethodManager inputManager =
-                                (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputManager.showSoftInput(editText, 0);
-                    }
-                },300);
+                comment();
             }
         });
     }
+
+    /**
+     * 评论事件
+     */
+    private void comment() {
+        commentPopupWindow = new CommentPopupWindow(context, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.tv_comment:
+                        if (commentPopupWindow.ed_comment.getText().length() > 0) {
+                            ToastUtil.showShort(context,"评论事件");
+                            commentPopupWindow.dismiss();
+                            commentPopupWindow.ed_comment.setText("");
+                        } else {
+
+                            Toast.makeText(context, "发送内容不能为空", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                }
+            }
+        });
+        final EditText editText = commentPopupWindow.ed_comment;
+        commentPopupWindow.showAtLocation(fragmentThirdSrlTrend, Gravity.BOTTOM, 0, 0);
+        //弹出系统输入法
+        PopInputManager.popInput(editText);
+    }
+
 
     /**
      * 字符串转模型
@@ -247,7 +244,8 @@ public class ThirdFragment extends BaseFragment {
         }.getType());
     }
     @OnClick(R.id.fragment_third_iv_send)
+    //发布动态
     public void onClick() {
-        getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
+        getActivity().startActivity(new Intent(getActivity(), PostTrendActivity.class));
     }
 }

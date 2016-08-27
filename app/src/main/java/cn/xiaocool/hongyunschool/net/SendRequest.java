@@ -3,6 +3,7 @@ package cn.xiaocool.hongyunschool.net;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +62,46 @@ public class SendRequest {
             }
         }.start();
     }
+    //http://wxt.xiaocool.net/index.php?g=apps&m=index&a=WriteMicroblog&userid=681&schoolid=1&type=1&content=8-4成长日记&classid=1&picurl=newsgroup6241470274805597.jpg,newsgroup7011470274805547.jpg
 
+    /**
+     * 发布动态
+     * @param userid
+     * @param schoolid
+     * @param type
+     * @param content
+     * @param classid
+     * @param picurl
+     * @param KEY
+     */
+    public void send_trend(final String userid, final String schoolid, final String type, final String classid, final String content, final String picurl, final int KEY) {
+        new Thread() {
+            Message msg = Message.obtain();
+
+            public void run() {
+
+                String data = "";
+                if (picurl.equals("null")) {
+                    data = "&userid=" + 681 + "&schoolid=" + 1 + "&type=" + "1"
+                            + "&content=" + content + "&classid=" + "1";
+                } else {
+                    data = "&userid=" + 681 + "&schoolid=" + 1 + "&type=" + "1"
+                            + "&content=" + content + "&classid=" + "1" + "&picurl=" + picurl;
+                }
+                String result_data = NetUtil.getResponse(NetConstantUrl.SEND_TREND, data);
+                Log.e("send_trend-----",result_data);
+                try {
+                    JSONObject obj = new JSONObject(result_data);
+                    msg.what = KEY;
+                    msg.obj = obj;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+        }.start();
+    }
 
 
 }

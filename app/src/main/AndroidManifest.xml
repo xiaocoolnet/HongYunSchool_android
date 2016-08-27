@@ -91,14 +91,15 @@
         <activity android:name=".activity.WebKeChengActivity" />
         <activity android:name=".activity.ParentMessageActivity" />
         <activity android:name=".activity.AddParentMessageActivity" />
-        <activity android:name=".activity.AddMessageActivity"></activity>
+        <activity android:name=".activity.AddMessageActivity" />
         <activity android:name=".activity.TestLayoutActivity" />
         <activity android:name=".activity.PersonalInfoActivity" />
         <activity android:name=".activity.ChangePswActivity" />
         <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.ForgetPswActivity"></activity>
-        <activity android:name=".activity.AddClassNewsActivity"></activity>
-        <activity android:name=".activity.AddSchoolAnnounceActivity"></activity>
+        <activity android:name=".activity.ForgetPswActivity" />
+        <activity android:name=".activity.AddClassNewsActivity" />
+        <activity android:name=".activity.AddSchoolAnnounceActivity" />
+        <activity android:name=".activity.PostTrendActivity"></activity>
     </application>
 
 </manifest>

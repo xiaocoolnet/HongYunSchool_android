@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_main_gray"
+    tools:context="cn.xiaocool.hongyunschool.activity.PostTrendActivity">
+    <EditText
+        android:id="@+id/activity_post_trend_ed_content"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:hint="编写您的动态吧"
+        android:textSize="@dimen/font_title_main"
+        android:gravity="top"
+        android:padding="10dp"
+        android:background="@color/white"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:background="@color/white">
+        <cn.xiaocool.hongyunschool.view.NoScrollGridView
+            android:id="@+id/activity_post_trend_gv_addpic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:horizontalSpacing="3dp"
+            android:verticalSpacing="3dp"
+            android:numColumns="4">
+        </cn.xiaocool.hongyunschool.view.NoScrollGridView>
+    </RelativeLayout>
+</LinearLayout>

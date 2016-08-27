@@ -15,7 +15,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/icon_load_ing"/>
+        android:background="@drawable/xiaoneitongzhi"/>
     <!--文字-->
     <TextView
         android:id="@+id/sa_tv_title"
@@ -40,6 +40,7 @@
         android:layout_toRightOf="@+id/sa_iv_img"
         android:textColor="@color/font_title_minor"
         android:textSize="@dimen/font_title_minor"
+        android:text="校内通知"
 
 
         />
