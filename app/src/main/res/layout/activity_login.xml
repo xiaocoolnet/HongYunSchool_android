@@ -62,6 +62,32 @@
             android:textColor="@color/font_title_main"/>
     </RelativeLayout>
 
+    <RadioGroup
+        android:id="@+id/login_rg_licence"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        >
+        <RadioButton
+            android:id="@+id/login_rb_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="家长"
+            android:layout_weight="1"
+            />
+        <RadioButton
+            android:id="@+id/login_rb_teacher"
+            android:layout_marginLeft="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="老师"
+            android:layout_weight="1"
+            />
+
+    </RadioGroup>
+
     <TextView
         android:id="@+id/activity_login_btn_login"
         android:layout_width="match_parent"

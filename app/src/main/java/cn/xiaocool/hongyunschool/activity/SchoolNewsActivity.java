@@ -72,7 +72,7 @@ public class SchoolNewsActivity extends BaseActivity {
 
     @Override
     public void requsetData() {
-        VolleyUtil.VolleyGetRequest(this, "http://wxt.xiaocool.net/index.php?g=Apps&m=Message&a=user_send_message&send_user_id=605", new
+        VolleyUtil.VolleyGetRequest(this, "http://hyx.xiaocool.net/index.php?g=Apps&m=Message&a=user_send_message&send_user_id=605", new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
                     public void onSuccess(String result) {

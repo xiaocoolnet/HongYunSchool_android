@@ -104,7 +104,7 @@ public class ThirdFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        VolleyUtil.VolleyGetRequest(context, "http://wxt.xiaocool.net/index.php?g=apps&m=index&a=GetMicroblog&userid=681&classid=1&schoolid=1&type=1&beginid=0", new
+        VolleyUtil.VolleyGetRequest(context, "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=GetMicroblog&userid=681&classid=1&schoolid=1&type=1&beginid=0", new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
                     public void onSuccess(String result) {
