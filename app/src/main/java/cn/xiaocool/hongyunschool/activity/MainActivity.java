@@ -2,7 +2,9 @@ package cn.xiaocool.hongyunschool.activity;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -15,7 +17,9 @@ import cn.xiaocool.hongyunschool.fragment.FirstFragment;
 import cn.xiaocool.hongyunschool.fragment.FourFragment;
 import cn.xiaocool.hongyunschool.fragment.SecondFragment;
 import cn.xiaocool.hongyunschool.fragment.ThirdFragment;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 
 
 public class MainActivity extends BaseActivity {
@@ -37,6 +41,7 @@ public class MainActivity extends BaseActivity {
     private ThirdFragment thirdFragment;
     private FourFragment fourFragment;
     private Fragment[] fragments;
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +49,10 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         hideTopView();
         init();
+        context = this;
+        Log.e("TAG", SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE,"").toString()
+                + SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER,"").toString()
+                + SPUtils.get(context, LocalConstant.USER_CLASSID,"").toString());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package cn.xiaocool.hongyunschool.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import cn.xiaocool.hongyunschool.activity.ImageDetailActivity;
 import cn.xiaocool.hongyunschool.adapter.ImgGridAdapter;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.view.NoScrollGridView;
@@ -116,7 +118,7 @@ public class ViewHolder {
     }
 
 
-    public ViewHolder setItemImages(Context mContext,int oneview,int gridview,ArrayList<String> images){
+    public ViewHolder setItemImages(final Context mContext,int oneview,int gridview, final ArrayList<String> images){
         ImageView view = getView(oneview);
         NoScrollGridView gv = getView(gridview);
 
@@ -129,7 +131,18 @@ public class ViewHolder {
             }else if (images.size()==1&&!images.get(0).equals("null")&&!images.get(0).equals("")){
                 view.setVisibility(View.VISIBLE);
                 gv.setVisibility(View.GONE);
-                ImgLoadUtil.display(NetConstantUrl.IMAGE_URL+images.get(0),view);
+                ImgLoadUtil.display(NetConstantUrl.IMAGE_URL + images.get(0), view);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent();
+                        intent.setClass(mContext, ImageDetailActivity.class);
+                        intent.putStringArrayListExtra("Imgs", images);
+                        intent.putExtra("position",0);
+                        intent.putExtra("type", "4");
+                        mContext.startActivity(intent);
+                    }
+                });
             }
 
 

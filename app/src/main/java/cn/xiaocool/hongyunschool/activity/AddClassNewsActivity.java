@@ -180,7 +180,7 @@ public class AddClassNewsActivity extends BaseActivity {
                     picArray.add(photo.getPicname());
                 }
                 String picname = StringJoint.arrayJointchar(picArray,",");
-                new SendRequest(AddClassNewsActivity.this,handler).send_newsgroup(addsnContent.getText().toString(),id,picname,ADD_KEY);
+                new SendRequest(AddClassNewsActivity.this,handler).send_newsgroup("","",addsnContent.getText().toString(),id,picname,ADD_KEY);
             }
 
             @Override

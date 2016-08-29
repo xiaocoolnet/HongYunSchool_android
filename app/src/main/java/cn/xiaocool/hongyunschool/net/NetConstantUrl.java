@@ -27,4 +27,31 @@ public class NetConstantUrl {
      * 发布动态
      */
     public static final String SEND_TREND = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=WriteMicroblog";
+    /**
+     * 获取老师职务
+     */
+    public static final String GET_DUTY = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=GetTeacherDuty";
+    /**
+     * 获取老师对应的班级信息
+     */
+    public static final String GET_CLASSINFO = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=GetLeaderClass";
+    /**
+     * 获取校长所发送的学校信息
+     */
+    public static final String GET_SCHOOL_NEWS_SEND = "http://hyx.xiaocool.net/index.php?g=Apps&m=Message&a=user_send_message";
+    /**
+     * 获取家长所接收的学校信息
+     */
+    public static final String GET_SCHOOL_NEWS_RECEIVE = "http://hyx.xiaocool.net/index.php?g=Apps&m=Message&a=user_reception_message";
+
+    /**
+     * 获取家长所关联的学生
+     */
+    public static final String GET_USER_RELATION = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=GetUserRelation";
+
+    /**
+     * 获取全校班级及对应学生
+     */
+    public static final String GET_SCHOOL_CLASS = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getclasslist&schoolid=1";
+
 }

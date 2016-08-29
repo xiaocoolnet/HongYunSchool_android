@@ -1,12 +1,14 @@
 package cn.xiaocool.hongyunschool.fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -17,7 +19,9 @@ import cn.xiaocool.hongyunschool.activity.ClassNewsActivity;
 import cn.xiaocool.hongyunschool.activity.MessageActivity;
 import cn.xiaocool.hongyunschool.activity.SchoolAnnounceActivity;
 import cn.xiaocool.hongyunschool.activity.SchoolNewsActivity;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.utils.BaseFragment;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 
 
 /**
@@ -36,6 +40,16 @@ public class SecondFragment extends BaseFragment {
     TextView saTvMirrorTitle;
     @BindView(R.id.msge_tv_mirror_title)
     TextView msgeTvMirrorTitle;
+    @BindView(R.id.second_rl_school_news)
+    RelativeLayout secondRlSchoolNews;
+    @BindView(R.id.second_rl_class_news)
+    RelativeLayout secondRlClassNews;
+    @BindView(R.id.second_rl_school_announce)
+    RelativeLayout secondRlSchoolAnnounce;
+    @BindView(R.id.second_rl_message)
+    RelativeLayout secondRlMessage;
+
+    private Context context;
 
 
     @Override
@@ -54,7 +68,21 @@ public class SecondFragment extends BaseFragment {
         // TODO: inflate a fragment view
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, rootView);
+        context = getActivity();
+        //根据登录身份确定布局
+        checkLayout();
         return rootView;
+    }
+
+    /**
+     * 根据登录身份确定布局
+     */
+    private void checkLayout() {
+        //是老师但不是校长，隐藏学校消息
+        if(!SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE,"").toString().equals("y")
+                &&SPUtils.get(context, LocalConstant.USER_TYPE,"").toString().equals("1")){
+            secondRlSchoolNews.setVisibility(View.GONE);
+        }
     }
 
     @OnClick({R.id.second_rl_school_news, R.id.second_rl_class_news, R.id.second_rl_school_announce, R.id.second_rl_message})

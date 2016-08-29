@@ -17,7 +17,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaocool.hongyunschool.R;
-import cn.xiaocool.hongyunschool.bean.SchoolNews;
+import cn.xiaocool.hongyunschool.bean.SchoolNewsSend;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
@@ -34,13 +34,13 @@ public class MessageActivity extends BaseActivity {
     SwipeRefreshLayout schoolNewsSrl;
 
     private CommonAdapter adapter;
-    private List<SchoolNews> schoolNewsList;
+    private List<SchoolNewsSend> schoolNewsSendList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_news);
         ButterKnife.bind(this);
-        schoolNewsList = new ArrayList<>();
+        schoolNewsSendList = new ArrayList<>();
         setTopName("校内通知");
         setRightImg(R.drawable.icon_load_ing).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,14 +93,14 @@ public class MessageActivity extends BaseActivity {
      * @param result
      */
     private void setAdapter(String result) {
-        schoolNewsList.clear();
-        schoolNewsList.addAll(getBeanFromJson(result));
+        schoolNewsSendList.clear();
+        schoolNewsSendList.addAll(getBeanFromJson(result));
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         } else {
-            adapter = new CommonAdapter<SchoolNews>(getBaseContext(), schoolNewsList, R.layout.school_news_item) {
+            adapter = new CommonAdapter<SchoolNewsSend>(getBaseContext(), schoolNewsSendList, R.layout.school_news_item) {
                 @Override
-                public void convert(ViewHolder holder, SchoolNews datas) {
+                public void convert(ViewHolder holder, SchoolNewsSend datas) {
                     setItem(holder, datas);
                 }
             };
@@ -113,7 +113,7 @@ public class MessageActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setItem(ViewHolder holder, SchoolNews datas) {
+    private void setItem(ViewHolder holder, SchoolNewsSend datas) {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
@@ -123,8 +123,8 @@ public class MessageActivity extends BaseActivity {
 
         //判断已读和未读
 
-        final ArrayList<SchoolNews.ReceiverBean> notReads = new ArrayList<>();
-        final ArrayList<SchoolNews.ReceiverBean> alreadyReads = new ArrayList<>();
+        final ArrayList<SchoolNewsSend.ReceiverBean> notReads = new ArrayList<>();
+        final ArrayList<SchoolNewsSend.ReceiverBean> alreadyReads = new ArrayList<>();
         if (datas.getReceiver().size()>0){
             for (int i=0;i<datas.getReceiver().size();i++){
                 if (datas.getReceiver().get(i).getRead_time()==null||datas.getReceiver().get(i).getRead_time().equals("null")){
@@ -155,7 +155,7 @@ public class MessageActivity extends BaseActivity {
      * @param result
      * @return
      */
-    private List<SchoolNews> getBeanFromJson(String result) {
+    private List<SchoolNewsSend> getBeanFromJson(String result) {
         String data = "";
         try {
             JSONObject json = new JSONObject(result);
@@ -163,7 +163,7 @@ public class MessageActivity extends BaseActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return new Gson().fromJson(data, new TypeToken<List<SchoolNews>>() {
+        return new Gson().fromJson(data, new TypeToken<List<SchoolNewsSend>>() {
         }.getType());
     }
 }

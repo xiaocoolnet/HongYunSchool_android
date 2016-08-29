@@ -25,6 +25,7 @@ import cn.xiaocool.hongyunschool.adapter.EListAdapter;
 import cn.xiaocool.hongyunschool.bean.Child;
 import cn.xiaocool.hongyunschool.bean.ChooseReciveBean;
 import cn.xiaocool.hongyunschool.bean.Group;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
@@ -77,7 +78,7 @@ public class ChooseReciverActivity extends BaseActivity {
 
     @Override
     public void requsetData() {
-        String url = "http://wxt.xiaocool.net/index.php?g=apps&m=teacher&a=getteacherclasslistandstudentlist&teacherid=605";
+        String url = NetConstantUrl.GET_SCHOOL_CLASS;
         VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
@@ -103,6 +104,7 @@ public class ChooseReciverActivity extends BaseActivity {
         changeModelForElistmodel();
         adapter = new EListAdapter(ChooseReciverActivity.this, groups, quanCheck, downSelectedNum);
         listView.setAdapter(adapter);
+        listView.setGroupIndicator(null);
     }
 
     /**

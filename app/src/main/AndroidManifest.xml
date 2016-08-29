@@ -67,9 +67,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
-
-        </activity>
+        <activity android:name=".activity.MainActivity"></activity>
         <activity android:name=".activity.SchoolNewsActivity" />
         <activity android:name=".activity.ClassNewsActivity" />
         <activity android:name=".activity.SchoolAnnounceActivity" />
@@ -91,7 +89,7 @@
         <activity android:name=".activity.TestLayoutActivity" />
         <activity android:name=".activity.PersonalInfoActivity" />
         <activity android:name=".activity.ChangePswActivity" />
-        <activity android:name=".activity.LoginActivity" >
+        <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -101,7 +99,8 @@
         <activity android:name=".activity.ForgetPswActivity" />
         <activity android:name=".activity.AddClassNewsActivity" />
         <activity android:name=".activity.AddSchoolAnnounceActivity" />
-        <activity android:name=".activity.PostTrendActivity"></activity>
+        <activity android:name=".activity.PostTrendActivity" />
+        <activity android:name=".activity.ReadListActivity"></activity>
     </application>
 
 </manifest>

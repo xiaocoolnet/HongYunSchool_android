@@ -28,6 +28,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginLeft="100dp"
             android:hint="请输入手机号"
+            android:text="15888708668"
             android:background="@color/white"
             android:drawableRight="@drawable/ic_arrow_right"
             android:textSize="@dimen/font_title_main"
@@ -56,6 +57,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginLeft="100dp"
             android:hint="请输入密码"
+            android:text="123"
             android:background="@color/white"
             android:drawableRight="@drawable/ic_arrow_right"
             android:textSize="@dimen/font_title_main"
@@ -75,6 +77,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="家长"
+            android:checked="true"
             android:layout_weight="1"
             />
         <RadioButton

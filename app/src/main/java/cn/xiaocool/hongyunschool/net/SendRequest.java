@@ -34,7 +34,7 @@ public class SendRequest {
      * Demo:http://wxt.xiaocool.net/index.php?g=apps&m=message&a=send_message&send_user_id=600&schoolid=1&send_user_name=呵呵
      * &message_content=222&receiver_user_id=597,600&picture_url=ajhsdiaho.png<>
      */
-    public void send_newsgroup(final String message_content, final String receiver_user_id, final String picture_url, final int KEY) {
+    public void send_newsgroup(final String send_user_id,final String send_user_name,final String message_content, final String receiver_user_id, final String picture_url, final int KEY) {
         new Thread() {
             Message msg = Message.obtain();
 
@@ -42,13 +42,13 @@ public class SendRequest {
 
                 String data = "";
                 if (picture_url.equals("null")) {
-                    data = "&send_user_id=" + 605 + "&schoolid=" + 1 + "&send_user_name=" + "HHH"
+                    data = "&send_user_id=" + send_user_id + "&schoolid=" + 1 + "&send_user_name=" + send_user_name
                             + "&message_content=" + message_content + "&receiver_user_id=" + receiver_user_id;
                 } else {
-                    data = "&send_user_id=" + 605 + "&schoolid=" + 1 + "&send_user_name=" + "HHH"
+                    data = "&send_user_id=" + send_user_id + "&schoolid=" + 1 + "&send_user_name=" + send_user_name
                             + "&message_content=" + message_content + "&receiver_user_id=" + receiver_user_id + "&picture_url=" + picture_url;
                 }
-
+                Log.e("send_school_news",NetConstantUrl.SEND_SCHOOL_NEWS + data);
                 String result_data = NetUtil.getResponse(NetConstantUrl.SEND_SCHOOL_NEWS, data);
                 try {
                     JSONObject obj = new JSONObject(result_data);

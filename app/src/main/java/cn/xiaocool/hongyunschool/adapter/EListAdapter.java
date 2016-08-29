@@ -5,7 +5,6 @@ package cn.xiaocool.hongyunschool.adapter;
  */
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -92,11 +91,9 @@ public class EListAdapter extends BaseExpandableListAdapter implements Expandabl
         tv.setText(group.getTitle());
         ImageView jiantou =  (ImageView) convertView.findViewById(R.id.jiantou);
         if (isExpanded){
-            Log.e("55550", "展开");
             jiantou.setImageResource(R.drawable.address_triangle_down);
 
         }else {
-            Log.e("55550","闭合");
             jiantou.setImageResource(R.drawable.address_triangle);
         }
 
@@ -231,8 +228,6 @@ public class EListAdapter extends BaseExpandableListAdapter implements Expandabl
     }
 
     public ArrayList<Group> getterGroups() {
-
-
         return groups;
     }
 

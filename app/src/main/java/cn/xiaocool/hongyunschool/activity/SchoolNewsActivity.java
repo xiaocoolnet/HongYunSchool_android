@@ -1,5 +1,6 @@
 package cn.xiaocool.hongyunschool.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
@@ -17,11 +18,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaocool.hongyunschool.R;
-import cn.xiaocool.hongyunschool.bean.SchoolNews;
+import cn.xiaocool.hongyunschool.bean.SchoolNewsReceiver;
+import cn.xiaocool.hongyunschool.bean.SchoolNewsSend;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 
@@ -32,27 +37,48 @@ public class SchoolNewsActivity extends BaseActivity {
     ListView schoolNewsLv;
     @BindView(R.id.school_news_srl)
     SwipeRefreshLayout schoolNewsSrl;
+    private Context context;
+    private int type;
 
     private CommonAdapter adapter;
-    private List<SchoolNews> schoolNewsList;
+    private List<SchoolNewsSend> schoolNewsSendList;
+    private List<SchoolNewsReceiver> schoolNewsReceiverList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_news);
         ButterKnife.bind(this);
-        schoolNewsList = new ArrayList<>();
+        schoolNewsSendList = new ArrayList<>();
+        schoolNewsReceiverList = new ArrayList<>();
         setTopName("学校消息");
-        setRightImg(R.drawable.icon_load_ing).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(AddSchoolNewsActivity.class);
-                ToastUtil.Toast(getBaseContext(),"发布");
-
-            }
-        });
+        context = this;
+        //判断身份
+        checkIdentity();
+        //如果是校长，显示右侧发布学校消息按钮
+        if(type == 2) {
+            setRightImg(R.drawable.icon_load_ing).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(AddSchoolNewsActivity.class);
+                    ToastUtil.Toast(getBaseContext(), "发布");
+                }
+            });
+        }
         settingRefresh();
     }
 
+    /**
+     * 判断身份
+     * 1----家长
+     * 2----校长
+     */
+    private void checkIdentity() {
+        if(SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("0")){
+            type = 1;
+        }else if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")){
+            type = 2;
+        }
+    }
 
 
     /**
@@ -72,7 +98,14 @@ public class SchoolNewsActivity extends BaseActivity {
 
     @Override
     public void requsetData() {
-        VolleyUtil.VolleyGetRequest(this, "http://hyx.xiaocool.net/index.php?g=Apps&m=Message&a=user_send_message&send_user_id=605", new
+        String url = "";
+        //判断身份并请求对应数据
+        if(type == 1){
+            url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&receiver_user_id=" + SPUtils.get(context,LocalConstant.USER_BABYID,"");
+        }else if(type == 2){
+            url = NetConstantUrl.GET_SCHOOL_NEWS_SEND + "&send_user_id" +SPUtils.get(context,LocalConstant.USER_ID,"");
+        }
+        VolleyUtil.VolleyGetRequest(this, url, new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
                     public void onSuccess(String result) {
@@ -81,6 +114,7 @@ public class SchoolNewsActivity extends BaseActivity {
                             setAdapter(result);
                         }
                     }
+
                     @Override
                     public void onError() {
 
@@ -93,27 +127,79 @@ public class SchoolNewsActivity extends BaseActivity {
      * @param result
      */
     private void setAdapter(String result) {
-        schoolNewsList.clear();
-        schoolNewsList.addAll(getBeanFromJson(result));
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        } else {
-            adapter = new CommonAdapter<SchoolNews>(getBaseContext(), schoolNewsList, R.layout.school_news_item) {
-                @Override
-                public void convert(ViewHolder holder, SchoolNews datas) {
-                    setItem(holder, datas);
-                }
-            };
-            schoolNewsLv.setAdapter(adapter);
+        if(type == 1){
+            schoolNewsReceiverList.clear();
+            schoolNewsReceiverList.addAll(getBeanFromJsonReceive(result));
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            } else {
+                adapter = new CommonAdapter<SchoolNewsReceiver>(getBaseContext(), schoolNewsReceiverList, R.layout.school_news_item) {
+                    @Override
+                    public void convert(ViewHolder holder, SchoolNewsReceiver datas) {
+                        setReceiveItem(holder, datas);
+                    }
+                };
+                schoolNewsLv.setAdapter(adapter);
+            }
+        }else if(type == 2){
+            schoolNewsSendList.clear();
+            schoolNewsSendList.addAll(getBeanFromJsonSend(result));
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            } else {
+                adapter = new CommonAdapter<SchoolNewsSend>(getBaseContext(), schoolNewsSendList, R.layout.school_news_item) {
+                    @Override
+                    public void convert(ViewHolder holder, SchoolNewsSend datas) {
+                        setSendItem(holder, datas);
+                    }
+                };
+                schoolNewsLv.setAdapter(adapter);
+            }
         }
+
     }
 
+
     /**
-     * 对item 操作
+     * 对item 操作(接收)
      * @param holder
      * @param datas
      */
-    private void setItem(ViewHolder holder, SchoolNews datas) {
+    private void setReceiveItem(ViewHolder holder, SchoolNewsReceiver datas) {
+
+        //获取图片字符串数组
+        ArrayList<String> images = new ArrayList<>();
+        for (int i=0;i<datas.getPic().size();i++){
+            images.add(datas.getPic().get(i).getPicture_url());
+        }
+
+        //判断已读和未读
+
+        final ArrayList<SchoolNewsReceiver.ReceiverBean> notReads = new ArrayList<>();
+        final ArrayList<SchoolNewsReceiver.ReceiverBean> alreadyReads = new ArrayList<>();
+        if (datas.getReceiver().size()>0){
+            for (int i=0;i<datas.getReceiver().size();i++){
+                if (datas.getReceiver().get(i).getRead_time()==null||datas.getReceiver().get(i).getRead_time().equals("null")){
+                    notReads.add(datas.getReceiver().get(i));
+                }else {
+                    alreadyReads.add(datas.getReceiver().get(i));
+                }
+            }
+        }
+
+        holder.setText(R.id.item_sn_content, datas.getSend_message().get(0).getMessage_content())
+                .setTimeText(R.id.item_sn_time,datas.getSend_message().get(0).getMessage_time())
+                .setText(R.id.item_sn_nickname,datas.getSend_message().get(0).getSend_user_name())
+                .setItemImages(this, R.id.item_sn_onepic, R.id.item_sn_gridpic, images)
+                .setText(R.id.item_sn_read, "总发" + datas.getReceiver().size() + " 已读" + alreadyReads.size() + " 未读" + notReads.size());
+    }
+
+    /**
+     * 对item 操作(发送)
+     * @param holder
+     * @param datas
+     */
+    private void setSendItem(ViewHolder holder, SchoolNewsSend datas) {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
@@ -123,8 +209,8 @@ public class SchoolNewsActivity extends BaseActivity {
 
         //判断已读和未读
 
-        final ArrayList<SchoolNews.ReceiverBean> notReads = new ArrayList<>();
-        final ArrayList<SchoolNews.ReceiverBean> alreadyReads = new ArrayList<>();
+        final ArrayList<SchoolNewsSend.ReceiverBean> notReads = new ArrayList<>();
+        final ArrayList<SchoolNewsSend.ReceiverBean> alreadyReads = new ArrayList<>();
         if (datas.getReceiver().size()>0){
             for (int i=0;i<datas.getReceiver().size();i++){
                 if (datas.getReceiver().get(i).getRead_time()==null||datas.getReceiver().get(i).getRead_time().equals("null")){
@@ -145,17 +231,20 @@ public class SchoolNewsActivity extends BaseActivity {
         holder.getView(R.id.item_sn_read).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.showShort(SchoolNewsActivity.this,"进入已读未读!");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("yidu",alreadyReads);
+                bundle.putSerializable("weidu",notReads);
+                startActivity(ReadListActivity.class,bundle);
             }
         });
     }
 
     /**
-     * 字符串转模型
+     * 字符串转模型（发送）
      * @param result
      * @return
      */
-    private List<SchoolNews> getBeanFromJson(String result) {
+    private List<SchoolNewsSend> getBeanFromJsonSend(String result) {
         String data = "";
         try {
             JSONObject json = new JSONObject(result);
@@ -163,7 +252,24 @@ public class SchoolNewsActivity extends BaseActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return new Gson().fromJson(data, new TypeToken<List<SchoolNews>>() {
+        return new Gson().fromJson(data, new TypeToken<List<SchoolNewsSend>>() {
+        }.getType());
+    }
+
+    /**
+     * 字符串转模型（接收）
+     * @param result
+     * @return
+     */
+    private List<SchoolNewsReceiver> getBeanFromJsonReceive(String result) {
+        String data = "";
+        try {
+            JSONObject json = new JSONObject(result);
+            data = json.getString("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new Gson().fromJson(data, new TypeToken<List<SchoolNewsReceiver>>() {
         }.getType());
     }
 }

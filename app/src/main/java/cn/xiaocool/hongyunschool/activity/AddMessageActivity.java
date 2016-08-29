@@ -181,7 +181,7 @@ public class AddMessageActivity extends BaseActivity {
                     picArray.add(photo.getPicname());
                 }
                 String picname = StringJoint.arrayJointchar(picArray,",");
-                new SendRequest(AddMessageActivity.this,handler).send_newsgroup(addsnContent.getText().toString(),id,picname,ADD_KEY);
+                new SendRequest(AddMessageActivity.this,handler).send_newsgroup("","",addsnContent.getText().toString(),id,picname,ADD_KEY);
             }
 
             @Override
