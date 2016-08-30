@@ -11,6 +11,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 
 public class SettingActivity extends BaseActivity {
     @BindView(R.id.activity_setting_rl_help)
@@ -61,6 +62,9 @@ public class SettingActivity extends BaseActivity {
                 break;
             //退出
             case R.id.activity_setting_tv_quit:
+                SPUtils.clear(context);
+                startActivity(LoginActivity.class);
+                finish();
                 break;
         }
     }

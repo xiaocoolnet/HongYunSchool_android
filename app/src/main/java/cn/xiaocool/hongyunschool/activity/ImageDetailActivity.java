@@ -69,7 +69,7 @@ public class ImageDetailActivity extends Activity implements View.OnClickListene
      */
     private void initView() {
         // 显示图片的配置
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.icon_load_ing).showImageOnFail(R.drawable.icon_load_ing).cacheInMemory(true).cacheOnDisc(true).build();
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.hyx_default).showImageOnFail(R.drawable.hyx_default).cacheInMemory(true).cacheOnDisc(true).build();
         back = (RelativeLayout) findViewById(R.id.relativeLayout_profession_circle_image_back);
         back.setOnClickListener(this);
         btn_save=(Button) findViewById(R.id.btn_profession_cicle_imgeview_save);

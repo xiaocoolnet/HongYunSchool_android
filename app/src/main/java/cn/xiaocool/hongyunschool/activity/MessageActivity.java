@@ -42,7 +42,7 @@ public class MessageActivity extends BaseActivity {
         ButterKnife.bind(this);
         schoolNewsSendList = new ArrayList<>();
         setTopName("校内通知");
-        setRightImg(R.drawable.icon_load_ing).setOnClickListener(new View.OnClickListener() {
+        setRightImg(R.drawable.ic_fabu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(AddSchoolNewsActivity.class);

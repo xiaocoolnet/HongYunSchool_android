@@ -70,7 +70,7 @@ public class WebMaxThreeAdapter extends BaseAdapter {
 
         imageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
 
-        holder.teacher_img.setImageResource(R.drawable.icon_load_ing);
+        holder.teacher_img.setImageResource(R.drawable.hyx_default);
 
 
         holder.post_title.setText(list.get(position).getPost_title());

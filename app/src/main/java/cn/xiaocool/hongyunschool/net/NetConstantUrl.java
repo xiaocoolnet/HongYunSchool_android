@@ -54,4 +54,10 @@ public class NetConstantUrl {
      */
     public static final String GET_SCHOOL_CLASS = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getclasslist&schoolid=1";
 
+
+    /**
+     * 获取全校科室及科室下的老师
+     */
+    public static final String GET_SCHOOL_TEACHER = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getteacherinfo&schoolid=1";
+
 }

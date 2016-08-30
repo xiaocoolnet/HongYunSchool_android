@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/themeColor</item>
         <item name="colorPrimaryDark">@color/themeColor</item>
         <item name="colorAccent">@color/themeColor</item>
+        <item name="actionSheetStyle">@style/ActionSheetStyleiOS7</item>
     </style>
 
     <style name="take_photo_anim" parent="android:Animation">

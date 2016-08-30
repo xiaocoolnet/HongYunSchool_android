@@ -1,5 +1,6 @@
 package cn.xiaocool.hongyunschool.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
@@ -18,10 +19,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.bean.SchoolNewsSend;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 
@@ -35,14 +38,19 @@ public class ClassNewsActivity extends BaseActivity {
 
     private CommonAdapter adapter;
     private List<SchoolNewsSend> schoolNewsSendList;
+    private Context context;
+    private int type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_news);
         ButterKnife.bind(this);
+        context = this;
         schoolNewsSendList = new ArrayList<>();
         setTopName("班级消息");
-        setRightImg(R.drawable.icon_load_ing).setOnClickListener(new View.OnClickListener() {
+        //判断身份
+        checkIdentity();
+        setRightImg(R.drawable.ic_fabu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(AddClassNewsActivity.class);
@@ -53,6 +61,28 @@ public class ClassNewsActivity extends BaseActivity {
         settingRefresh();
     }
 
+    /**
+     * 判断身份
+     * 1-----家长
+     * 2-----校长
+     * 3-----班主任
+     * 4-----校长+班主任
+     * 4-----任课老师
+     */
+    private void checkIdentity() {
+        if(SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("0")){
+            type = 1;
+        }else {
+            if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")&&SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER,"").equals("y"))
+                type = 4;
+            if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")&&SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER,"").equals("n"))
+                type = 4;
+            if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("n")&&SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER,"").equals("y"))
+                type = 4;
+            if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("n")&&SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER,"").equals("n"))
+                type = 4;
+        }
+    }
 
 
     /**

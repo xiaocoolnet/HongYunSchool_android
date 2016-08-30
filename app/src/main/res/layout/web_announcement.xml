@@ -12,9 +12,9 @@
 
         <!--园所公告图片-->
         <ImageView
-            android:layout_width="26dp"
-            android:layout_height="21dp"
-            android:background="@drawable/icon_load_ing"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_yuansuogonggao"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
             />

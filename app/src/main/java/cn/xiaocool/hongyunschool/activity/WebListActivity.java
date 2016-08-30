@@ -93,7 +93,7 @@ public class WebListActivity extends BaseActivity {
             adapter = new CommonAdapter<WebListInfo>(this,webListInfoArrayList,R.layout.item_web_list) {
                 @Override
                 public void convert(ViewHolder holder, WebListInfo webListInfo) {
-                    holder.setImageResource(R.id.teacher_img,R.drawable.icon_load_ing)
+                    holder.setImageResource(R.id.teacher_img,R.drawable.hyx_default)
                             .setText(R.id.post_title,webListInfo.getPost_title())
                             .setText(R.id.post_content,webListInfo.getPost_excerpt())
                             .setText(R.id.post_date,webListInfo.getPost_date());

@@ -3,6 +3,7 @@ package cn.xiaocool.hongyunschool.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -43,6 +44,7 @@ public class SchoolNewsActivity extends BaseActivity {
     private CommonAdapter adapter;
     private List<SchoolNewsSend> schoolNewsSendList;
     private List<SchoolNewsReceiver> schoolNewsReceiverList;
+    public static final String TAG = "学校消息";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +58,7 @@ public class SchoolNewsActivity extends BaseActivity {
         checkIdentity();
         //如果是校长，显示右侧发布学校消息按钮
         if(type == 2) {
-            setRightImg(R.drawable.icon_load_ing).setOnClickListener(new View.OnClickListener() {
+            setRightImg(R.drawable.ic_fabu).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startActivity(AddSchoolNewsActivity.class);
@@ -71,12 +73,15 @@ public class SchoolNewsActivity extends BaseActivity {
      * 判断身份
      * 1----家长
      * 2----校长
+     * 3----老师
      */
     private void checkIdentity() {
         if(SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("0")){
             type = 1;
         }else if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")){
             type = 2;
+        }else{
+            type =3;
         }
     }
 
@@ -101,10 +106,13 @@ public class SchoolNewsActivity extends BaseActivity {
         String url = "";
         //判断身份并请求对应数据
         if(type == 1){
-            url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&receiver_user_id=" + SPUtils.get(context,LocalConstant.USER_BABYID,"");
+            url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"");
         }else if(type == 2){
-            url = NetConstantUrl.GET_SCHOOL_NEWS_SEND + "&send_user_id" +SPUtils.get(context,LocalConstant.USER_ID,"");
+            url = NetConstantUrl.GET_SCHOOL_NEWS_SEND + "&send_user_id=" +SPUtils.get(context,LocalConstant.USER_ID,"");
+        }else if(type == 3){
+            url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"") + "&type=1";
         }
+        Log.e(TAG, url);
         VolleyUtil.VolleyGetRequest(this, url, new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
@@ -127,7 +135,7 @@ public class SchoolNewsActivity extends BaseActivity {
      * @param result
      */
     private void setAdapter(String result) {
-        if(type == 1){
+        if(type == 1||type ==3){
             schoolNewsReceiverList.clear();
             schoolNewsReceiverList.addAll(getBeanFromJsonReceive(result));
             if (adapter != null) {
@@ -169,11 +177,11 @@ public class SchoolNewsActivity extends BaseActivity {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
-        for (int i=0;i<datas.getPic().size();i++){
-            images.add(datas.getPic().get(i).getPicture_url());
+        for (int i=0;i<datas.getReceive().get(0).getPic().size();i++){
+            images.add(datas.getReceive().get(0).getPic().get(i).getPicture_url());
         }
 
-        //判断已读和未读
+        /*//判断已读和未读
 
         final ArrayList<SchoolNewsReceiver.ReceiverBean> notReads = new ArrayList<>();
         final ArrayList<SchoolNewsReceiver.ReceiverBean> alreadyReads = new ArrayList<>();
@@ -185,13 +193,13 @@ public class SchoolNewsActivity extends BaseActivity {
                     alreadyReads.add(datas.getReceiver().get(i));
                 }
             }
-        }
+        }*/
 
-        holder.setText(R.id.item_sn_content, datas.getSend_message().get(0).getMessage_content())
-                .setTimeText(R.id.item_sn_time,datas.getSend_message().get(0).getMessage_time())
-                .setText(R.id.item_sn_nickname,datas.getSend_message().get(0).getSend_user_name())
-                .setItemImages(this, R.id.item_sn_onepic, R.id.item_sn_gridpic, images)
-                .setText(R.id.item_sn_read, "总发" + datas.getReceiver().size() + " 已读" + alreadyReads.size() + " 未读" + notReads.size());
+        holder.setText(R.id.item_sn_content, datas.getReceive().get(0).getSend_message().getMessage_content())
+                .setTimeText(R.id.item_sn_time, datas.getReceive().get(0).getSend_message().getMessage_time())
+                .setText(R.id.item_sn_nickname,datas.getReceive().get(0).getSend_message().getSend_user_name())
+                .setItemImages(this, R.id.item_sn_onepic, R.id.item_sn_gridpic, images);
+                //.setText(R.id.item_sn_read, "总发" + datas.getReceiver().size() + " 已读" + alreadyReads.size() + " 未读" + notReads.size());
     }
 
     /**
@@ -207,7 +215,7 @@ public class SchoolNewsActivity extends BaseActivity {
             images.add(datas.getPicture().get(i).getPicture_url());
         }
 
-        //判断已读和未读
+        /*//判断已读和未读
 
         final ArrayList<SchoolNewsSend.ReceiverBean> notReads = new ArrayList<>();
         final ArrayList<SchoolNewsSend.ReceiverBean> alreadyReads = new ArrayList<>();
@@ -219,16 +227,16 @@ public class SchoolNewsActivity extends BaseActivity {
                     alreadyReads.add(datas.getReceiver().get(i));
                 }
             }
-        }
+        }*/
 
         holder.setText(R.id.item_sn_content, datas.getMessage_content())
         .setTimeText(R.id.item_sn_time,datas.getMessage_time())
         .setText(R.id.item_sn_nickname,datas.getSend_user_name())
-        .setItemImages(this,R.id.item_sn_onepic,R.id.item_sn_gridpic,images)
-        .setText(R.id.item_sn_read,"总发" + datas.getReceiver().size()+" 已读"+alreadyReads.size()+" 未读"+notReads.size());
+        .setItemImages(this,R.id.item_sn_onepic,R.id.item_sn_gridpic,images);
+        //.setText(R.id.item_sn_read,"总发" + datas.getReceiver().size()+" 已读"+alreadyReads.size()+" 未读"+notReads.size());
 
         //进入已读未读界面
-        holder.getView(R.id.item_sn_read).setOnClickListener(new View.OnClickListener() {
+        /*holder.getView(R.id.item_sn_read).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
@@ -236,7 +244,7 @@ public class SchoolNewsActivity extends BaseActivity {
                 bundle.putSerializable("weidu",notReads);
                 startActivity(ReadListActivity.class,bundle);
             }
-        });
+        });*/
     }
 
     /**

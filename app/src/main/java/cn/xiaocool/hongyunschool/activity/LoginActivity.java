@@ -153,6 +153,7 @@ public class LoginActivity extends BaseActivity {
                             getClassInfomation();
                         }else{
                             startActivity(MainActivity.class);
+                            finish();
                         }
                     }
                 }
@@ -179,6 +180,7 @@ public class LoginActivity extends BaseActivity {
                 BabyInfo babyInfo = getBabyInfoFromJson(result).get(0);
                 SPUtils.put(context,LocalConstant.USER_BABYID,babyInfo.getStudentid());
                 startActivity(MainActivity.class);
+                finish();
             }
 
             @Override
@@ -202,6 +204,7 @@ public class LoginActivity extends BaseActivity {
                     //记录班级id到本地
                     SPUtils.put(context,LocalConstant.USER_CLASSID,classInfo.getClassid());
                     startActivity(MainActivity.class);
+                    finish();
                 }
             }
 

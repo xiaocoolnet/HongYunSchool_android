@@ -148,7 +148,7 @@ public class AddClassNewsActivity extends BaseActivity {
      * 设置发布按钮
      */
     private void setRight() {
-        setRightImg(R.drawable.icon_load_ing).setOnClickListener(new View.OnClickListener() {
+        setRightText("发布").setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendNews();

@@ -22,11 +22,13 @@
             android:layout_height="match_parent">
             <CheckBox
                 android:id="@+id/chbChild"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
+                android:background="@drawable/checkbox_bg2"
+                android:button="@null"
                 android:clickable="false"
                 android:focusable="false" />
         </RelativeLayout>

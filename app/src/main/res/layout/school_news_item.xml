@@ -18,7 +18,7 @@
             android:id="@+id/item_sn_head_iv"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:background="@drawable/icon_load_ing" />
+            android:background="@drawable/hyx_default" />
 
         <LinearLayout
             android:layout_width="match_parent"

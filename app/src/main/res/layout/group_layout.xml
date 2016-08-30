@@ -13,7 +13,7 @@
             android:layout_height="15dp"
             android:layout_margin="10dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/address_triangle"/>
+            android:src="@drawable/ic_jiantouyou"/>
         <TextView
             android:id="@+id/tvGroup"
             android:layout_width="wrap_content"
@@ -31,10 +31,12 @@
 
             <CheckBox
                 android:id="@+id/chbGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
+                android:button="@null"
+                android:background="@drawable/checkbox_bg2"
                 android:focusable="false" />
         </RelativeLayout>
     </LinearLayout>

@@ -79,9 +79,13 @@ public class SecondFragment extends BaseFragment {
      */
     private void checkLayout() {
         //是老师但不是校长，隐藏学校消息
-        if(!SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE,"").toString().equals("y")
+        /*if(!SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE,"").toString().equals("y")
                 &&SPUtils.get(context, LocalConstant.USER_TYPE,"").toString().equals("1")){
             secondRlSchoolNews.setVisibility(View.GONE);
+        }*/
+        //家长（隐藏校内通知）
+        if(SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("0")){
+            secondRlSchoolAnnounce.setVisibility(View.GONE);
         }
     }
 

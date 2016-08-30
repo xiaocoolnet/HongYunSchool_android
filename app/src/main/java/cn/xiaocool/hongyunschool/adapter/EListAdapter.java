@@ -27,6 +27,7 @@ public class EListAdapter extends BaseExpandableListAdapter implements Expandabl
     private Context context;
     private TextView textView;
     private int size;
+    private String type;   //1是选择班级，2是选择人
 
     public ArrayList<Group> getGroups() {
         return groups;
@@ -38,11 +39,12 @@ public class EListAdapter extends BaseExpandableListAdapter implements Expandabl
 
     private ArrayList<Group> groups;
 
-    public EListAdapter(Context context, ArrayList<Group> groups, CheckBox checkBox, TextView textView) {
+    public EListAdapter(Context context, ArrayList<Group> groups, CheckBox checkBox, TextView textView ,String type) {
         this.textView = textView;
         this.checkBox = checkBox;
         this.context = context;
         this.groups = groups;
+        this.type = type;
     }
 
     public Object getChild(int groupPosition, int childPosition) {
@@ -91,10 +93,10 @@ public class EListAdapter extends BaseExpandableListAdapter implements Expandabl
         tv.setText(group.getTitle());
         ImageView jiantou =  (ImageView) convertView.findViewById(R.id.jiantou);
         if (isExpanded){
-            jiantou.setImageResource(R.drawable.address_triangle_down);
+            jiantou.setImageResource(R.drawable.ic_jiantouxia);
 
         }else {
-            jiantou.setImageResource(R.drawable.address_triangle);
+            jiantou.setImageResource(R.drawable.ic_jiantouyou);
         }
 
         // 重新產生 CheckBox 時，將存起來的 isChecked 狀態重新設定
@@ -156,7 +158,12 @@ public class EListAdapter extends BaseExpandableListAdapter implements Expandabl
                 }
             }
         }
-        textView.setText("已选择" + size + "人");
+        if (type.equals("1")){
+            textView.setText("已选择" + size + "个班级");
+        }else{
+            textView.setText("已选择" + size + "人");
+        }
+
     }
 
     /**

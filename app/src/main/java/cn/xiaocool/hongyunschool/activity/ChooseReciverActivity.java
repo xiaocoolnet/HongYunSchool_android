@@ -102,7 +102,7 @@ public class ChooseReciverActivity extends BaseActivity {
     private void setAdapter() {
 
         changeModelForElistmodel();
-        adapter = new EListAdapter(ChooseReciverActivity.this, groups, quanCheck, downSelectedNum);
+        adapter = new EListAdapter(ChooseReciverActivity.this, groups, quanCheck, downSelectedNum ,"2");
         listView.setAdapter(adapter);
         listView.setGroupIndicator(null);
     }

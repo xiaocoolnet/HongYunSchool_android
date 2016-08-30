@@ -17,9 +17,9 @@ import cn.xiaocool.hongyunschool.R;
 public class ImgLoadUtil {
 
     private static DisplayImageOptions options =new DisplayImageOptions.Builder()
-            .showImageOnLoading(R.drawable.icon_load_ing)
-            .showImageOnFail(R.drawable.icon_load_ing)
-            .showImageForEmptyUri(R.drawable.icon_load_ing)
+            .showImageOnLoading(R.drawable.hyx_default)
+            .showImageOnFail(R.drawable.hyx_default)
+            .showImageForEmptyUri(R.drawable.hyx_default)
             .cacheInMemory(true)
             .cacheOnDisc(true)
             .bitmapConfig(Bitmap.Config.RGB_565)
@@ -29,9 +29,9 @@ public class ImgLoadUtil {
             .build();
 
     private static DisplayImageOptions headerOptions = new DisplayImageOptions.Builder()
-            .showImageOnLoading(R.drawable.icon_load_ing)
-            .showImageOnFail(R.drawable.icon_load_ing)
-            .showImageForEmptyUri(R.drawable.icon_load_ing)
+            .showImageOnLoading(R.drawable.hyx_default)
+            .showImageOnFail(R.drawable.hyx_default)
+            .showImageForEmptyUri(R.drawable.hyx_default)
             .cacheInMemory(true)
             .cacheOnDisc(true)
             .bitmapConfig(Bitmap.Config.RGB_565)

@@ -159,7 +159,7 @@ public class AddSchoolNewsActivity extends BaseActivity {
      * 设置发布按钮
      */
     private void setRight() {
-        setRightImg(R.drawable.icon_load_ing).setOnClickListener(new View.OnClickListener() {
+        setRightText("发布").setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendNews();
@@ -212,7 +212,7 @@ public class AddSchoolNewsActivity extends BaseActivity {
     @OnClick(R.id.addsn_tv_choose_class)
     public void onClick() {
 
-        Intent intent = new Intent(AddSchoolNewsActivity.this, ChooseReciverActivity.class);
+        Intent intent = new Intent(AddSchoolNewsActivity.this, ChooseClassActivity.class);
         intent.putExtra("type", "");
         startActivityForResult(intent, 101);
     }
@@ -275,7 +275,7 @@ public class AddSchoolNewsActivity extends BaseActivity {
                             id = id + "," + ids.get(i);
                         }
                         id = id.substring(5, id.length());
-                        tvSelectCount.setText("共选择" + ids.size() + "人");
+                        tvSelectCount.setText("共选择" + ids.size() + "个班级");
                         addsnTvChooseClass.setText(haschoose);
                     }
 

@@ -48,14 +48,14 @@ public class GalleryFinalUtil {
         functionConfig = functionConfigBuilder.build();
 
         ThemeConfig theme = new ThemeConfig.Builder()
-                .setTitleBarBgColor(Color.parseColor("#9BE5B4"))
+                .setTitleBarBgColor(Color.parseColor("#1BBCDC"))
                 .setTitleBarTextColor(Color.WHITE)
                 .setTitleBarIconColor(Color.WHITE)
-                .setFabNornalColor(Color.parseColor("#9BE5B4"))
+                .setFabNornalColor(Color.parseColor("#1BBCDC"))
                 .setFabPressedColor(Color.BLUE)
                 .setCheckNornalColor(Color.WHITE)
-                .setCheckSelectedColor(Color.parseColor("#9BE5B4"))
-                .setIconBack(R.drawable.back_whrit)
+                .setCheckSelectedColor(Color.parseColor("#1BBCDC"))
+                .setIconBack(R.drawable.ic_fanhui_left)
                 .build();
 
         CoreConfig coreConfig = new CoreConfig.Builder(context, imageLoader, theme)
