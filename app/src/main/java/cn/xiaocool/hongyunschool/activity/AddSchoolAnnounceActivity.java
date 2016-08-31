@@ -34,6 +34,7 @@ import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.GalleryFinalUtil;
 import cn.xiaocool.hongyunschool.utils.GetImageUtil;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.MyProgressDialog;
 import cn.xiaocool.hongyunschool.utils.PushImageUtil;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.StringJoint;
@@ -60,6 +61,7 @@ public class AddSchoolAnnounceActivity extends BaseActivity {
     private GalleryFinalUtil galleryFinalUtil;
     private String id;
     private String userid;
+    private MyProgressDialog dialog;
     private Context context;
     private Handler handler = new Handler() {
         @Override
@@ -85,6 +87,7 @@ public class AddSchoolAnnounceActivity extends BaseActivity {
         mPhotoList = new ArrayList<>();
         photoWithPaths = new ArrayList<>();
         context = this;
+        dialog = new MyProgressDialog(context,"",R.anim.loading);
         userid = SPUtils.get(context, LocalConstant.USER_ID,"").toString();
         galleryFinalUtil = new GalleryFinalUtil(9);
         setTopName("通知发布");
@@ -161,6 +164,7 @@ public class AddSchoolAnnounceActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 sendNews();
+                dialog.show();
             }
         });
     }

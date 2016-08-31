@@ -29,6 +29,7 @@ import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.ProgressUtil;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.view.CleanableEditText;
@@ -75,6 +76,7 @@ public class LoginActivity extends BaseActivity {
             //登录
             case R.id.activity_login_btn_login:
                 login();
+                ProgressUtil.showLoadingDialog(this);
                 break;
             //忘记密码
             case R.id.activity_login_btn_forgetpsw:
@@ -202,7 +204,7 @@ public class LoginActivity extends BaseActivity {
                     //得到班级信息
                     ClassInfo classInfo = getClassInfoFromJson(result).get(0);
                     //记录班级id到本地
-                    SPUtils.put(context,LocalConstant.USER_CLASSID,classInfo.getClassid());
+                    SPUtils.put(context, LocalConstant.USER_CLASSID, classInfo.getClassid());
                     startActivity(MainActivity.class);
                     finish();
                 }

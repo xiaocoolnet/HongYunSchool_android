@@ -40,5 +40,4 @@ dependencies {
     compile 'cn.finalteam:galleryfinal:1.4.6'
     compile 'com.squareup.picasso:picasso:2.5.2'
 
-
 }
