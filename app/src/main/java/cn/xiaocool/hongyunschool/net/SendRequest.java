@@ -102,6 +102,74 @@ public class SendRequest {
             }
         }.start();
     }
+    //http://hyx.xiaocool.net/index.php?g=apps&m=school&a=publishnotice&userid=599&title=%E6%A0%87%E9%A2%98&content=%E5%86%85%E5%AE%B9&photo=hyx8221472460032673.jpg,hyx9381472460032660.jpg&reciveid=604
+    /**
+     * 发布校内通知
+     * @param userid
+     * @param title
+     * @param content
+     * @param photo
+     * @param reciveid
+     * @param KEY
+     */
+    public void send_school_announce(final String userid, final String title, final String content, final String photo, final String reciveid,final int KEY) {
+        new Thread() {
+            Message msg = Message.obtain();
+
+            public void run() {
+
+                String data = "";
+                if (photo.equals("null")) {
+                    data = "&userid=" + userid + "&title=" + title + "&content=" + content
+                            + "&reciveid=" + reciveid ;
+                } else {
+                    data = "&userid=" + userid + "&title=" + title + "&content=" + content
+                            + "&reciveid=" + reciveid + "&photo=" + photo ;
+                }
+                String result_data = NetUtil.getResponse(NetConstantUrl.SEND_ANNOUNCEMENT, data);
+                Log.e("send_trend-----",result_data);
+                try {
+                    JSONObject obj = new JSONObject(result_data);
+                    msg.what = KEY;
+                    msg.obj = obj;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+        }.start();
+    }
+
+    //http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=addhomework&schoolid=1&teacherid=599&title=%E5%91%A8%E5%9B%9B%E4%BD%9C%E4%B8%9A&content=%E4%BD%9C%E4%B8%9A%E5%86%85%E5%AE%B9%EF%BC%8C%E5%BF%AB%E6%9D%A5%E7%9C%8B&receiverid=654&picture_url=hyx8221472460032673.jpg,hyx9381472460032660.jpg
+    public void send_class_new(final String schoolid, final String teacherid, final String title, final String content, final String receiverid,final String picture_url,final int KEY) {
+        new Thread() {
+            Message msg = Message.obtain();
+
+            public void run() {
+
+                String data = "";
+                if (picture_url.equals("null")) {
+                    data = "&schoolid=" + "1" + "&teacherid=" + teacherid + "&title=" + title
+                            + "&content=" + content + "&receiverid=" + receiverid ;
+                } else {
+                    data = "&schoolid=" + "1" + "&teacherid=" + teacherid + "&title=" + title
+                            + "&content=" + content + "&receiverid=" + receiverid + "&picture_url=" + picture_url;
+                }
+                String result_data = NetUtil.getResponse(NetConstantUrl.SEND_CLASS_NEW, data);
+                Log.e("send_class_new-----",result_data);
+                try {
+                    JSONObject obj = new JSONObject(result_data);
+                    msg.what = KEY;
+                    msg.obj = obj;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+        }.start();
+    }
 
 
 }

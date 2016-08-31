@@ -1,5 +1,6 @@
 package cn.xiaocool.hongyunschool.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -27,12 +28,14 @@ import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.adapter.LocalImgGridAdapter;
 import cn.xiaocool.hongyunschool.bean.PhotoWithPath;
 import cn.xiaocool.hongyunschool.callback.PushImage;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.net.SendRequest;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.GalleryFinalUtil;
 import cn.xiaocool.hongyunschool.utils.GetImageUtil;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.PushImageUtil;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.StringJoint;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.view.NoScrollGridView;
@@ -56,6 +59,7 @@ public class AddClassNewsActivity extends BaseActivity {
     private static final int ADD_KEY = 101;
     private GalleryFinalUtil galleryFinalUtil;
     private String id;
+    private Context context;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -63,6 +67,7 @@ public class AddClassNewsActivity extends BaseActivity {
                 case ADD_KEY:
                     if (msg.obj!=null){
                         if (JsonResult.JSONparser(AddClassNewsActivity.this, String.valueOf(msg.obj))){
+                            ToastUtil.showShort(context,"发送成功");
                             finish();
                         }
 
@@ -74,12 +79,13 @@ public class AddClassNewsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_school_news);
+        setContentView(R.layout.activity_add_class_news);
         ButterKnife.bind(this);
+        context = this;
         mPhotoList = new ArrayList<>();
         photoWithPaths = new ArrayList<>();
         galleryFinalUtil = new GalleryFinalUtil(9);
-        setTopName("公告消息");
+        setTopName("消息发布");
         setRight();
         setAddImgGrid();
     }
@@ -180,7 +186,8 @@ public class AddClassNewsActivity extends BaseActivity {
                     picArray.add(photo.getPicname());
                 }
                 String picname = StringJoint.arrayJointchar(picArray,",");
-                new SendRequest(AddClassNewsActivity.this,handler).send_newsgroup("","",addsnContent.getText().toString(),id,picname,ADD_KEY);
+                new SendRequest(AddClassNewsActivity.this,handler).send_class_new("", SPUtils.get(context, LocalConstant.USER_ID,"").toString(),
+                        "标题", addsnContent.getText().toString(), id, picname, ADD_KEY);
             }
 
             @Override

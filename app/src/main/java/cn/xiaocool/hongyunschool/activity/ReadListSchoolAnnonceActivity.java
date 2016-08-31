@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaocool.hongyunschool.R;
-import cn.xiaocool.hongyunschool.bean.SchoolNewsSend;
+import cn.xiaocool.hongyunschool.bean.SchoolAnnouncement;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 import cn.xiaocool.hongyunschool.view.NoScrollListView;
 
-public class ReadListActivity extends BaseActivity {
+public class ReadListSchoolAnnonceActivity extends BaseActivity {
 
     @BindView(R.id.activity_read_list_tv_yidu)
     TextView activityReadListTvYidu;
@@ -26,8 +26,8 @@ public class ReadListActivity extends BaseActivity {
     @BindView(R.id.activity_read_list_lv_weidu)
     NoScrollListView activityReadListLvWeidu;
     private Context context;
-    private ArrayList<SchoolNewsSend.ReceiverBean> notReads = new ArrayList<>();
-    private ArrayList<SchoolNewsSend.ReceiverBean> alreadyReads = new ArrayList<>();
+    private ArrayList<SchoolAnnouncement.ReceiveListBean> notReads = new ArrayList<>();
+    private ArrayList<SchoolAnnouncement.ReceiveListBean> alreadyReads = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,17 +43,17 @@ public class ReadListActivity extends BaseActivity {
     private void setContent() {
         activityReadListTvWeidu.setText(notReads.size()+"");
         activityReadListTvYidu.setText(alreadyReads.size()+"");
-        activityReadListLvWeidu.setAdapter(new CommonAdapter<SchoolNewsSend.ReceiverBean>(context, notReads, R.layout.item_read_info) {
+        activityReadListLvWeidu.setAdapter(new CommonAdapter<SchoolAnnouncement.ReceiveListBean>(context, notReads, R.layout.item_read_info) {
             @Override
-            public void convert(ViewHolder holder, SchoolNewsSend.ReceiverBean receiverBean) {
-                holder.setText(R.id.item_read_info_tv_name, receiverBean.getReceiver_user_name());
+            public void convert(ViewHolder holder, SchoolAnnouncement.ReceiveListBean receiverBean) {
+                holder.setText(R.id.item_read_info_tv_name, receiverBean.getName());
                 holder.setImageByUrl(R.id.item_read_info_iv_avatar, receiverBean.getPhoto());
             }
         });
-        activityReadListLvYidu.setAdapter(new CommonAdapter<SchoolNewsSend.ReceiverBean>(context,alreadyReads,R.layout.item_read_info) {
+        activityReadListLvYidu.setAdapter(new CommonAdapter<SchoolAnnouncement.ReceiveListBean>(context,alreadyReads,R.layout.item_read_info) {
             @Override
-            public void convert(ViewHolder holder, SchoolNewsSend.ReceiverBean receiverBean) {
-                holder.setText(R.id.item_read_info_tv_name, receiverBean.getReceiver_user_name());
+            public void convert(ViewHolder holder, SchoolAnnouncement.ReceiveListBean receiverBean) {
+                holder.setText(R.id.item_read_info_tv_name, receiverBean.getName());
                 holder.setImageByUrl(R.id.item_read_info_iv_avatar, receiverBean.getPhoto());
             }
         });
@@ -64,8 +64,8 @@ public class ReadListActivity extends BaseActivity {
      * 根据intent接收值
      */
     private void getData() {
-        alreadyReads = (ArrayList<SchoolNewsSend.ReceiverBean>) getIntent().getSerializableExtra("yidu");
-        notReads = (ArrayList<SchoolNewsSend.ReceiverBean>) getIntent().getSerializableExtra("weidu");
+        alreadyReads = (ArrayList<SchoolAnnouncement.ReceiveListBean>) getIntent().getSerializableExtra("yidu");
+        notReads = (ArrayList<SchoolAnnouncement.ReceiveListBean>) getIntent().getSerializableExtra("weidu");
     }
 
     @Override

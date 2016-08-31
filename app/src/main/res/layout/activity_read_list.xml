@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="cn.xiaocool.hongyunschool.activity.ReadListActivity">
+    tools:context=".activity.ReadListSchoolAnnonceActivity">
     <cn.xiaocool.hongyunschool.view.ReboundScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

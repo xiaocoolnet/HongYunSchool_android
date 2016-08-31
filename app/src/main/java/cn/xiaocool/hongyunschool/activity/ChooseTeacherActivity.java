@@ -1,6 +1,5 @@
 package cn.xiaocool.hongyunschool.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,17 +23,15 @@ import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.adapter.EListAdapter;
 import cn.xiaocool.hongyunschool.bean.Child;
-import cn.xiaocool.hongyunschool.bean.ClassAndStudent;
 import cn.xiaocool.hongyunschool.bean.Group;
-import cn.xiaocool.hongyunschool.net.LocalConstant;
+import cn.xiaocool.hongyunschool.bean.TeacherInfo;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
-import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 
-public class ChooseReciverActivity extends BaseActivity {
+public class ChooseTeacherActivity extends BaseActivity {
 
     @BindView(R.id.listView)
     ExpandableListView listView;
@@ -42,21 +39,19 @@ public class ChooseReciverActivity extends BaseActivity {
     TextView downSelectedNum;
     @BindView(R.id.quan_check)
     CheckBox quanCheck;
-    private List<ClassAndStudent> classAndStudents;
+    private List<TeacherInfo> teacherInfos;
 
     private ArrayList<Group> groups;
     private ArrayList<Child> childs;
     private EListAdapter adapter;
     private int size;
     private ArrayList<String> selectedIds, selectedNames;
-    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_reciver);
         ButterKnife.bind(this);
-        context = this;
         setTopName("选择接收人");
         setRightText("完成").setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,24 +67,24 @@ public class ChooseReciverActivity extends BaseActivity {
                     finish();
                 } else {
 
-                    ToastUtil.showShort(ChooseReciverActivity.this, "请选择接收人！");
+                    ToastUtil.showShort(ChooseTeacherActivity.this, "请选择接收人！");
                 }
             }
         });
-        classAndStudents = new ArrayList<>();
+        teacherInfos = new ArrayList<>();
         groups = new ArrayList<>();
         childs = new ArrayList<>();
     }
 
     @Override
     public void requsetData() {
-        String url = NetConstantUrl.GET_CLASS_BYID + "&classid=" + SPUtils.get(context,LocalConstant.USER_CLASSID,"").toString();
+        String url = NetConstantUrl.GET_SCHOOL_TEACHER;
         VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
-                if (JsonResult.JSONparser(ChooseReciverActivity.this, result)) {
-                    classAndStudents.clear();
-                    classAndStudents.addAll(getBeanFromJson(result));
+                if (JsonResult.JSONparser(ChooseTeacherActivity.this, result)) {
+                    teacherInfos.clear();
+                    teacherInfos.addAll(getBeanFromJson(result));
                     setAdapter();
                 }
             }
@@ -107,7 +102,7 @@ public class ChooseReciverActivity extends BaseActivity {
     private void setAdapter() {
 
         changeModelForElistmodel();
-        adapter = new EListAdapter(ChooseReciverActivity.this, groups, quanCheck, downSelectedNum ,"2");
+        adapter = new EListAdapter(ChooseTeacherActivity.this, groups, quanCheck, downSelectedNum ,"2");
         listView.setAdapter(adapter);
         listView.setGroupIndicator(null);
     }
@@ -116,11 +111,11 @@ public class ChooseReciverActivity extends BaseActivity {
      * 转换模型
      */
     private void changeModelForElistmodel() {
-        for (int i = 0; i < classAndStudents.size(); i++) {
-            Group group = new Group(SPUtils.get(context, LocalConstant.USER_CLASSID,"1").toString(), classAndStudents.get(i).getClassname());
-            for (int j = 0; j < classAndStudents.get(i).getLists().size(); j++) {
-                Child child = new Child(classAndStudents.get(i).getLists().get(j).getId(), classAndStudents.get(i).getLists().get(j).getName(),
-                        classAndStudents.get(i).getLists().get(j).getName());
+        for (int i = 0; i < teacherInfos.size(); i++) {
+            Group group = new Group(teacherInfos.get(i).getId(), teacherInfos.get(i).getName());
+            for (int j = 0; j < teacherInfos.get(i).getTeacherinfo().size(); j++) {
+                Child child = new Child(teacherInfos.get(i).getTeacherinfo().get(j).getId(), teacherInfos.get(i).getTeacherinfo().get(j).getName(),
+                        teacherInfos.get(i).getTeacherinfo().get(j).getName());
                 group.addChildrenItem(child);
             }
             groups.add(group);
@@ -134,7 +129,7 @@ public class ChooseReciverActivity extends BaseActivity {
      * @param result
      * @return
      */
-    private List<ClassAndStudent> getBeanFromJson(String result) {
+    private List<TeacherInfo> getBeanFromJson(String result) {
         String data = "";
         try {
             JSONObject json = new JSONObject(result);
@@ -142,7 +137,7 @@ public class ChooseReciverActivity extends BaseActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return new Gson().fromJson(data, new TypeToken<List<ClassAndStudent>>() {
+        return new Gson().fromJson(data, new TypeToken<List<TeacherInfo>>() {
         }.getType());
     }
 

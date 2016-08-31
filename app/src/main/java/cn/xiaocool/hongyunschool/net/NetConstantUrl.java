@@ -28,6 +28,10 @@ public class NetConstantUrl {
      */
     public static final String SEND_TREND = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=WriteMicroblog";
     /**
+     * 发布校内通知
+     */
+    public static final String SEND_ANNOUNCEMENT = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=publishnotice";
+    /**
      * 获取老师职务
      */
     public static final String GET_DUTY = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=GetTeacherDuty";
@@ -50,14 +54,45 @@ public class NetConstantUrl {
     public static final String GET_USER_RELATION = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=GetUserRelation";
 
     /**
-     * 获取全校班级及对应学生
+     * 获取全校班级
      */
     public static final String GET_SCHOOL_CLASS = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getclasslist&schoolid=1";
 
+    /**
+     * 根据班级id获取班级学生
+     */
+    public static final String GET_CLASS_BYID = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getStudentlistByClassid";
 
     /**
      * 获取全校科室及科室下的老师
      */
     public static final String GET_SCHOOL_TEACHER = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getteacherinfo&schoolid=1";
 
+    /**
+     * 获取校长发送的校内通知
+     */
+    public static final String GET_ANNOUNCE_SEND = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getnoticelist";
+
+    /**
+     * 获取老师接收的校内通知
+     */
+    public static final String GET_ANNOUNCE_RECEIVE = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=get_receive_notice";
+    /**
+     * 发送班级消息
+     */
+    public static final String SEND_CLASS_NEW = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=addhomework";
+    /**
+     * 获取班主任发布的班级消息
+     */
+    public static final String GET_CLASS_NEWS_SEND = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=gethomeworklist";
+
+    /**
+     * 获取家长接收的班级消息
+     */
+    public static final String GET_CLASS_NEWS_RECEIVE = "http://hyx.xiaocool.net/index.php?g=apps&m=student&a=gethomeworkmessage";
+
+    /**
+     * 校长获取全校班级消息
+     */
+    public static final String GET_CLASS_NEWS_ALL = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=GetAllClassInfo&schoolid=1";
 }

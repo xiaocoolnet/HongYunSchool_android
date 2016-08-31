@@ -242,7 +242,7 @@ public class SchoolNewsActivity extends BaseActivity {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("yidu",alreadyReads);
                 bundle.putSerializable("weidu",notReads);
-                startActivity(ReadListActivity.class,bundle);
+                startActivity(ReadListSchoolAnnonceActivity.class,bundle);
             }
         });*/
     }

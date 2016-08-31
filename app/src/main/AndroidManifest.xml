@@ -94,7 +94,7 @@
         <activity android:name=".activity.AddClassNewsActivity" />
         <activity android:name=".activity.AddSchoolAnnounceActivity" />
         <activity android:name=".activity.PostTrendActivity" />
-        <activity android:name=".activity.ReadListActivity" />
+        <activity android:name=".activity.ReadListSchoolAnnonceActivity" />
         <activity android:name=".activity.SplashActivity"></activity>
         <activity android:name=".activity.FullActivity">
             <intent-filter>
@@ -104,6 +104,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.ChooseClassActivity"></activity>
+        <activity android:name=".activity.ChooseTeacherActivity"/>
+        <activity android:name=".activity.ReadListClassNewLeaderActivity"/>
+        <activity android:name=".activity.ReadListClassNewTeacherActivity"/>
     </application>
 
 </manifest>

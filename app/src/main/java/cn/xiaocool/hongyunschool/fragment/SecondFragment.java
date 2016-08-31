@@ -87,6 +87,12 @@ public class SecondFragment extends BaseFragment {
         if(SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("0")){
             secondRlSchoolAnnounce.setVisibility(View.GONE);
         }
+        //任课老师(隐藏班级消息)
+        if(SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("1")
+                && !SPUtils.get(context,LocalConstant.USER_IS_CLASSLEADER,"").equals("y")
+                && !SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")){
+            secondRlClassNews.setVisibility(View.GONE);
+        }
     }
 
     @OnClick({R.id.second_rl_school_news, R.id.second_rl_class_news, R.id.second_rl_school_announce, R.id.second_rl_message})
