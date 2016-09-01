@@ -8,6 +8,8 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.xiaocool.hongyunschool.utils.LogUtils;
+
 /**
  * Created by 潘 on 2016/3/31.
  */
@@ -68,13 +70,12 @@ public class SendRequest {
      * 发布动态
      * @param userid
      * @param schoolid
-     * @param type
      * @param content
      * @param classid
      * @param picurl
      * @param KEY
      */
-    public void send_trend(final String userid, final String schoolid, final String type, final String classid, final String content, final String picurl, final int KEY) {
+    public void send_trend(final String userid, final String schoolid, final String classid, final String content, final String picurl, final int KEY) {
         new Thread() {
             Message msg = Message.obtain();
 
@@ -82,11 +83,11 @@ public class SendRequest {
 
                 String data = "";
                 if (picurl.equals("null")) {
-                    data = "&userid=" + 681 + "&schoolid=" + 1 + "&type=" + "1"
-                            + "&content=" + content + "&classid=" + "1";
+                    data = "&userid=" + userid + "&schoolid=" + 1 + "&type=" + "1"
+                            + "&content=" + content + "&classid=" + classid;
                 } else {
-                    data = "&userid=" + 681 + "&schoolid=" + 1 + "&type=" + "1"
-                            + "&content=" + content + "&classid=" + "1" + "&picurl=" + picurl;
+                    data = "&userid=" + userid + "&schoolid=" + 1 + "&type=" + "1"
+                            + "&content=" + content + "&classid=" + classid + "&picurl=" + picurl;
                 }
                 String result_data = NetUtil.getResponse(NetConstantUrl.SEND_TREND, data);
                 Log.e("send_trend-----",result_data);
@@ -171,5 +172,150 @@ public class SendRequest {
         }.start();
     }
 
+    /**
+     * 修改性别
+     */
+    public void updateSex(final String userid,final int sex, final int key) {
+        new Thread() {
+            Message msg = Message.obtain();
 
+            public void run() {
+                String data = "&userid=" + userid + "&sex=" + sex;
+                String result_data = NetUtil.getResponse("http://hyx.xiaocool.net/index.php?g=apps&m=index&a=UpdateUserSex", data);
+                try {
+                    JSONObject obj = new JSONObject(result_data);
+                    msg.what = key;
+                    msg.obj = obj;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * 更新名字
+     */
+    public void updateName(final String userid,final String name, final int key) {
+        new Thread() {
+            Message msg = Message.obtain();
+
+            public void run() {
+                String data = "&userid=" + userid + "&nicename=" + name;
+                String result_data = NetUtil.getResponse("http://hyx.xiaocool.net/index.php?g=apps&m=index&a=UpdateUserName", data);
+                try {
+                    JSONObject obj = new JSONObject(result_data);
+                    msg.what = key;
+                    msg.obj = obj;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * 更新头像
+     */
+    public void updateHeadImg(final String userid,final String avatar, final int key) {
+        new Thread() {
+            Message msg = Message.obtain();
+
+            public void run() {
+                String data = "&userid=" + userid + "&avatar=" + avatar;
+                String result_data = NetUtil.getResponse("http://hyx.xiaocool.net/index.php?g=apps&m=index&a=UpdateUserAvatar", data);
+                try {
+                    JSONObject obj = new JSONObject(result_data);
+                    msg.what = key;
+                    msg.obj = obj;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+        }.start();
+    }
+
+    public void send_remark(final String id,final String userid, final String content, final String type,final int KEY) {
+        new Thread() {
+            Message msg = Message.obtain();
+
+            public void run() {
+                String data = "&userid=" + userid + "&id=" + id + "&content=" + content + "&type=" + type;
+                Log.d("final String id", data);
+                String result_data = NetUtil.getResponse("http://hyx.xiaocool.net/index.php?g=apps&m=school&a=SetComment", data);
+                try {
+                    JSONObject obj = new JSONObject(result_data);
+                    msg.what = KEY;
+                    msg.obj = obj;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+
+
+        }.start();
+    }
+
+    /**
+     * 点赞
+     * @param workBindId
+     * @param workPraiseKey
+     */
+    public void Praise(final String userId,final String workBindId, final int workPraiseKey) {
+        LogUtils.d("weixiaotong", "getCircleList");
+        new Thread() {
+            Message msg = Message.obtain();
+
+            public void run() {
+                try {
+                    String data = "&userid=" + userId + "&id=" + workBindId + "&type=" + 1;
+                    String result_data = NetUtil.getResponse("http://hyx.xiaocool.net/index.php?g=apps&m=school&a=SetLike", data);
+                    JSONObject jsonObject = new JSONObject(result_data);
+                    msg.what = workPraiseKey;
+                    msg.obj = jsonObject;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * 取消点赞
+     * @param id
+     * @param KEY
+     * @param type
+     */
+    public void DelPraise(final String userid,final String id, final int KEY) {
+        new Thread() {
+            Message msg = Message.obtain();
+            public void run() {
+                try {
+                    String data = "userid=" + userid + "&id=" + id + "&type=" + "1";
+                    String result_data = NetUtil.getResponse("http://hyx.xiaocool.net/index.php?g=apps&m=school&a=ResetLike", data);
+
+                    LogUtils.e("getIndexSlideNewsList", result_data.toString());
+                    JSONObject jsonObject = new JSONObject(result_data);
+                    msg.what = KEY;
+                    msg.obj = jsonObject;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+
+            ;
+        }.start();
+    }
 }

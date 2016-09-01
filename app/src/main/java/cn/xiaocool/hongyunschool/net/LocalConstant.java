@@ -12,6 +12,11 @@ public class LocalConstant {
     public static final String USER_ID = "userid";
 
     /**
+     * 用户密码
+     */
+    public static final String USER_PASSWORD = "userpassword";
+
+    /**
      * 用户头像
      */
     public static final String USER_PHOTO = "userphoto";

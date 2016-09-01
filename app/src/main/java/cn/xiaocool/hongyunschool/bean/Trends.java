@@ -8,18 +8,18 @@ import java.util.List;
 public class Trends {
 
     /**
-     * mid : 14
-     * type : 3
+     * mid : 1
+     * type : 1
      * schoolid : 1
-     * classid : 1
-     * userid : 681
-     * name : 高德江
-     * content : 咩
-     * write_time : 1472030580
-     * photo : newsgroup5891471922801965.jpg
-     * pic : [{"pictureurl":"661baby1472030580.680291723.png"},{"pictureurl":"661baby1472030580.680481803.png"},{"pictureurl":"661baby1472030580.680571637.png"},{"pictureurl":"661baby1472030580.680661202.png"},{"pictureurl":"661baby1472030580.680741003.png"},{"pictureurl":"661baby1472030580.680811263.png"}]
-     * like : [{"userid":"681","name":"高德江"}]
-     * comment : [{"userid":"681","name":"高德江","content":"咯","avatar":"newsgroup5891471922801965.jpg","comment_time":"1472030695"},{"userid":"681","name":"高德江","content":"咯","avatar":"newsgroup5891471922801965.jpg","comment_time":"1472030698"}]
+     * classid : 3
+     * userid : 686
+     * name : 小头
+     * content : 哈哈哈
+     * write_time : 1472717936
+     * photo : weixiaotong.png
+     * pic : [{"pictureurl":"hyx7991472717935446.jpg"},{"pictureurl":"hyx6421472717935435.jpg"}]
+     * like : [{"userid":"604","name":"王志恒"}]
+     * comment : [{"userid":"604","name":"王志恒","content":"哈哈","avatar":"weixiaotong.png","comment_time":"1472718250"},{"userid":"604","name":"王志恒","content":"哈哈","avatar":"weixiaotong.png","comment_time":"1472718278"},{"userid":"604","name":"王志恒","content":"哈哈","avatar":"weixiaotong.png","comment_time":"1472718467"}]
      */
 
     private String mid;
@@ -32,22 +32,22 @@ public class Trends {
     private String write_time;
     private String photo;
     /**
-     * pictureurl : 661baby1472030580.680291723.png
+     * pictureurl : hyx7991472717935446.jpg
      */
 
     private List<PicBean> pic;
     /**
-     * userid : 681
-     * name : 高德江
+     * userid : 604
+     * name : 王志恒
      */
 
     private List<LikeBean> like;
     /**
-     * userid : 681
-     * name : 高德江
-     * content : 咯
-     * avatar : newsgroup5891471922801965.jpg
-     * comment_time : 1472030695
+     * userid : 604
+     * name : 王志恒
+     * content : 哈哈
+     * avatar : weixiaotong.png
+     * comment_time : 1472718250
      */
 
     private List<CommentBean> comment;

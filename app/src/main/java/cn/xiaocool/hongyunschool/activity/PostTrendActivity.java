@@ -24,12 +24,14 @@ import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.adapter.LocalImgGridAdapter;
 import cn.xiaocool.hongyunschool.bean.PhotoWithPath;
 import cn.xiaocool.hongyunschool.callback.PushImage;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.net.SendRequest;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.GalleryFinalUtil;
 import cn.xiaocool.hongyunschool.utils.GetImageUtil;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.PushImageUtil;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.StringJoint;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.view.NoScrollGridView;
@@ -47,6 +49,8 @@ public class PostTrendActivity extends BaseActivity {
     private final int REQUEST_CODE_CAMERA = 1000;
     private final int REQUEST_CODE_GALLERY = 1001;
     private GalleryFinalUtil galleryFinalUtil;
+    private String userid,classid;
+    private int type;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -79,7 +83,26 @@ public class PostTrendActivity extends BaseActivity {
         mPhotoList = new ArrayList<>();
         photoWithPaths = new ArrayList<>();
         galleryFinalUtil = new GalleryFinalUtil(9);
+        userid = SPUtils.get(context, LocalConstant.USER_ID,"").toString();
+        classid = SPUtils.get(context,LocalConstant.USER_CLASSID,"").toString();
+        checkIdentity();
         setGrigView();
+    }
+
+    /**
+     * 判断身份
+     * 1-----家长
+     * 2-----校长
+     * 3-----老师
+     */
+    private void checkIdentity() {
+        if(SPUtils.get(context,LocalConstant.USER_TYPE,"").equals("0")){
+            type = 1;
+        }else if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")){
+            type = 2;
+        }else{
+            type = 3;
+        }
     }
 
 
@@ -98,7 +121,7 @@ public class PostTrendActivity extends BaseActivity {
                     picArray.add(photo.getPicname());
                 }
                 String picname = StringJoint.arrayJointchar(picArray, ",");
-                new SendRequest(context,handler).send_trend("", "", "", "", activityPostTrendEdContent.getText().toString(),picname,0x110);
+                new SendRequest(context,handler).send_trend(userid, "1", classid, activityPostTrendEdContent.getText().toString(),picname,0x110);
             }
 
             @Override

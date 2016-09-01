@@ -10,6 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
+import cn.xiaocool.hongyunschool.app.MyApplication;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 
@@ -64,7 +65,7 @@ public class SettingActivity extends BaseActivity {
             case R.id.activity_setting_tv_quit:
                 SPUtils.clear(context);
                 startActivity(LoginActivity.class);
-                finish();
+                MyApplication.getInstance().onTerminate();
                 break;
         }
     }

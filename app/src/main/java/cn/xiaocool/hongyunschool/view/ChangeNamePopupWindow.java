@@ -16,19 +16,21 @@ import cn.xiaocool.hongyunschool.R;
 /**
  * Created by Administrator on 2016/8/11 0011.
  */
-public class CommentPopupWindow extends PopupWindow {
+public class ChangeNamePopupWindow extends PopupWindow {
     private Context mContext;
     private View view;
     public TextView tv_comment;
     public EditText ed_comment;
 
 
-    public CommentPopupWindow(Context mContext, View.OnClickListener itemsOnClick) {
+    public ChangeNamePopupWindow(Context mContext, View.OnClickListener itemsOnClick) {
 
         this.view = LayoutInflater.from(mContext).inflate(R.layout.popupwindow_comment, null);
 
         tv_comment = (TextView) view.findViewById(R.id.tv_comment);
         ed_comment = (EditText) view.findViewById(R.id.ed_comment);
+        ed_comment.setHint("输入姓名");
+        tv_comment.setText("修改");
         // 设置按钮监听
         ed_comment.setOnClickListener(itemsOnClick);
         tv_comment.setOnClickListener(itemsOnClick);
