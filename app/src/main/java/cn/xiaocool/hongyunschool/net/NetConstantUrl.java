@@ -95,4 +95,35 @@ public class NetConstantUrl {
      * 校长获取全校班级消息
      */
     public static final String GET_CLASS_NEWS_ALL = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=GetAllClassInfo&schoolid=1";
+
+    /**
+     * 校网学校概况获取列表
+     */
+    public static final String GET_WEB_SCHOOL_INTROUCE = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getWebSchoolInfos&schoolid=";
+
+    /**
+     * 校网教师风采获取列表
+     */
+    public static final String GET_WEB_SCHOOL_TEACHER = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getteacherinfos&schoolid=";
+    /**
+     * 校网学生秀场获取列表
+     */
+    public static final String GET_WEB_SCHOOL_STUDENT = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getbabyinfos&schoolid=";
+    /**
+     * 校网精彩活动获取列表
+     */
+    public static final String GET_WEB_SCHOOL_ACTIVITY = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getInterestclass&schoolid=";
+    /**
+     * 校网校园公告获取列表
+     */
+    public static final String GET_WEB_SCHOOL_NOTICE = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getSchoolNotices&schoolid=";
+    /**
+     * 校网新闻动态获取列表
+     */
+    public static final String GET_WEB_SCHOOL_NEWS = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getSchoolNews&schoolid=";
+
+    /**
+     * 校网H5拼接地址
+     */
+    public final static String WEB_LINK = "http://wxt.xiaocool.net/index.php?g=portal&m=article";
 }

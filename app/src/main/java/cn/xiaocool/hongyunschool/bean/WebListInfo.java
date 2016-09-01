@@ -1,9 +1,11 @@
 package cn.xiaocool.hongyunschool.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2016/8/26.
  */
-public class WebListInfo {
+public class WebListInfo implements Serializable{
 
     /**
      * id : 1
@@ -22,6 +24,8 @@ public class WebListInfo {
     private String post_date;
     private String smeta;
     private String thumb;
+
+    private String where;
 
     public String getId() {
         return id;
@@ -77,5 +81,13 @@ public class WebListInfo {
 
     public void setThumb(String thumb) {
         this.thumb = thumb;
+    }
+
+    public String getWhere() {
+        return where;
+    }
+
+    public void setWhere(String where) {
+        this.where = where;
     }
 }

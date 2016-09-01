@@ -24,7 +24,7 @@
             android:id="@+id/web_yuansuogonggao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="园所公告"
+            android:text="校园公告"
             android:textSize="@dimen/font_title_main"
             android:layout_marginLeft="43dp"
             android:textColor="@color/font_title_main"

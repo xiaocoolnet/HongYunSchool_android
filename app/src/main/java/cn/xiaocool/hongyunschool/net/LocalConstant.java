@@ -48,4 +48,21 @@ public class LocalConstant {
      * 宝宝id
      */
     public static final String USER_BABYID = "userbabyid";
+
+    /**
+     * WEB_FLAG  校网传递标识
+     * WEB_INTROUCE 学校概况
+     * WEB_TEACHER  教师风采
+     * WEB_STUDENT  学生秀场
+     * WEB_ACTIVITY  精彩活动
+     * WEB_NOTICE   校园公告
+     * WEB_NEWS     新闻动态
+     */
+    public static final String WEB_FLAG = "WEB_FLAG";
+    public static final String WEB_INTROUCE = "WEB_INTROUCE";
+    public static final String WEB_TEACHER = "WEB_TEACHER";
+    public static final String WEB_STUDENT = "WEB_STUDENT";
+    public static final String WEB_ACTIVITY = "WEB_ACTIVITY";
+    public static final String WEB_NOTICE = "WEB_NOTICE";
+    public static final String WEB_NEWS = "WEB_NEWS";
 }

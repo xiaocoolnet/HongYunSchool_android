@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,12 +27,16 @@ import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.activity.FivePublicActivity;
 import cn.xiaocool.hongyunschool.activity.ParentMessageActivity;
+import cn.xiaocool.hongyunschool.activity.SchoolWebDetailActivity;
 import cn.xiaocool.hongyunschool.activity.WebListActivity;
 import cn.xiaocool.hongyunschool.adapter.WebMaxThreeAdapter;
 import cn.xiaocool.hongyunschool.bean.WebListInfo;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseFragment;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.view.ImageCycleView;
 import cn.xiaocool.hongyunschool.view.NoScrollListView;
 
@@ -58,6 +63,7 @@ public class FirstFragment extends BaseFragment {
 
     private ArrayList<WebListInfo> announceList;
     private ArrayList<WebListInfo> newsList;
+
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
         return inflater.inflate(R.layout.fragment_first, container, false);
@@ -76,7 +82,7 @@ public class FirstFragment extends BaseFragment {
     }
 
     private void setLunBo() {
-        List<ImageCycleView.ImageInfo> list=new ArrayList<ImageCycleView.ImageInfo>();
+        List<ImageCycleView.ImageInfo> list = new ArrayList<ImageCycleView.ImageInfo>();
 
         //res图片资源
         list.add(new ImageCycleView.ImageInfo(R.drawable.ll1, "今天天气不错", ""));
@@ -126,7 +132,8 @@ public class FirstFragment extends BaseFragment {
     public void initData() {
 //http://wxt.xiaocool.net/index.php?g=apps&m=school&a=getSchoolNotices&schoolid=1
         //getSchoolNews
-        String announceUrl = "http://wxt.xiaocool.net/index.php?g=apps&m=school&a=getSchoolNotices&schoolid=1";
+        String schoolid = (String) SPUtils.get(mActivity, "schoolid", "1");
+        String announceUrl = NetConstantUrl.GET_WEB_SCHOOL_NOTICE + schoolid;
         //获取校园公告
         VolleyUtil.VolleyGetRequest(mActivity, announceUrl, new VolleyUtil.VolleyJsonCallback() {
             @Override
@@ -143,7 +150,7 @@ public class FirstFragment extends BaseFragment {
 
             }
         });
-        String newsUrl = "http://wxt.xiaocool.net/index.php?g=apps&m=school&a=getSchoolNews&schoolid=1";
+        String newsUrl = NetConstantUrl.GET_WEB_SCHOOL_NEWS + schoolid;
         //获取新闻动态
         VolleyUtil.VolleyGetRequest(mActivity, newsUrl, new VolleyUtil.VolleyJsonCallback() {
             @Override
@@ -163,18 +170,39 @@ public class FirstFragment extends BaseFragment {
     }
 
     /**
-     *新闻动态适配器
+     * 校园公告适配器
      */
     private void setNewsAdapter() {
-
-        webGonggaoList.setAdapter(new WebMaxThreeAdapter(newsList,mActivity));
+        webNewsList.setAdapter(new WebMaxThreeAdapter(newsList, mActivity));
+        webNewsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(mActivity, SchoolWebDetailActivity.class);
+                Bundle bundle = new Bundle();
+                newsList.get(position).setWhere(LocalConstant.WEB_NEWS);
+                bundle.putSerializable(LocalConstant.WEB_FLAG, newsList.get(position));
+                intent.putExtras(bundle);
+                mActivity.startActivity(intent);
+            }
+        });
     }
 
     /**
-     * 校园公告适配器
+     * 新闻动态适配器
      */
     private void setAnnounceAdapter() {
-        webNewsList.setAdapter(new WebMaxThreeAdapter(announceList,mActivity));
+        webGonggaoList.setAdapter(new WebMaxThreeAdapter(announceList, mActivity));
+        webGonggaoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(mActivity, SchoolWebDetailActivity.class);
+                Bundle bundle = new Bundle();
+                announceList.get(position).setWhere(LocalConstant.WEB_NOTICE);
+                bundle.putSerializable(LocalConstant.WEB_FLAG, announceList.get(position));
+                intent.putExtras(bundle);
+                mActivity.startActivity(intent);
+            }
+        });
     }
 
 
@@ -186,45 +214,61 @@ public class FirstFragment extends BaseFragment {
         return rootView;
     }
 
-    @OnClick({R.id.web_rl_schoolintrouce, R.id.web_rl_teacher_style, R.id.web_rl_student_show, R.id.web_rl_five_public, R.id.web_rl_exciting_event, R.id.web_rl_parent_message})
+    @OnClick({R.id.web_rl_schoolintrouce, R.id.web_rl_teacher_style, R.id.web_rl_student_show, R.id.web_rl_five_public, R.id.web_rl_exciting_event, R.id.web_rl_parent_message,R.id.gonggao_more, R.id.news_more})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
             case R.id.web_rl_schoolintrouce://学校介绍
                 intent = new Intent(mActivity, WebListActivity.class);
-                intent.putExtra("title","学校概况");
+                intent.putExtra("title", "学校概况");
+                intent.putExtra(LocalConstant.WEB_FLAG, LocalConstant.WEB_INTROUCE);
                 startActivity(intent);
                 break;
             case R.id.web_rl_teacher_style://教师风采
                 intent = new Intent(mActivity, WebListActivity.class);
-                intent.putExtra("title","教师风采");
+                intent.putExtra("title", "教师风采");
+                intent.putExtra(LocalConstant.WEB_FLAG, LocalConstant.WEB_TEACHER);
                 startActivity(intent);
                 break;
             case R.id.web_rl_student_show://学生秀场
                 intent = new Intent(mActivity, WebListActivity.class);
-                intent.putExtra("title","学生秀场");
+                intent.putExtra("title", "学生秀场");
+                intent.putExtra(LocalConstant.WEB_FLAG, LocalConstant.WEB_STUDENT);
                 startActivity(intent);
                 break;
             case R.id.web_rl_five_public://五项公开专栏
                 intent = new Intent(mActivity, FivePublicActivity.class);
-                intent.putExtra("title","五项公开专栏");
+                intent.putExtra("title", "五项公开专栏");
                 startActivity(intent);
                 break;
             case R.id.web_rl_exciting_event://
                 intent = new Intent(mActivity, WebListActivity.class);
-                intent.putExtra("title","精彩活动");
+                intent.putExtra("title", "精彩活动");
+                intent.putExtra(LocalConstant.WEB_FLAG, LocalConstant.WEB_ACTIVITY);
                 startActivity(intent);
                 break;
             case R.id.web_rl_parent_message:
                 intent = new Intent(mActivity, ParentMessageActivity.class);
-                intent.putExtra("title","家长信箱");
+                intent.putExtra("title", "家长信箱");
+                startActivity(intent);
+                break;
+            case R.id.gonggao_more:
+                intent = new Intent(mActivity, WebListActivity.class);
+                intent.putExtra("title", "校园公告");
+                intent.putExtra(LocalConstant.WEB_FLAG, LocalConstant.WEB_NOTICE);
+                startActivity(intent);
+                break;
+            case R.id.news_more:
+                intent = new Intent(mActivity, WebListActivity.class);
+                intent.putExtra("title", "新闻动态");
+                intent.putExtra(LocalConstant.WEB_FLAG, LocalConstant.WEB_NEWS);
                 startActivity(intent);
                 break;
         }
     }
 
 
-    public  List<WebListInfo> JsonParser(String result) {
+    public List<WebListInfo> JsonParser(String result) {
         String data = "";
         try {
             JSONObject json = new JSONObject(result);

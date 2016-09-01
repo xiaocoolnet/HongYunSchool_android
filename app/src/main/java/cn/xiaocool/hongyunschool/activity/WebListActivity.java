@@ -2,6 +2,8 @@ package cn.xiaocool.hongyunschool.activity;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -17,10 +19,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.bean.WebListInfo;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 
 public class WebListActivity extends BaseActivity {
@@ -56,13 +61,45 @@ public class WebListActivity extends BaseActivity {
             }
         });
 
-        setTopName(getIntent().getStringExtra("title")!=null?getIntent().getStringExtra("title"):"列表");
+        setTopName(getIntent().getStringExtra("title") != null ? getIntent().getStringExtra("title") : "列表");
+
+        webList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle bundle = new Bundle();
+                webListInfoArrayList.get(position).setWhere(getIntent().getStringExtra(LocalConstant.WEB_FLAG));
+                bundle.putSerializable(LocalConstant.WEB_FLAG,webListInfoArrayList.get(position));
+                startActivity(SchoolWebDetailActivity.class,bundle);
+            }
+        });
     }
     @Override
     public void requsetData() {
 
-        String url = "http://wxt.xiaocool.net/index.php?g=apps&m=school&a=getteacherinfos&schoolid=1";
+        String schoolid = (String) SPUtils.get(this,"schoolid","1");
 
+        String url = "";
+
+        switch (getIntent().getStringExtra(LocalConstant.WEB_FLAG)){
+            case LocalConstant.WEB_INTROUCE:
+                url = NetConstantUrl.GET_WEB_SCHOOL_INTROUCE + schoolid;
+                break;
+            case LocalConstant.WEB_TEACHER:
+                url = NetConstantUrl.GET_WEB_SCHOOL_TEACHER + schoolid;
+                break;
+            case LocalConstant.WEB_STUDENT:
+                url = NetConstantUrl.GET_WEB_SCHOOL_STUDENT + schoolid;
+                break;
+            case LocalConstant.WEB_ACTIVITY:
+                url = NetConstantUrl.GET_WEB_SCHOOL_ACTIVITY + schoolid;
+                break;
+            case LocalConstant.WEB_NOTICE:
+                url = NetConstantUrl.GET_WEB_SCHOOL_NOTICE + schoolid;
+                break;
+            case LocalConstant.WEB_NEWS:
+                url = NetConstantUrl.GET_WEB_SCHOOL_NEWS + schoolid;
+                break;
+        }
         //http://wxt.xiaocool.net/index.php?g=apps&m=school&a=getteacherinfos&schoolid=1    教师风采
         //http://wxt.xiaocool.net/index.php?g=apps&m=school&a=getbabyinfos&schoolid=1       学生秀场
         //http://wxt.xiaocool.net/index.php?g=apps&m=school&a=getWebSchoolInfos&schoolid=1  学校介绍
