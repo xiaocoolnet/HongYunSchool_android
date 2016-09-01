@@ -181,6 +181,7 @@ public class LoginActivity extends BaseActivity {
             public void onSuccess(String result) {
                 BabyInfo babyInfo = getBabyInfoFromJson(result).get(0);
                 SPUtils.put(context,LocalConstant.USER_BABYID,babyInfo.getStudentid());
+                SPUtils.put(context,LocalConstant.USER_CLASSID,babyInfo.getClasslist().get(0).getClassid());
                 startActivity(MainActivity.class);
                 finish();
             }
@@ -272,6 +273,7 @@ public class LoginActivity extends BaseActivity {
         SPUtils.put(context,LocalConstant.USER_NAME,loginReturn.getName());
         SPUtils.put(context,LocalConstant.USER_PHOTO,loginReturn.getPhoto());
         SPUtils.put(context, LocalConstant.USER_TYPE, type);
+        SPUtils.put(context,LocalConstant.USER_PASSWORD,loginReturn.getPassword());
     }
 
     /**

@@ -95,4 +95,34 @@ public class NetConstantUrl {
      * 校长获取全校班级消息
      */
     public static final String GET_CLASS_NEWS_ALL = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=GetAllClassInfo&schoolid=1";
+
+    /**
+     * 获取个人信息
+     */
+    public static final String GET_USER_INFO = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=GetUsers";
+
+    /**
+     * 获取全校班级和老师
+     */
+    public static final String GET_CLASS_TEACHER = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getclassteacherlist&schoolid=1";
+
+    /**
+     * 获取全校班级和家长
+     */
+    public static final String GET_PARENT_ALL = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=GetSchoolParent&schoolid=1";
+
+    /**
+     * 获取老师任教班级和家长
+     */
+    public static final String GET_PARENT_BYTEACHERID = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=GetTeacherClassStudentParent";
+
+    /**
+     * 获取对应班级id的班级和家长
+     */
+    public static final String GET_PARENT_BYCLASSID = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=GetSchoolParent";
+
+    /**
+     * 获取动态（家长）
+     */
+    public static final String GET_TRENDS_PARENT = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=GetMicroblog&schoolid=1&type=1";
 }

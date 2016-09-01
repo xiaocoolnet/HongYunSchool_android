@@ -7,6 +7,8 @@ public class Child {
     private String userid;
     private String fullname;
     private String username;
+    private String phone;
+    private String childName;
     private boolean isChecked;
 
     public Child(String userid, String fullname, String username) {
@@ -14,6 +16,22 @@ public class Child {
         this.fullname = fullname;
         this.username = username;
         this.isChecked = false;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getChildName() {
+        return childName;
+    }
+
+    public void setChildName(String childName) {
+        this.childName = childName;
     }
 
     public void setChecked(boolean isChecked) {

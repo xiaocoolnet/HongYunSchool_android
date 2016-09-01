@@ -1,5 +1,6 @@
 package cn.xiaocool.hongyunschool.app;
 
+import android.app.Activity;
 import android.app.Application;
 import android.graphics.Bitmap;
 
@@ -15,6 +16,8 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -25,6 +28,47 @@ public class MyApplication extends Application {
     private static RequestQueue requestQueue;
     private static RequestQueue requestQueueFile;
     private static MyApplication myApplication;
+    /**打开的activity**/
+    private List<Activity> activities = new ArrayList<Activity>();
+    /**应用实例**/
+    private static MyApplication instance;
+    /**
+     *  获得实例
+     * @return
+     */
+    public static MyApplication getInstance(){
+        return instance;
+    }
+    /**
+     * 新建了一个activity
+     * @param activity
+     */
+    public void addActivity(Activity activity){
+        activities.add(activity);
+    }
+    /**
+     *  结束指定的Activity
+     * @param activity
+     */
+    public void finishActivity(Activity activity){
+        if (activity!=null) {
+            this.activities.remove(activity);
+            activity.finish();
+            activity = null;
+        }
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+
+        for (Activity activity : activities) {
+            activity.finish();
+        }
+
+        System.exit(0);
+    }
+
 
 
     @Override
@@ -33,7 +77,7 @@ public class MyApplication extends Application {
         //请求队列
         requestQueue = Volley.newRequestQueue(this);
         myApplication = new MyApplication();
-
+        instance = this;
         initImageLoder();
     }
 

@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import cn.xiaocool.hongyunschool.R;
+import cn.xiaocool.hongyunschool.app.MyApplication;
 
 
 public abstract class BaseActivity extends FragmentActivity {
@@ -32,6 +33,8 @@ public abstract class BaseActivity extends FragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         super.setContentView(R.layout.activity_base);
+        //添加ctivity集合
+        MyApplication.getInstance().addActivity(this);
         try {
             if (isSetStatusBar) {
                 steepStatusBar();

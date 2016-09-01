@@ -12,6 +12,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -21,7 +27,14 @@ import cn.xiaocool.hongyunschool.activity.MyIntegrationActivity;
 import cn.xiaocool.hongyunschool.activity.PersonalInfoActivity;
 import cn.xiaocool.hongyunschool.activity.SettingActivity;
 import cn.xiaocool.hongyunschool.activity.SystemNewsActivity;
+import cn.xiaocool.hongyunschool.bean.UserInfo;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
+import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseFragment;
+import cn.xiaocool.hongyunschool.utils.ImgLoadUtil;
+import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.view.RoundImageView;
 
 
@@ -54,6 +67,7 @@ public class FourFragment extends BaseFragment {
     @BindView(R.id.fragment_four_rl_code)
     RelativeLayout fragmentFourRlCode;
     private Context context;
+    private UserInfo userInfo;
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
@@ -63,7 +77,21 @@ public class FourFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        String url = NetConstantUrl.GET_USER_INFO + "&userid=" + SPUtils.get(context, LocalConstant.USER_ID, "");
+        VolleyUtil.VolleyGetRequest(context, url, new VolleyUtil.VolleyJsonCallback() {
+            @Override
+            public void onSuccess(String result) {
+                if (JsonResult.JSONparser(context, result)) {
+                    showUserInfo(result);
+                }
+            }
 
+            @Override
+            public void onError() {
+
+            }
+
+        });
     }
 
     @Override
@@ -113,5 +141,24 @@ public class FourFragment extends BaseFragment {
             case R.id.fragment_four_rl_code:
                 break;
         }
+    }
+
+    /**
+     * 显示个人信息
+     *
+     * @param result
+     */
+    private void showUserInfo(String result) {
+        String data = "";
+        try {
+            JSONObject json = new JSONObject(result);
+            data = json.getString("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        userInfo = new Gson().fromJson(data, new TypeToken<UserInfo>() {
+        }.getType());
+        fragmentFourTvName.setText(userInfo.getName());
+        ImgLoadUtil.display(NetConstantUrl.IMAGE_URL + userInfo.getPhoto(), fragmentFourIvAvatar);
     }
 }
