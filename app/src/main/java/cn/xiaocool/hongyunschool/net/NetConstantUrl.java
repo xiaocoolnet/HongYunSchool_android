@@ -5,6 +5,7 @@ package cn.xiaocool.hongyunschool.net;
  */
 public class NetConstantUrl {
 
+
     /**
      * 登录
      * 参数&phone=17862816935&password=123&type=1
