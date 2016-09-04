@@ -3,7 +3,12 @@
     package="cn.xiaocool.hongyunschool">
 
     <!-- 权限 -->
-
+    <code class="code">
+        <uses-permission android:name="android.permission.INTERNET"/>
+        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+        <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+        <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> </code>
 
     <!-- To access Google+ APIs: -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -107,8 +112,13 @@
         <activity android:name=".activity.ChooseTeacherActivity" />
         <activity android:name=".activity.ReadListClassNewLeaderActivity" />
         <activity android:name=".activity.ReadListClassNewTeacherActivity" />
-        <activity android:name=".activity.SchoolWebDetailActivity"></activity>
-        <activity android:name=".activity.SystemNewsDetailActivity"/>
+        <activity android:name=".activity.SchoolWebDetailActivity" />
+        <activity android:name=".activity.SystemNewsDetailActivity" />
+        <activity android:name=".activity.QRCodeActivity"></activity>
+
+
+
+        <service android:name=".view.update.UpdateService" />
     </application>
 
 </manifest>

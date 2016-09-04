@@ -39,5 +39,5 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'cn.finalteam:galleryfinal:1.4.6'
     compile 'com.squareup.picasso:picasso:2.5.2'
-
+    compile files('libs/libammsdk.jar')
 }

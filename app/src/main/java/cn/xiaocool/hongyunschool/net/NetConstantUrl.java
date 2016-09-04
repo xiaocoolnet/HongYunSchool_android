@@ -176,4 +176,19 @@ public class NetConstantUrl {
      * 获取积分列表
      */
     public static final String GET_INTEGRATION_LIST = "http://hyx.xiaocool.net//index.php?g=apps&m=index&a=GetIntegralInfo&userid=";
+
+    /**
+     * 获取家长信箱（家长）
+     */
+    public static final String GET_FEEDBACK_PARENT = "http://hyx.xiaocool.net/index.php?g=apps&m=student&a=ParentGetParentMessage&userid=";
+
+    /**
+     * 获取家长信箱（校长）
+     */
+    public static final String GET_FEEDBACK_LEADER = "http://hyx.xiaocool.net/index.php?g=apps&m=student&a=TeacherGetParentMessage&schoolid=1";
+    /**
+     * 获取家长信箱（班主任）
+     */
+    public static final String GET_FEEDBACK_CLASS = "http://hyx.xiaocool.net/index.php?g=apps&m=student&a=TeacherGetParentMessage&classid=";
+
 }

@@ -30,6 +30,7 @@ import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.GalleryFinalUtil;
 import cn.xiaocool.hongyunschool.utils.GetImageUtil;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.ProgressUtil;
 import cn.xiaocool.hongyunschool.utils.PushImageUtil;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.StringJoint;
@@ -77,6 +78,7 @@ public class PostTrendActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 sendTrend();
+                ProgressUtil.showLoadingDialog(PostTrendActivity.this);
             }
         });
         context = this;

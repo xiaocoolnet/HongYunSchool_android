@@ -1,9 +1,15 @@
 package cn.xiaocool.hongyunschool.activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -17,12 +23,20 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaocool.hongyunschool.R;
-import cn.xiaocool.hongyunschool.bean.WebListInfo;
+import cn.xiaocool.hongyunschool.bean.FeedbackLeader;
+import cn.xiaocool.hongyunschool.bean.FeedbackSend;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
+import cn.xiaocool.hongyunschool.net.SendRequest;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.PopInputManager;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
+import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.CommentPopupWindow;
 
 public class ParentMessageActivity extends BaseActivity {
 
@@ -33,22 +47,65 @@ public class ParentMessageActivity extends BaseActivity {
     SwipeRefreshLayout webParentSwip;
 
     private CommonAdapter adapter;
-    private ArrayList<WebListInfo> listData;
+    private ArrayList<FeedbackSend> feedbackSends;
+    private ArrayList<FeedbackLeader> feedbackLeaders;
+    private Context context;
+    private int type ;
+    private CommentPopupWindow commentPopupWindow;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 0x110:
+                    if (msg.obj != null) {
+                        if (JsonResult.JSONparser(context, String.valueOf(msg.obj))) {
+                            requsetData();
+                            ToastUtil.showShort(context, "回复成功！");
+                        }
+                    }
+                    break;
+            }
+        }
+    };
+    private String userid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent_message);
         ButterKnife.bind(this);
-        listData = new ArrayList<>();
+        context = this;
+        feedbackSends = new ArrayList<>();
+        feedbackLeaders = new ArrayList<>();
         setTopName("家长信箱");
-        setRightText("反馈").setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(AddParentMessageActivity.class);
-            }
-        });
-
+        checkIdentity();
+        userid = SPUtils.get(context,LocalConstant.USER_ID,"").toString();
+        if(type == 1){
+            setRightText("反馈").setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(AddParentMessageActivity.class);
+                }
+            });
+        }
         settingRefresh();
+    }
+
+    /**
+     * 判断身份
+     * 1-----家长
+     * 2-----校长
+     * 3-----班主任
+     */
+    private void checkIdentity() {
+        if(SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("0")){
+            type = 1;
+        }else if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")){
+            type = 2;
+        }else if(SPUtils.get(context,LocalConstant.USER_IS_CLASSLEADER,"").equals("y")){
+            type = 3;
+        }
     }
 
     /**
@@ -68,14 +125,28 @@ public class ParentMessageActivity extends BaseActivity {
     @Override
     public void requsetData() {
         String url = "";
+        if(type == 1){
+            url = NetConstantUrl.GET_FEEDBACK_PARENT + SPUtils.get(context,LocalConstant.USER_ID,"");
+        }else if(type == 2){
+            url = NetConstantUrl.GET_FEEDBACK_LEADER;
+        }else if(type == 3){
+            url = NetConstantUrl.GET_FEEDBACK_CLASS + SPUtils.get(context,LocalConstant.USER_CLASSID,"");
+        }
         VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
                 if (JsonResult.JSONparser(ParentMessageActivity.this, result)) {
-                    listData.clear();
-                    listData.addAll(getBeanFromJson(result));
-                    setAdapter(result);
-
+                    webParentSwip.setRefreshing(false);
+                    if (type == 1) {
+                        feedbackSends.clear();
+                        feedbackSends.addAll(getBeanFromJson(result));
+                        setAdapter(result);
+                    }
+                    if (type == 2||type ==3) {
+                        feedbackLeaders.clear();
+                        feedbackLeaders.addAll(getBeanFromJsonLeader(result));
+                        setAdapterLeader(result);
+                    }
                 }
             }
 
@@ -91,15 +162,31 @@ public class ParentMessageActivity extends BaseActivity {
      * @param result
      */
     private void setAdapter(String result) {
-        listData.clear();
-        listData.addAll(getBeanFromJson(result));
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         } else {
-            adapter = new CommonAdapter<WebListInfo>(getBaseContext(), listData, R.layout.item_parent_message) {
+            adapter = new CommonAdapter<FeedbackSend>(getBaseContext(), feedbackSends, R.layout.item_parent_message) {
                 @Override
-                public void convert(ViewHolder holder, WebListInfo datas) {
+                public void convert(ViewHolder holder, FeedbackSend datas) {
                     setItem(holder, datas);
+                }
+            };
+            webParentLv.setAdapter(adapter);
+        }
+    }
+
+    /**
+     * list 设置adapter
+     * @param result
+     */
+    private void setAdapterLeader(String result) {
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        } else {
+            adapter = new CommonAdapter<FeedbackLeader>(getBaseContext(), feedbackLeaders, R.layout.item_parent_message) {
+                @Override
+                public void convert(ViewHolder holder, FeedbackLeader datas) {
+                    setItemLeader(holder, datas);
                 }
             };
             webParentLv.setAdapter(adapter);
@@ -112,18 +199,76 @@ public class ParentMessageActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setItem(ViewHolder holder, WebListInfo datas) {
-
-        holder.getView(R.id.item_pn_remark_layout).setVisibility(View.GONE);
-
+    private void setItem(ViewHolder holder, FeedbackSend datas) {
+        holder.setText(R.id.item_sn_nickname,datas.getName())
+                .setTimeText(R.id.item_sn_time,datas.getSend_time())
+                .setImageByUrl(R.id.item_sn_head_iv,datas.getPhoto())
+                .setText(R.id.item_sn_content, datas.getContent());
+        holder.getView(R.id.btn_parent_send).setVisibility(View.GONE);
+        if(datas.getFeedback().equals("")||datas.getFeedback().length()==0){
+            holder.getView(R.id.ll_feedback).setVisibility(View.GONE);
+        }else{
+            holder.getView(R.id.ll_feedback).setVisibility(View.VISIBLE);
+            holder.setText(R.id.teacher_name,datas.getTeacher_name())
+                    .setTimeText(R.id.teacher_time,datas.getFeed_time())
+                    .setText(R.id.teacher_content,datas.getFeedback())
+                    .setImageByUrl(R.id.teacher_avatar, datas.getTeacher_photo());
+        }
     }
+
+    private void setItemLeader(ViewHolder holder, final FeedbackLeader datas) {
+        holder.setText(R.id.item_sn_nickname,datas.getParent_name())
+                .setTimeText(R.id.item_sn_time,datas.getSend_time())
+                .setImageByUrl(R.id.item_sn_head_iv, datas.getParent_photo())
+                .setText(R.id.item_sn_content, datas.getContent());
+
+        if(datas.getFeedback().equals("")||datas.getFeedback().length()==0){
+            holder.getView(R.id.ll_feedback).setVisibility(View.GONE);
+            holder.getView(R.id.btn_parent_send).setVisibility(View.VISIBLE);
+            holder.getView(R.id.btn_parent_send).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    commentPopupWindow = new CommentPopupWindow(context, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            switch (v.getId()) {
+                                case R.id.tv_comment:
+                                    if (commentPopupWindow.ed_comment.getText().length() > 0) {
+                                        new SendRequest(context,handler).feedback(datas.getId(),userid,commentPopupWindow.ed_comment.getText().toString(),0x110);
+                                        commentPopupWindow.dismiss();
+                                        commentPopupWindow.ed_comment.setText("");
+                                    } else {
+
+                                        Toast.makeText(context, "发送内容不能为空", Toast.LENGTH_SHORT).show();
+                                    }
+                                    break;
+                            }
+                        }
+                    });
+                    final EditText editText = commentPopupWindow.ed_comment;
+                    commentPopupWindow.showAtLocation(webParentSwip, Gravity.BOTTOM, 0, 0);
+                    //弹出系统输入法
+                    PopInputManager.popInput(editText);
+                }
+            });
+        }else{
+            holder.getView(R.id.btn_parent_send).setVisibility(View.GONE);
+            holder.getView(R.id.ll_feedback).setVisibility(View.VISIBLE);
+            holder.setText(R.id.teacher_name,datas.getTeachername())
+                    .setTimeText(R.id.teacher_time,datas.getFeed_time())
+                    .setText(R.id.teacher_content,datas.getFeedback())
+                    .setImageByUrl(R.id.teacher_avatar, datas.getTeacheravatar());
+        }
+    }
+
+
     /**
      * 字符串转模型
      *
      * @param result
      * @return
      */
-    private List<WebListInfo> getBeanFromJson(String result) {
+    private List<FeedbackSend> getBeanFromJson(String result) {
         String data = "";
         try {
             JSONObject json = new JSONObject(result);
@@ -131,7 +276,25 @@ public class ParentMessageActivity extends BaseActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return new Gson().fromJson(data, new TypeToken<List<WebListInfo>>() {
+        return new Gson().fromJson(data, new TypeToken<List<FeedbackSend>>() {
+        }.getType());
+    }
+
+    /**
+     * 字符串转模型
+     *
+     * @param result
+     * @return
+     */
+    private List<FeedbackLeader> getBeanFromJsonLeader(String result) {
+        String data = "";
+        try {
+            JSONObject json = new JSONObject(result);
+            data = json.getString("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new Gson().fromJson(data, new TypeToken<List<FeedbackLeader>>() {
         }.getType());
     }
 }

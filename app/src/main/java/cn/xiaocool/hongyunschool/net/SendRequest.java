@@ -294,7 +294,6 @@ public class SendRequest {
      * 取消点赞
      * @param id
      * @param KEY
-     * @param type
      */
     public void DelPraise(final String userid,final String id, final int KEY) {
         new Thread() {
@@ -314,8 +313,60 @@ public class SendRequest {
                     handler.sendMessage(msg);
                 }
             }
+        }.start();
+    }
 
-            ;
+    //http://hyx.xiaocool.net/index.php?g=apps&m=student&a=AddParentMessage&classid=1&schoolid=1&userid=674&content=%E5%86%85%E5%AE%B9
+
+    /**
+     * 发送反馈
+     * @param userid
+     * @param classid
+     * @param schoolid
+     * @param content
+     * @param KEY
+     */
+    public void send_feedback(final String userid, final String classid, final String schoolid, final String content,final int KEY) {
+        new Thread() {
+            Message msg = Message.obtain();
+
+            public void run() {
+                String data = "&classid=" + classid + "&schoolid=" + "1" + "&userid=" + userid
+                            + "&content=" + content ;
+                String result_data = NetUtil.getResponse("http://hyx.xiaocool.net/index.php?g=apps&m=student&a=AddParentMessage", data);
+                Log.e("send_feedback-----",result_data);
+                try {
+                    JSONObject obj = new JSONObject(result_data);
+                    msg.what = KEY;
+                    msg.obj = obj;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+        }.start();
+    }
+
+    //http://hyx.xiaocool.net/index.php?g=apps&m=student&a=FeedParentMessage&messageid=1&teacherid=599&feedback=%E5%9B%9E%E5%A4%8D%E5%86%85%E5%AE%B9
+    public void feedback(final String messageid, final String teacherid, final String feedback,final int KEY) {
+        new Thread() {
+            Message msg = Message.obtain();
+
+            public void run() {
+                String data = "&messageid=" + messageid + "&teacherid=" + teacherid + "&feedback=" + feedback;
+                String result_data = NetUtil.getResponse("http://hyx.xiaocool.net/index.php?g=apps&m=student&a=FeedParentMessage", data);
+                Log.e("feedback-----",result_data);
+                try {
+                    JSONObject obj = new JSONObject(result_data);
+                    msg.what = KEY;
+                    msg.obj = obj;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
         }.start();
     }
 }

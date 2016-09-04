@@ -61,8 +61,8 @@ public class AddMessageActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ADD_KEY:
-                    if (msg.obj!=null){
-                        if (JsonResult.JSONparser(AddMessageActivity.this, String.valueOf(msg.obj))){
+                    if (msg.obj != null) {
+                        if (JsonResult.JSONparser(AddMessageActivity.this, String.valueOf(msg.obj))) {
                             finish();
                         }
 
@@ -71,6 +71,7 @@ public class AddMessageActivity extends BaseActivity {
             }
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,12 +163,12 @@ public class AddMessageActivity extends BaseActivity {
      */
     private void sendNews() {
         //判断必填项
-        if (!(addsnContent.getText().toString().length()>0)){
-            ToastUtil.showShort(this,"发送内容不能为空!");
+        if (!(addsnContent.getText().toString().length() > 0)) {
+            ToastUtil.showShort(this, "发送内容不能为空!");
             return;
         }
-        if (id==null){
-            ToastUtil.showShort(this,"请选择接收人!");
+        if (id == null) {
+            ToastUtil.showShort(this, "请选择接收人!");
             return;
         }
 
@@ -180,8 +181,8 @@ public class AddMessageActivity extends BaseActivity {
                 for (PhotoWithPath photo : photoWithPaths) {
                     picArray.add(photo.getPicname());
                 }
-                String picname = StringJoint.arrayJointchar(picArray,",");
-                new SendRequest(AddMessageActivity.this,handler).send_newsgroup("","",addsnContent.getText().toString(),id,picname,ADD_KEY);
+                String picname = StringJoint.arrayJointchar(picArray, ",");
+                new SendRequest(AddMessageActivity.this, handler).send_newsgroup("", "", addsnContent.getText().toString(), id, picname, ADD_KEY);
             }
 
             @Override
@@ -208,7 +209,6 @@ public class AddMessageActivity extends BaseActivity {
     }
 
 
-
     /**
      * 选择图片后 返回的图片数据
      */
@@ -226,6 +226,7 @@ public class AddMessageActivity extends BaseActivity {
                 addsnPicGrid.setAdapter(localImgGridAdapter);
             }
         }
+
         @Override
         public void onHanlderFailure(int requestCode, String errorMsg) {
             Toast.makeText(AddMessageActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
@@ -235,6 +236,7 @@ public class AddMessageActivity extends BaseActivity {
 
     /**
      * 获取返回的接收人
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -260,7 +262,7 @@ public class AddMessageActivity extends BaseActivity {
 
                         }
 
-                        id =null;
+                        id = null;
                         for (int i = 0; i < ids.size(); i++) {
                             id = id + "," + ids.get(i);
                         }
@@ -277,22 +279,23 @@ public class AddMessageActivity extends BaseActivity {
 
     /**
      * 授权权限
+     *
      * @param permsRequestCode
      * @param permissions
      * @param grantResults
      */
     @Override
-    public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults){
+    public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults) {
 
-        switch(permsRequestCode){
+        switch (permsRequestCode) {
 
             case 200:
 
-                boolean cameraAccepted = grantResults[0]== PackageManager.PERMISSION_GRANTED;
-                if(cameraAccepted){
+                boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                if (cameraAccepted) {
                     //授权成功之后，调用系统相机进行拍照操作等
                     galleryFinalUtil.openCamera(AddMessageActivity.this, mPhotoList, REQUEST_CODE_CAMERA, mOnHanlderResultCallback);
-                }else{
+                } else {
                     //用户授权拒绝之后，友情提示一下就可以了
                     ToastUtil.showShort(this, "已拒绝进入相机，如想开启请到设置中开启！");
                 }

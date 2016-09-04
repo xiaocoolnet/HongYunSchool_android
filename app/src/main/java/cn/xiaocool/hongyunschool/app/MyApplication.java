@@ -14,6 +14,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,6 +30,10 @@ public class MyApplication extends Application {
     private static RequestQueue requestQueue;
     private static RequestQueue requestQueueFile;
     private static MyApplication myApplication;
+
+    public IWXAPI api; //第三方app与微信通信的openapi接口
+    public static final String APP_ID = "wxc72796fa99c1cdea";
+
     /**打开的activity**/
     private List<Activity> activities = new ArrayList<Activity>();
     /**应用实例**/
@@ -79,6 +85,15 @@ public class MyApplication extends Application {
         myApplication = new MyApplication();
         instance = this;
         initImageLoder();
+        setWeShare();
+    }
+
+    /**
+     * 微信分享
+     */
+    private void setWeShare() {
+        api = WXAPIFactory.createWXAPI(this, APP_ID,true); //初始化api
+        api.registerApp(APP_ID); //将APP_ID注册到微信中
     }
 
     /**

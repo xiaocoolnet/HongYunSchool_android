@@ -34,6 +34,7 @@ import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.GalleryFinalUtil;
 import cn.xiaocool.hongyunschool.utils.GetImageUtil;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.ProgressUtil;
 import cn.xiaocool.hongyunschool.utils.PushImageUtil;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.StringJoint;
@@ -163,6 +164,7 @@ public class AddSchoolNewsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 sendNews();
+                ProgressUtil.showLoadingDialog(AddSchoolNewsActivity.this);
             }
         });
     }

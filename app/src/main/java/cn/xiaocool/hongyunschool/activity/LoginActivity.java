@@ -53,7 +53,8 @@ public class LoginActivity extends BaseActivity {
     private Context context;
     private String type = "0";
     private LoginReturn loginReturn;
-    private String isPrinsiple,isClassleader;
+    private String isPrinsiple, isClassleader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,33 +91,33 @@ public class LoginActivity extends BaseActivity {
      */
     private void login() {
         //判断手机号位数
-        if (activityLoginEdPhone.getText().length()!=11){
-            ToastUtil.showShort(context,"请输入正确的手机号!");
+        if (activityLoginEdPhone.getText().length() != 11) {
+            ToastUtil.showShort(context, "请输入正确的手机号!");
             return;
         }
         //判断是否选择身份
         //licenceIS();
 
         //判断是否输入密码
-        if (activityLoginEdPsw.getText()==null){
-            ToastUtil.showShort(context,"请输入密码!");
+        if (activityLoginEdPsw.getText() == null) {
+            ToastUtil.showShort(context, "请输入密码!");
             return;
         }
 
         //调用登录接口
         String url;
         //判断使用的身份网址
-        if (type.equals("0")){
-            url = NetConstantUrl.LOGIN_URL+"&phone="+activityLoginEdPhone.getText().toString()+"&password="+activityLoginEdPsw.getText().toString();
-        }else {
-            url = NetConstantUrl.LOGIN_URL+"&phone="+activityLoginEdPhone.getText().toString()+"&password="+activityLoginEdPsw.getText().toString()
-                    +"&type="+type;
+        if (type.equals("0")) {
+            url = NetConstantUrl.LOGIN_URL + "&phone=" + activityLoginEdPhone.getText().toString() + "&password=" + activityLoginEdPsw.getText().toString();
+        } else {
+            url = NetConstantUrl.LOGIN_URL + "&phone=" + activityLoginEdPhone.getText().toString() + "&password=" + activityLoginEdPsw.getText().toString()
+                    + "&type=" + type;
         }
-        Log.e("TAG_login",url);
+        Log.e("TAG_login", url);
         VolleyUtil.VolleyGetRequest(context, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
-                if (JsonResult.JSONparser(context,result)){
+                if (JsonResult.JSONparser(context, result)) {
                     loginReturn = new LoginReturn();
                     loginReturn = getBeanFromJson(result);
                     spInLocal();
@@ -137,12 +138,12 @@ public class LoginActivity extends BaseActivity {
     private void getDuty() {
         //老师登录-->获取职务
         //家长登录-->获取宝宝的信息
-        if(SPUtils.get(context,LocalConstant.USER_TYPE,"").equals("1")){
+        if (SPUtils.get(context, LocalConstant.USER_TYPE, "").equals("1")) {
             String url_duty = NetConstantUrl.GET_DUTY + "&teacherid=" + loginReturn.getId();
             VolleyUtil.VolleyGetRequest(context, url_duty, new VolleyUtil.VolleyJsonCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    if (JsonResult.JSONparser(context,result)){
+                    if (JsonResult.JSONparser(context, result)) {
                         //判断是否为校长
                         checkisPrinsiple(result);
                         //判断是否为班主任
@@ -150,22 +151,23 @@ public class LoginActivity extends BaseActivity {
                         SPUtils.put(context, LocalConstant.USER_IS_PRINSIPLE, isPrinsiple);
                         SPUtils.put(context, LocalConstant.USER_IS_CLASSLEADER, isClassleader);
                         //如果是班主任，获取所任班级信息，否则跳转到主页面
-                        if(isClassleader.equals("y")){
+                        if (isClassleader.equals("y")) {
                             //获取班主任班级信息
                             getClassInfomation();
-                        }else{
+                        } else {
                             startActivity(MainActivity.class);
                             finish();
                         }
                     }
                 }
+
                 @Override
                 public void onError() {
 
                 }
             });
 
-        }else{
+        } else {
             //获取家长对应的宝宝信息，并存入本地
             getBabyInfo();
         }
@@ -180,8 +182,8 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onSuccess(String result) {
                 BabyInfo babyInfo = getBabyInfoFromJson(result).get(0);
-                SPUtils.put(context,LocalConstant.USER_BABYID,babyInfo.getStudentid());
-                SPUtils.put(context,LocalConstant.USER_CLASSID,babyInfo.getClasslist().get(0).getClassid());
+                SPUtils.put(context, LocalConstant.USER_BABYID, babyInfo.getStudentid());
+                SPUtils.put(context, LocalConstant.USER_CLASSID, babyInfo.getClasslist().get(0).getClassid());
                 startActivity(MainActivity.class);
                 finish();
             }
@@ -201,7 +203,7 @@ public class LoginActivity extends BaseActivity {
         VolleyUtil.VolleyGetRequest(context, url_classinfo, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
-                if (JsonResult.JSONparser(context,result)){
+                if (JsonResult.JSONparser(context, result)) {
                     //得到班级信息
                     ClassInfo classInfo = getClassInfoFromJson(result).get(0);
                     //记录班级id到本地
@@ -220,6 +222,7 @@ public class LoginActivity extends BaseActivity {
 
     /**
      * 判断是否为校长
+     *
      * @param result
      * @return
      */
@@ -233,7 +236,7 @@ public class LoginActivity extends BaseActivity {
         }
         for (int i = 0; i < data.length(); i++) {
             JSONObject itemObject = data.optJSONObject(i);
-            if(itemObject.optString("id").equals("1")){
+            if (itemObject.optString("id").equals("1")) {
                 isPrinsiple = "y";
                 return;
             }
@@ -243,6 +246,7 @@ public class LoginActivity extends BaseActivity {
 
     /**
      * 判断是否为班主任
+     *
      * @param result
      * @return
      */
@@ -256,7 +260,7 @@ public class LoginActivity extends BaseActivity {
         }
         for (int i = 0; i < data.length(); i++) {
             JSONObject itemObject = data.optJSONObject(i);
-            if(itemObject.optString("id").equals("3")){
+            if (itemObject.optString("id").equals("3")) {
                 isClassleader = "y";
                 return;
             }
@@ -269,11 +273,11 @@ public class LoginActivity extends BaseActivity {
      * 将需要的信息存储到本地
      */
     private void spInLocal() {
-        SPUtils.put(context, LocalConstant.USER_ID,loginReturn.getId());
-        SPUtils.put(context,LocalConstant.USER_NAME,loginReturn.getName());
-        SPUtils.put(context,LocalConstant.USER_PHOTO,loginReturn.getPhoto());
+        SPUtils.put(context, LocalConstant.USER_ID, loginReturn.getId());
+        SPUtils.put(context, LocalConstant.USER_NAME, loginReturn.getName());
+        SPUtils.put(context, LocalConstant.USER_PHOTO, loginReturn.getPhoto());
         SPUtils.put(context, LocalConstant.USER_TYPE, type);
-        SPUtils.put(context,LocalConstant.USER_PASSWORD,loginReturn.getPassword());
+        SPUtils.put(context, LocalConstant.USER_PASSWORD, loginReturn.getPassword());
     }
 
     /**
@@ -294,6 +298,7 @@ public class LoginActivity extends BaseActivity {
 
     /**
      * 字符串转模型（登录信息）
+     *
      * @param result
      * @return
      */
@@ -311,6 +316,7 @@ public class LoginActivity extends BaseActivity {
 
     /**
      * 字符串转模型（班级信息）
+     *
      * @param result
      * @return
      */
@@ -328,7 +334,8 @@ public class LoginActivity extends BaseActivity {
 
     /**
      * 字符串转模型（宝宝信息）
-     * @param     * @return
+     *
+     * @param * @return
      */
     private List<BabyInfo> getBabyInfoFromJson(String result) {
         String data = "";

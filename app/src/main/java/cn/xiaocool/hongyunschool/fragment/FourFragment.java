@@ -25,6 +25,7 @@ import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.activity.AddressActivity;
 import cn.xiaocool.hongyunschool.activity.MyIntegrationActivity;
 import cn.xiaocool.hongyunschool.activity.PersonalInfoActivity;
+import cn.xiaocool.hongyunschool.activity.QRCodeActivity;
 import cn.xiaocool.hongyunschool.activity.SettingActivity;
 import cn.xiaocool.hongyunschool.activity.WebListActivity;
 import cn.xiaocool.hongyunschool.bean.UserInfo;
@@ -142,6 +143,7 @@ public class FourFragment extends BaseFragment {
                 break;
             //客户端二维码
             case R.id.fragment_four_rl_code:
+                context.startActivity(new Intent(context,QRCodeActivity.class));
                 break;
         }
     }

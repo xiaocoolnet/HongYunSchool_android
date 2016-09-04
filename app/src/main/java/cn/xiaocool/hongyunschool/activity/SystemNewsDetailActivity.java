@@ -1,14 +1,21 @@
 package cn.xiaocool.hongyunschool.activity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaocool.hongyunschool.R;
+import cn.xiaocool.hongyunschool.app.MyApplication;
 import cn.xiaocool.hongyunschool.bean.SystemNews;
 import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
@@ -22,6 +29,7 @@ public class SystemNewsDetailActivity extends BaseActivity {
     WebView swdWebview;
     private SystemNews systemNews;
     SharePopupWindow takePhotoPopWin;
+    private   int flag=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +48,6 @@ public class SystemNewsDetailActivity extends BaseActivity {
 
     public void showPopFormBottom(View view) {
         takePhotoPopWin = new SharePopupWindow(this, onClickListener);
-        //SharePopupWindow takePhotoPopWin = new SharePopupWindow(this, onClickListener);
         takePhotoPopWin.showAtLocation(swdWebview, Gravity.BOTTOM, 0, 0);
     }
 
@@ -49,11 +56,9 @@ public class SystemNewsDetailActivity extends BaseActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.haoyou:
-                    ToastUtil.showShort(SystemNewsDetailActivity.this, "微信好友");
                     setting();
                     break;
                 case R.id.dongtai:
-                    ToastUtil.showShort(SystemNewsDetailActivity.this, "微信朋友圈");
                     history();
                     break;
             }
@@ -79,8 +84,9 @@ public class SystemNewsDetailActivity extends BaseActivity {
      * 分享到微信好友
      */
     private void setting() {
-        //ToastUtils.ToastShort(this, "分享到微信好友");
-//        flag = 0;
+
+        ToastUtil.showShort(this, "分享到微信好友");
+        flag = 0;
         shareWX();
         takePhotoPopWin.dismiss();
 
@@ -90,8 +96,8 @@ public class SystemNewsDetailActivity extends BaseActivity {
      * 分享到微信朋友圈
      */
     private void history() {
-        // ToastUtils.ToastShort(this, "分享到微信朋友圈");
-//        flag = 1;
+        ToastUtil.showShort(this, "分享到微信朋友圈");
+        flag = 1;
         shareWX();
         takePhotoPopWin.dismiss();
     }
@@ -102,20 +108,20 @@ public class SystemNewsDetailActivity extends BaseActivity {
      * 微信分享网页
      * */
     private void shareWX() {
-//        //创建一个WXWebPageObject对象，用于封装要发送的Url
-//        WXWebpageObject webpage =new WXWebpageObject();
-//        webpage.webpageUrl=NetBaseConstant.NET_H5_HOST + "&a="+a+"&id="+itemid;
-//        WXMediaMessage msg =new WXMediaMessage(webpage);
-//        msg.title=title;
-//        msg.description=content;
-//        Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.drawable.ic_share_wx);
-//        msg.setThumbImage(thumb);
-//        SendMessageToWX.Req req = new SendMessageToWX.Req();
-//        req.transaction = "weiyi";
-//        req.message = msg;
-//        req.scene = flag==0? SendMessageToWX.Req.WXSceneSession: SendMessageToWX.Req.WXSceneTimeline;
-//        WxtApplication wxtApplication = WxtApplication.getInstance();
-//        wxtApplication.api.sendReq(req);
+        //创建一个WXWebPageObject对象，用于封装要发送的Url
+        WXWebpageObject webpage =new WXWebpageObject();
+        webpage.webpageUrl= NetConstantUrl.SYSTEM_H5 + systemNews.getId();
+        WXMediaMessage msg =new WXMediaMessage(webpage);
+        msg.title=systemNews.getPost_title();
+        msg.description= systemNews.getPost_excerpt();
+        Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        msg.setThumbImage(thumb);
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = "分享";
+        req.message = msg;
+        req.scene = flag==0? SendMessageToWX.Req.WXSceneSession: SendMessageToWX.Req.WXSceneTimeline;
+        MyApplication application = MyApplication.getInstance();
+        application.api.sendReq(req);
     }
 
 }
