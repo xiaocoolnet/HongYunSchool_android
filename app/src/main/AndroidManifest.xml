@@ -108,6 +108,7 @@
         <activity android:name=".activity.ReadListClassNewLeaderActivity" />
         <activity android:name=".activity.ReadListClassNewTeacherActivity" />
         <activity android:name=".activity.SchoolWebDetailActivity"></activity>
+        <activity android:name=".activity.SystemNewsDetailActivity"/>
     </application>
 
 </manifest>

@@ -70,4 +70,5 @@ public class LocalConstant {
     public static final String WEB_ACTIVITY = "WEB_ACTIVITY";
     public static final String WEB_NOTICE = "WEB_NOTICE";
     public static final String WEB_NEWS = "WEB_NEWS";
+    public static final String SYSTEN_NEWS = "SYSTEN_NEWS";
 }

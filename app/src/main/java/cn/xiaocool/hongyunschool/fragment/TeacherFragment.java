@@ -103,6 +103,7 @@ public class TeacherFragment extends Fragment {
      * 转换模型
      */
     private void changeModelForElistmodel() {
+        groups.clear();
         for (int i = 0; i < classTeachers.size(); i++) {
             Group group = new Group(classTeachers.get(i).getClassid(), classTeachers.get(i).getClassname());
             for (int j = 0; j < classTeachers.get(i).getTeacherlist().size(); j++) {

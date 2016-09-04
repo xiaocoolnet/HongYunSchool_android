@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
@@ -14,12 +15,14 @@
             android:orientation="vertical"
             android:layout_marginLeft="10dp">
             <TextView
+                android:id="@+id/item_integration_tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="发布动态"
                 android:textColor="@color/font_title_main"
                 android:textSize="@dimen/font_title_main"/>
             <TextView
+                android:id="@+id/item_integration_tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2016-10-05"
@@ -31,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
+                android:id="@+id/item_integration_tv_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+3"

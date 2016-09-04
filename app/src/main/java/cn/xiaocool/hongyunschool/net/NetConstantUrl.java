@@ -124,9 +124,18 @@ public class NetConstantUrl {
     public static final String GET_WEB_SCHOOL_NEWS = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getSchoolNews&schoolid=";
 
     /**
+     * 校网系统消息
+     */
+    public static final String GET_WEB_SYSTEM_NEWS = "http://wxt.xiaocool.net/index.php?g=apps&m=index&a=getSystemMessages&term_id=3";
+    /**
      * 校网H5拼接地址
      */
     public final static String WEB_LINK = "http://wxt.xiaocool.net/index.php?g=portal&m=article";
+
+    /**
+     * 系统消息拼接地址
+     */
+    public final static String SYSTEM_H5 = "http://wxt.xiaocool.net/index.php?g=portal&m=article&a=system&id=";
 
     /**
      * 获取个人信息
@@ -157,4 +166,14 @@ public class NetConstantUrl {
      * 获取动态（家长）
      */
     public static final String GET_TRENDS_PARENT = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=GetMicroblog&schoolid=1&type=1";
+
+    /**
+     * 获取总积分
+     */
+    public static final String GET_INTEGRATION_TOTAL = "http://hyx.xiaocool.net//index.php?g=apps&m=index&a=GetIntegralList&userid=";
+
+    /**
+     * 获取积分列表
+     */
+    public static final String GET_INTEGRATION_LIST = "http://hyx.xiaocool.net//index.php?g=apps&m=index&a=GetIntegralInfo&userid=";
 }

@@ -18,6 +18,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaocool.hongyunschool.R;
+import cn.xiaocool.hongyunschool.bean.SystemNews;
 import cn.xiaocool.hongyunschool.bean.WebListInfo;
 import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
@@ -36,6 +37,7 @@ public class WebListActivity extends BaseActivity {
     SwipeRefreshLayout webListSwip;
 
     private ArrayList<WebListInfo> webListInfoArrayList;
+    private ArrayList<SystemNews> systemNewses;
     private CommonAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class WebListActivity extends BaseActivity {
         setContentView(R.layout.activity_web_list);
         ButterKnife.bind(this);
         webListInfoArrayList = new ArrayList<>();
+        systemNewses = new ArrayList<>();
         settingRefresh();
     }
 
@@ -67,11 +70,16 @@ public class WebListActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
-                webListInfoArrayList.get(position).setWhere(getIntent().getStringExtra(LocalConstant.WEB_FLAG));
-                bundle.putSerializable(LocalConstant.WEB_FLAG,webListInfoArrayList.get(position));
-                startActivity(SchoolWebDetailActivity.class,bundle);
+                if (getIntent().getStringExtra(LocalConstant.WEB_FLAG).equals(LocalConstant.SYSTEN_NEWS)) {
+                    bundle.putSerializable(LocalConstant.WEB_FLAG,systemNewses.get(position));
+                    startActivity(SystemNewsDetailActivity.class,bundle);
+                } else {
+                    webListInfoArrayList.get(position).setWhere(getIntent().getStringExtra(LocalConstant.WEB_FLAG));
+                    bundle.putSerializable(LocalConstant.WEB_FLAG, webListInfoArrayList.get(position));
+                    startActivity(SchoolWebDetailActivity.class, bundle);
+                }
             }
-        });
+    });
     }
     @Override
     public void requsetData() {
@@ -99,28 +107,49 @@ public class WebListActivity extends BaseActivity {
             case LocalConstant.WEB_NEWS:
                 url = NetConstantUrl.GET_WEB_SCHOOL_NEWS + schoolid;
                 break;
+            case LocalConstant.SYSTEN_NEWS:
+                url = NetConstantUrl.GET_WEB_SYSTEM_NEWS;
+                break;
         }
         //http://wxt.xiaocool.net/index.php?g=apps&m=school&a=getteacherinfos&schoolid=1    教师风采
         //http://wxt.xiaocool.net/index.php?g=apps&m=school&a=getbabyinfos&schoolid=1       学生秀场
         //http://wxt.xiaocool.net/index.php?g=apps&m=school&a=getWebSchoolInfos&schoolid=1  学校介绍
         //http://wxt.xiaocool.net/index.php?g=apps&m=school&a=getInterestclass&schoolid=1   精彩活动
-
-
-        VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
-            @Override
-            public void onSuccess(String result) {
-                if (JsonResult.JSONparser(WebListActivity.this,result)){
-                    webListInfoArrayList.clear();
-                    webListInfoArrayList.addAll(getBeanFromJson(result));
-                    setAdapter();
+        //系统消息
+        if(getIntent().getStringExtra(LocalConstant.WEB_FLAG).equals(LocalConstant.SYSTEN_NEWS)){
+            VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    if (JsonResult.JSONparser(WebListActivity.this,result)){
+                        systemNewses.clear();
+                        systemNewses.addAll(getBeanFromJsonSystem(result));
+                        setSystemAdapter();
+                    }
                 }
-            }
 
-            @Override
-            public void onError() {
+                @Override
+                public void onError() {
 
-            }
-        });
+                }
+            });
+        }else{
+            VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    if (JsonResult.JSONparser(WebListActivity.this,result)){
+                        webListInfoArrayList.clear();
+                        webListInfoArrayList.addAll(getBeanFromJson(result));
+                        setAdapter();
+                    }
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
+        }
+
     }
 
     private void setAdapter() {
@@ -130,6 +159,24 @@ public class WebListActivity extends BaseActivity {
             adapter = new CommonAdapter<WebListInfo>(this,webListInfoArrayList,R.layout.item_web_list) {
                 @Override
                 public void convert(ViewHolder holder, WebListInfo webListInfo) {
+                    holder.setImageResource(R.id.teacher_img,R.drawable.hyx_default)
+                            .setText(R.id.post_title,webListInfo.getPost_title())
+                            .setText(R.id.post_content,webListInfo.getPost_excerpt())
+                            .setText(R.id.post_date,webListInfo.getPost_date());
+                }
+
+            };
+            webList.setAdapter(adapter);
+        }
+    }
+
+    private void setSystemAdapter() {
+        if (adapter!=null){
+            adapter.notifyDataSetChanged();
+        }else {
+            adapter = new CommonAdapter<SystemNews>(this,systemNewses,R.layout.item_web_list) {
+                @Override
+                public void convert(ViewHolder holder, SystemNews webListInfo) {
                     holder.setImageResource(R.id.teacher_img,R.drawable.hyx_default)
                             .setText(R.id.post_title,webListInfo.getPost_title())
                             .setText(R.id.post_content,webListInfo.getPost_excerpt())
@@ -156,6 +203,23 @@ public class WebListActivity extends BaseActivity {
             e.printStackTrace();
         }
         return new Gson().fromJson(data, new TypeToken<List<WebListInfo>>() {
+        }.getType());
+    }
+
+    /**
+     * 字符串转模型
+     * @param result
+     * @return
+     */
+    private List<SystemNews> getBeanFromJsonSystem(String result) {
+        String data = "";
+        try {
+            JSONObject json = new JSONObject(result);
+            data = json.getString("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new Gson().fromJson(data, new TypeToken<List<SystemNews>>() {
         }.getType());
     }
 }

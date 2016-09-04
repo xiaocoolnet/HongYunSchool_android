@@ -26,7 +26,7 @@ import cn.xiaocool.hongyunschool.activity.AddressActivity;
 import cn.xiaocool.hongyunschool.activity.MyIntegrationActivity;
 import cn.xiaocool.hongyunschool.activity.PersonalInfoActivity;
 import cn.xiaocool.hongyunschool.activity.SettingActivity;
-import cn.xiaocool.hongyunschool.activity.SystemNewsActivity;
+import cn.xiaocool.hongyunschool.activity.WebListActivity;
 import cn.xiaocool.hongyunschool.bean.UserInfo;
 import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
@@ -132,7 +132,10 @@ public class FourFragment extends BaseFragment {
                 break;
             //系统通知
             case R.id.fragment_four_rl_system:
-                context.startActivity(new Intent(context, SystemNewsActivity.class));
+                Intent intent = new Intent(mActivity, WebListActivity.class);
+                intent.putExtra("title", "系统通知");
+                intent.putExtra(LocalConstant.WEB_FLAG, LocalConstant.SYSTEN_NEWS);
+                startActivity(intent);
                 break;
             //在线客服
             case R.id.fragment_four_rl_online:

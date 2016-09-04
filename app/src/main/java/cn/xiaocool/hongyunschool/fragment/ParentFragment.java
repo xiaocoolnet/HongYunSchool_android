@@ -125,6 +125,7 @@ public class ParentFragment extends Fragment {
      * 转换模型
      */
     private void changeModelForElistmodel() {
+        groups.clear();
         for (int i = 0; i < classParents.size(); i++) {
             Group group = new Group(classParents.get(i).getClassid(), classParents.get(i).getClassname());
             for (int j = 0; j < classParents.get(i).getStudent_list().size(); j++) {

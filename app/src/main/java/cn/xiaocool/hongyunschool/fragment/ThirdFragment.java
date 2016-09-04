@@ -53,7 +53,6 @@ import cn.xiaocool.hongyunschool.view.RefreshLayout;
  */
 public class ThirdFragment extends BaseFragment {
 
-
     @BindView(R.id.fragment_third_iv_send)
     ImageView fragmentThirdIvSend;
     @BindView(R.id.fragment_third_lv_trend)
@@ -66,7 +65,8 @@ public class ThirdFragment extends BaseFragment {
     private CommentPopupWindow commentPopupWindow;
     private int type;
     private static long lastClickTime;
-    private String userid,classid,beginid;
+    private String userid,classid;
+    private int beginId;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -109,9 +109,10 @@ public class ThirdFragment extends BaseFragment {
     @Override
     public void initData() {
         String url = "";
+        beginId = 0;
         if(type == 1){
         }
-        url = NetConstantUrl.GET_TRENDS_PARENT +setParams(userid,classid,beginid);
+        url = NetConstantUrl.GET_TRENDS_PARENT +setParams(userid,classid,beginId+"");
 
         VolleyUtil.VolleyGetRequest(context, url, new
                 VolleyUtil.VolleyJsonCallback() {
@@ -151,12 +152,37 @@ public class ThirdFragment extends BaseFragment {
 
                     @Override
                     public void run() {
-                        ToastUtil.showShort(context, "上拉加载");
+                        loadTrend();
                         fragmentThirdSrlTrend.setLoading(false);
                     }
                 }, 1000);
             }
         });
+    }
+
+    /**
+     * 上拉加载数据
+     */
+    private void loadTrend() {
+        String url = "";
+        beginId = beginId + trendsList.size();
+        url = NetConstantUrl.GET_TRENDS_PARENT +setParams(userid,classid,beginId+"");
+
+        VolleyUtil.VolleyGetRequest(context, url, new
+                VolleyUtil.VolleyJsonCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        if (JsonResult.JSONparser(context, result)) {
+                            fragmentThirdSrlTrend.setRefreshing(false);
+                            setAdapter(result);
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
     }
 
 
