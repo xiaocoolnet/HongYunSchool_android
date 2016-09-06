@@ -29,7 +29,7 @@ public class FivePublicActivity extends BaseActivity {
         Intent intent;
         switch (view.getId()) {
             case R.id.web_five_homework:
-                intent = new Intent(this, WebListActivity.class);
+                intent = new Intent(this, WebOtherListActivity.class);
                 intent.putExtra("title","学校作业");
                 startActivity(intent);
                 break;
@@ -39,17 +39,17 @@ public class FivePublicActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.web_five_keshi:
-                intent = new Intent(this, WebListActivity.class);
+                intent = new Intent(this, WebOtherListActivity.class);
                 intent.putExtra("title","课时");
                 startActivity(intent);
                 break;
             case R.id.web_five_qimojiance:
-                intent = new Intent(this, WebListActivity.class);
+                intent = new Intent(this, WebOtherListActivity.class);
                 intent.putExtra("title","期末检测");
                 startActivity(intent);
                 break;
             case R.id.web_five_jiejiari:
-                intent = new Intent(this, WebListActivity.class);
+                intent = new Intent(this, WebOtherListActivity.class);
                 intent.putExtra("title","节假日");
                 startActivity(intent);
                 break;

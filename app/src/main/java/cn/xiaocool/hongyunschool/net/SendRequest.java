@@ -369,4 +369,26 @@ public class SendRequest {
             }
         }.start();
     }
+
+    //http://hyx.xiaocool.net/index.php?g=apps&m=index&a=SendMessageInfo&phone=18553546580,13276386385,15653579769&message=%E6%B5%8B%E8%AF%95%E4%B8%80%E4%B8%8B&userid=597
+    public void sendGroupMessage(final String phone, final String userid, final String message,final int KEY) {
+        new Thread() {
+            Message msg = Message.obtain();
+
+            public void run() {
+                String data = "&phone=" + phone + "&userid=" + userid + "&message=" + message;
+                String result_data = NetUtil.getResponse("http://hyx.xiaocool.net/index.php?g=apps&m=index&a=SendMessageInfo", data);
+                Log.e("sendGroup-----",result_data);
+                try {
+                    JSONObject obj = new JSONObject(result_data);
+                    msg.what = KEY;
+                    msg.obj = obj;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+        }.start();
+    }
 }

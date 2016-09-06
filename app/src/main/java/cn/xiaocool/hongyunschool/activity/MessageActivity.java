@@ -1,5 +1,6 @@
 package cn.xiaocool.hongyunschool.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
@@ -17,12 +18,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaocool.hongyunschool.R;
-import cn.xiaocool.hongyunschool.bean.SchoolNewsSend;
+import cn.xiaocool.hongyunschool.bean.ShortMessage;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
-import cn.xiaocool.hongyunschool.utils.ToastUtil;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 
 public class MessageActivity extends BaseActivity {
@@ -34,20 +37,21 @@ public class MessageActivity extends BaseActivity {
     SwipeRefreshLayout schoolNewsSrl;
 
     private CommonAdapter adapter;
-    private List<SchoolNewsSend> schoolNewsSendList;
+    private List<ShortMessage> shortMessages;
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_news);
         ButterKnife.bind(this);
-        schoolNewsSendList = new ArrayList<>();
-        setTopName("校内通知");
+        shortMessages = new ArrayList<>();
+        context = this;
+        setTopName("短信列表");
         setRightImg(R.drawable.ic_fabu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(AddSchoolNewsActivity.class);
-                ToastUtil.Toast(getBaseContext(), "发布");
-
+                startActivity(AddGroupMessageActivity.class);
             }
         });
         settingRefresh();
@@ -72,7 +76,8 @@ public class MessageActivity extends BaseActivity {
 
     @Override
     public void requsetData() {
-        VolleyUtil.VolleyGetRequest(this, "http://wxt.xiaocool.net/index.php?g=Apps&m=Message&a=user_send_message&send_user_id=605", new
+        String url = NetConstantUrl.GET_SHORT_MESSAGE + SPUtils.get(context, LocalConstant.USER_ID,"");
+        VolleyUtil.VolleyGetRequest(this, url, new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
                     public void onSuccess(String result) {
@@ -93,14 +98,14 @@ public class MessageActivity extends BaseActivity {
      * @param result
      */
     private void setAdapter(String result) {
-        schoolNewsSendList.clear();
-        schoolNewsSendList.addAll(getBeanFromJson(result));
+        shortMessages.clear();
+        shortMessages.addAll(getBeanFromJson(result));
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         } else {
-            adapter = new CommonAdapter<SchoolNewsSend>(getBaseContext(), schoolNewsSendList, R.layout.school_news_item) {
+            adapter = new CommonAdapter<ShortMessage>(getBaseContext(), shortMessages, R.layout.short_message_item) {
                 @Override
-                public void convert(ViewHolder holder, SchoolNewsSend datas) {
+                public void convert(ViewHolder holder, ShortMessage datas) {
                     setItem(holder, datas);
                 }
             };
@@ -113,41 +118,12 @@ public class MessageActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setItem(ViewHolder holder, SchoolNewsSend datas) {
-
-        //获取图片字符串数组
-        ArrayList<String> images = new ArrayList<>();
-        for (int i=0;i<datas.getPicture().size();i++){
-            images.add(datas.getPicture().get(i).getPicture_url());
-        }
-
-        //判断已读和未读
-
-        final ArrayList<SchoolNewsSend.ReceiverBean> notReads = new ArrayList<>();
-        final ArrayList<SchoolNewsSend.ReceiverBean> alreadyReads = new ArrayList<>();
-        if (datas.getReceiver().size()>0){
-            for (int i=0;i<datas.getReceiver().size();i++){
-                if (datas.getReceiver().get(i).getRead_time()==null||datas.getReceiver().get(i).getRead_time().equals("null")){
-                    notReads.add(datas.getReceiver().get(i));
-                }else {
-                    alreadyReads.add(datas.getReceiver().get(i));
-                }
-            }
-        }
+    private void setItem(ViewHolder holder, ShortMessage datas) {
 
         holder.setText(R.id.item_sn_content, datas.getMessage_content())
-                .setTimeText(R.id.item_sn_time,datas.getMessage_time())
-                .setText(R.id.item_sn_nickname,datas.getSend_user_name())
-                .setItemImages(this,R.id.item_sn_onepic,R.id.item_sn_gridpic,images)
-                .setText(R.id.item_sn_read,"总发" + datas.getReceiver().size()+" 已读"+alreadyReads.size()+" 未读"+notReads.size());
-
-        //进入已读未读界面
-        holder.getView(R.id.item_sn_read).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ToastUtil.showShort(MessageActivity.this, "进入已读未读!");
-            }
-        });
+                .setTimeText(R.id.item_sn_time,datas.getCreate_time())
+                .setText(R.id.item_sn_nickname,datas.getName())
+                .setImageByUrl(R.id.item_sn_head_iv,datas.getPhoto());
     }
 
     /**
@@ -155,7 +131,7 @@ public class MessageActivity extends BaseActivity {
      * @param result
      * @return
      */
-    private List<SchoolNewsSend> getBeanFromJson(String result) {
+    private List<ShortMessage> getBeanFromJson(String result) {
         String data = "";
         try {
             JSONObject json = new JSONObject(result);
@@ -163,7 +139,7 @@ public class MessageActivity extends BaseActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return new Gson().fromJson(data, new TypeToken<List<SchoolNewsSend>>() {
+        return new Gson().fromJson(data, new TypeToken<List<ShortMessage>>() {
         }.getType());
     }
 }

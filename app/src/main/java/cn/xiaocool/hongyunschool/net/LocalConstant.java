@@ -64,6 +64,7 @@ public class LocalConstant {
      * WEB_NEWS     新闻动态
      */
     public static final String WEB_FLAG = "WEB_FLAG";
+    public static final String WEB_FLAG_FIVE = "WEB_FLAG_FIVE";
     public static final String WEB_INTROUCE = "WEB_INTROUCE";
     public static final String WEB_TEACHER = "WEB_TEACHER";
     public static final String WEB_STUDENT = "WEB_STUDENT";

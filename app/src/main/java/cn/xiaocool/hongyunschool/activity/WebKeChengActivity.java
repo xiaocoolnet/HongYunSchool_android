@@ -29,12 +29,12 @@ public class WebKeChengActivity extends BaseActivity {
         Intent intent;
         switch (view.getId()) {
             case R.id.web_kecheng_main:
-                intent = new Intent(this, WebListActivity.class);
+                intent = new Intent(this, WebOtherListActivity.class);
                 intent.putExtra("title","校本课程");
                 startActivity(intent);
                 break;
             case R.id.kecheng_xuanxiu:
-                intent = new Intent(this, WebListActivity.class);
+                intent = new Intent(this, WebOtherListActivity.class);
                 intent.putExtra("title","选修课程");
                 startActivity(intent);
                 break;

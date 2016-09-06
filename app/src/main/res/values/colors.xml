@@ -43,11 +43,11 @@
     <color name="font_read_gray">#ff9800</color>
 
     <!--五项公开专栏颜色-->
-    <color name="homework_public">#949294</color>
-    <color name="kecheng_public">#000000</color>
-    <color name="keshi_public">#696969</color>
-    <color name="qimojiance_public">#8f8f8f</color>
-    <color name="jiejiari_public">#ff9800</color>
+    <color name="homework_public">#FFA726</color>
+    <color name="kecheng_public">#1BBCDC</color>
+    <color name="keshi_public">#FFED26</color>
+    <color name="qimojiance_public">#26A69A</color>
+    <color name="jiejiari_public">#9CCC65</color>
 
     <!-- 对话框dialog -->
     <color name="remind_infomation_split_line_color">#FFE8E8E8</color>

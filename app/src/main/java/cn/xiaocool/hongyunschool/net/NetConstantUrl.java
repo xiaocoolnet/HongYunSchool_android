@@ -126,7 +126,7 @@ public class NetConstantUrl {
     /**
      * 校网系统消息
      */
-    public static final String GET_WEB_SYSTEM_NEWS = "http://wxt.xiaocool.net/index.php?g=apps&m=index&a=getSystemMessages&term_id=3";
+    public static final String GET_WEB_SYSTEM_NEWS = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=getSystemMessages&term_id=3";
     /**
      * 校网H5拼接地址
      */
@@ -191,4 +191,38 @@ public class NetConstantUrl {
      */
     public static final String GET_FEEDBACK_CLASS = "http://hyx.xiaocool.net/index.php?g=apps&m=student&a=TeacherGetParentMessage&classid=";
 
+    /**
+     * 获取教师群发的短信（班主任）
+     */
+    public static final String GET_SHORT_MESSAGE = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=GetMobileMessage&userid=";
+
+    /**
+     * 五公开专栏（作业公告）
+     */
+    public static final String FIVE_PUBLIC_HOMEWORK = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=gethomeworknotice&schoolid=1";
+
+    /**
+     * 五公开专栏（校本课程）
+     */
+    public static final String FIVE_PUBLIC_SUBJECT1 = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getschoolsyl&schoolid=1";
+
+    /**
+     * 五公开专栏（校本选修课程）
+     */
+    public static final String FIVE_PUBLIC_SUBJECT2 = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getschoolsylchoice&schoolid=1";
+
+    /**
+     * 五公开专栏（课时）
+     */
+    public static final String FIVE_PUBLIC_SUBJECT_TIME = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getclasstime&schoolid=1";
+
+    /**
+     * 五公开专栏（期末检测）
+     */
+    public static final String FIVE_PUBLIC_END = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getendtest&schoolid=1";
+
+    /**
+     * 五公开专栏（节假日）
+     */
+    public static final String FIVE_PUBLIC_HOLIDAY = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getholiday&schoolid=1";
 }

@@ -91,7 +91,6 @@ public class AddSchoolAnnounceActivity extends BaseActivity {
         setTopName("通知发布");
         setRight();
         setAddImgGrid();
-
     }
 
     /**
