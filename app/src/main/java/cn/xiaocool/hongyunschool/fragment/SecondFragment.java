@@ -54,11 +54,6 @@ public class SecondFragment extends BaseFragment {
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
-        if(SPUtils.get(context,LocalConstant.USER_TYPE,"").equals("1")){
-            return inflater.inflate(R.layout.fragment_second, container, false);
-        }else if(SPUtils.get(context,LocalConstant.USER_TYPE,"").equals("0")){
-            return inflater.inflate(R.layout.fragment_second, container, false);
-        }
         return inflater.inflate(R.layout.fragment_second, container, false);
     }
 
@@ -83,15 +78,15 @@ public class SecondFragment extends BaseFragment {
      * 根据登录身份确定布局
      */
     private void checkLayout() {
-        //家长（隐藏校内通知、短息发送）
-        if(SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("0")){
+/*        //家长（隐藏校内通知、短息发送）
+        if (SPUtils.get(context, LocalConstant.USER_TYPE, "").equals("0")) {
             secondRlSchoolAnnounce.setVisibility(View.GONE);
             secondRlMessage.setVisibility(View.GONE);
-        }
+        }*/
         //任课老师(隐藏班级消息)
-        if(SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("1")
-                && !SPUtils.get(context,LocalConstant.USER_IS_CLASSLEADER,"").equals("y")
-                && !SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")){
+        if (SPUtils.get(context, LocalConstant.USER_TYPE, "").equals("1")
+                && !SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER, "").equals("y")
+                && !SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE, "").equals("y")) {
             secondRlClassNews.setVisibility(View.GONE);
         }
     }

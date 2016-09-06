@@ -16,6 +16,7 @@ import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.fragment.FirstFragment;
 import cn.xiaocool.hongyunschool.fragment.FourFragment;
 import cn.xiaocool.hongyunschool.fragment.SecondFragment;
+import cn.xiaocool.hongyunschool.fragment.SecondParentFragment;
 import cn.xiaocool.hongyunschool.fragment.ThirdFragment;
 import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
@@ -40,6 +41,7 @@ public class MainActivity extends BaseActivity {
     private SecondFragment secondFragment;
     private ThirdFragment thirdFragment;
     private FourFragment fourFragment;
+    private SecondParentFragment secondParentFragment;
     private Fragment[] fragments;
     private Context context;
     @Override
@@ -48,8 +50,8 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         hideTopView();
-        init();
         context = this;
+        init();
         Log.e("TAG", SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE,"").toString()
                 + SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER,"").toString()
                 + SPUtils.get(context, LocalConstant.USER_CLASSID,"").toString());
@@ -65,10 +67,14 @@ public class MainActivity extends BaseActivity {
         secondFragment = new SecondFragment();
         thirdFragment = new ThirdFragment();
         fourFragment = new FourFragment();
-        fragments = new Fragment[]{firstFragment,secondFragment,thirdFragment,fourFragment};
+        secondParentFragment = new SecondParentFragment();
+        if(SPUtils.get(context,LocalConstant.USER_TYPE,"1").equals("0")){
+            fragments = new Fragment[]{firstFragment,secondParentFragment,thirdFragment,fourFragment};
+        }else{
+            fragments = new Fragment[]{firstFragment,secondFragment,thirdFragment,fourFragment};
+        }
         getFragmentManager().beginTransaction().add(R.id.fragment_container, firstFragment).commit();
     }
-
 
     @OnClick({R.id.main_tab_home, R.id.main_tab_sort, R.id.main_tab_quick, R.id.main_tab_mine})
     public void onClick(View view) {

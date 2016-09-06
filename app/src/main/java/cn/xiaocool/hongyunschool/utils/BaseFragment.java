@@ -1,9 +1,9 @@
 package cn.xiaocool.hongyunschool.utils;
 
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 public abstract class BaseFragment extends Fragment {
 
-    public Activity mActivity;
+    public FragmentActivity mActivity;
 
     /**
      * 此方法可以得到上下文对象
@@ -29,7 +29,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mActivity =  getActivity();
+        mActivity = (FragmentActivity) getActivity();
         View view = initView(inflater,container);
 
         return view;
