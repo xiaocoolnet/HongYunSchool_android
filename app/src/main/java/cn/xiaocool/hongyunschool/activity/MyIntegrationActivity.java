@@ -62,6 +62,8 @@ public class MyIntegrationActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     activityMyIntegrationTvNumber.setText(data.optString("integral"));
+                }else{
+                    activityMyIntegrationTvNumber.setText("0");
                 }
             }
 

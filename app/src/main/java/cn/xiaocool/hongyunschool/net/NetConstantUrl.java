@@ -57,7 +57,7 @@ public class NetConstantUrl {
     /**
      * 获取全校班级
      */
-    public static final String GET_SCHOOL_CLASS = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getclasslist&schoolid=1";
+    public static final String GET_SCHOOL_CLASS = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getclasslist&schoolid=";
 
     /**
      * 根据班级id获取班级学生
@@ -67,7 +67,7 @@ public class NetConstantUrl {
     /**
      * 获取全校科室及科室下的老师
      */
-    public static final String GET_SCHOOL_TEACHER = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getteacherinfo&schoolid=1";
+    public static final String GET_SCHOOL_TEACHER = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getteacherinfo&schoolid=";
 
     /**
      * 获取校长发送的校内通知
@@ -95,7 +95,7 @@ public class NetConstantUrl {
     /**
      * 校长获取全校班级消息
      */
-    public static final String GET_CLASS_NEWS_ALL = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=GetAllClassInfo&schoolid=1";
+    public static final String GET_CLASS_NEWS_ALL = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=GetAllClassInfo&schoolid=";
 
     /**
      * 校网学校概况获取列表
@@ -126,7 +126,7 @@ public class NetConstantUrl {
     /**
      * 校网系统消息
      */
-    public static final String GET_WEB_SYSTEM_NEWS = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=getSystemMessages&term_id=3";
+    public static final String GET_WEB_SYSTEM_NEWS = "http://wxt.xiaocool.net/index.php?g=apps&m=index&a=getSystemMessages&term_id=3";
     /**
      * 校网H5拼接地址
      */
@@ -145,7 +145,7 @@ public class NetConstantUrl {
     /**
      * 获取全校班级和老师
      */
-    public static final String GET_CLASS_TEACHER = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getclassteacherlist&schoolid=1";
+    public static final String GET_CLASS_TEACHER = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getclassteacherlist&schoolid=";
 
     /**
      * 获取全校班级和家长
@@ -165,7 +165,7 @@ public class NetConstantUrl {
     /**
      * 获取动态（家长）
      */
-    public static final String GET_TRENDS_PARENT = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=GetMicroblog&schoolid=1&type=1";
+    public static final String GET_TRENDS_PARENT = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=GetMicroblog&type=1&schoolid=";
 
     /**
      * 获取总积分
@@ -185,7 +185,7 @@ public class NetConstantUrl {
     /**
      * 获取家长信箱（校长）
      */
-    public static final String GET_FEEDBACK_LEADER = "http://hyx.xiaocool.net/index.php?g=apps&m=student&a=TeacherGetParentMessage&schoolid=1";
+    public static final String GET_FEEDBACK_LEADER = "http://hyx.xiaocool.net/index.php?g=apps&m=student&a=TeacherGetParentMessage&schoolid=";
     /**
      * 获取家长信箱（班主任）
      */
@@ -199,30 +199,30 @@ public class NetConstantUrl {
     /**
      * 五公开专栏（作业公告）
      */
-    public static final String FIVE_PUBLIC_HOMEWORK = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=gethomeworknotice&schoolid=1";
+    public static final String FIVE_PUBLIC_HOMEWORK = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=gethomeworknotice&schoolid=";
 
     /**
      * 五公开专栏（校本课程）
      */
-    public static final String FIVE_PUBLIC_SUBJECT1 = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getschoolsyl&schoolid=1";
+    public static final String FIVE_PUBLIC_SUBJECT1 = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getschoolsyl&schoolid=";
 
     /**
      * 五公开专栏（校本选修课程）
      */
-    public static final String FIVE_PUBLIC_SUBJECT2 = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getschoolsylchoice&schoolid=1";
+    public static final String FIVE_PUBLIC_SUBJECT2 = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getschoolsylchoice&schoolid=";
 
     /**
      * 五公开专栏（课时）
      */
-    public static final String FIVE_PUBLIC_SUBJECT_TIME = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getclasstime&schoolid=1";
+    public static final String FIVE_PUBLIC_SUBJECT_TIME = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getclasstime&schoolid=";
 
     /**
      * 五公开专栏（期末检测）
      */
-    public static final String FIVE_PUBLIC_END = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getendtest&schoolid=1";
+    public static final String FIVE_PUBLIC_END = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getendtest&schoolid=";
 
     /**
      * 五公开专栏（节假日）
      */
-    public static final String FIVE_PUBLIC_HOLIDAY = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getholiday&schoolid=1";
+    public static final String FIVE_PUBLIC_HOLIDAY = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getholiday&schoolid=";
 }

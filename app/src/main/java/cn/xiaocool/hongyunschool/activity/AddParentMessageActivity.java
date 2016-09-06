@@ -64,7 +64,8 @@ public class AddParentMessageActivity extends BaseActivity {
         if(msg.length()==0){
             ToastUtil.showShort(context,"发送消息不能为空！");
         }else{
-            new SendRequest(context,handler).send_feedback(userid,classid,"",msg,SEND_FEEDBACK);
+            new SendRequest(context,handler).send_feedback(userid,classid,
+                    SPUtils.get(context,LocalConstant.SCHOOL_ID,"1").toString(),msg,SEND_FEEDBACK);
         }
     }
 }

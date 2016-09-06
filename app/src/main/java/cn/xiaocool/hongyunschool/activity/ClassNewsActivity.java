@@ -115,7 +115,7 @@ public class ClassNewsActivity extends BaseActivity {
         }else if(type == 1){
             url = NetConstantUrl.GET_CLASS_NEWS_RECEIVE + "&receiverid=" + SPUtils.get(context,LocalConstant.USER_BABYID,"").toString();
         }else if(type == 2||type == 4){
-            url = NetConstantUrl.GET_CLASS_NEWS_ALL;
+            url = NetConstantUrl.GET_CLASS_NEWS_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1");
         }
         VolleyUtil.VolleyGetRequest(this, url, new
                 VolleyUtil.VolleyJsonCallback() {

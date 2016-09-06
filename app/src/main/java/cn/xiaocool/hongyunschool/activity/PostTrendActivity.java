@@ -123,7 +123,9 @@ public class PostTrendActivity extends BaseActivity {
                     picArray.add(photo.getPicname());
                 }
                 String picname = StringJoint.arrayJointchar(picArray, ",");
-                new SendRequest(context,handler).send_trend(userid, "1", classid, activityPostTrendEdContent.getText().toString(),picname,0x110);
+                new SendRequest(context,handler).send_trend(userid,
+                        SPUtils.get(context,LocalConstant.SCHOOL_ID,"1").toString(),
+                        classid, activityPostTrendEdContent.getText().toString(),picname,0x110);
             }
 
             @Override

@@ -33,6 +33,11 @@ public class LocalConstant {
     public static final String USER_TYPE = "userlicense";
 
     /**
+     * 学校id
+     */
+    public static final String SCHOOL_ID = "schoolid";
+
+    /**
      * 是否为校长
      * y-->是 n-->不是
      */

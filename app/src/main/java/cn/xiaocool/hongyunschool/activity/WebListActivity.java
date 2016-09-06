@@ -84,7 +84,7 @@ public class WebListActivity extends BaseActivity {
     @Override
     public void requsetData() {
 
-        String schoolid = (String) SPUtils.get(this,"schoolid","1");
+        String schoolid = (String) SPUtils.get(this,LocalConstant.SCHOOL_ID,"1");
 
         String url = "";
 

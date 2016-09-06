@@ -184,6 +184,7 @@ public class LoginActivity extends BaseActivity {
                 BabyInfo babyInfo = getBabyInfoFromJson(result).get(0);
                 SPUtils.put(context, LocalConstant.USER_BABYID, babyInfo.getStudentid());
                 SPUtils.put(context, LocalConstant.USER_CLASSID, babyInfo.getClasslist().get(0).getClassid());
+                SPUtils.put(context, LocalConstant.SCHOOL_ID,babyInfo.getClasslist().get(0).getSchoolid());
                 startActivity(MainActivity.class);
                 finish();
             }
@@ -273,6 +274,9 @@ public class LoginActivity extends BaseActivity {
      * 将需要的信息存储到本地
      */
     private void spInLocal() {
+        if (type.equals("1")){
+            SPUtils.put(context,LocalConstant.SCHOOL_ID,loginReturn.getSchoolid());
+        }
         SPUtils.put(context, LocalConstant.USER_ID, loginReturn.getId());
         SPUtils.put(context, LocalConstant.USER_NAME, loginReturn.getName());
         SPUtils.put(context, LocalConstant.USER_PHOTO, loginReturn.getPhoto());

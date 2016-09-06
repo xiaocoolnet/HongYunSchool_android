@@ -193,7 +193,9 @@ public class AddSchoolNewsActivity extends BaseActivity {
                     picArray.add(photo.getPicname());
                 }
                 String picname = StringJoint.arrayJointchar(picArray,",");
-                new SendRequest(AddSchoolNewsActivity.this,handler).send_newsgroup(send_user_id,send_user_name,addsnContent.getText().toString(),id,picname,ADD_KEY);
+                new SendRequest(AddSchoolNewsActivity.this,handler).send_newsgroup(send_user_id,
+                        SPUtils.get(context,LocalConstant.SCHOOL_ID,"1").toString(),
+                        addsnContent.getText().toString(),id,picname,ADD_KEY);
             }
 
             @Override

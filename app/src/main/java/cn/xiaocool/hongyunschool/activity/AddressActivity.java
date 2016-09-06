@@ -16,7 +16,9 @@ import butterknife.ButterKnife;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.fragment.ParentFragment;
 import cn.xiaocool.hongyunschool.fragment.TeacherFragment;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 
 public class AddressActivity extends BaseActivity {
     @BindView(R.id.activity_address_tab)
@@ -31,6 +33,7 @@ public class AddressActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
         ButterKnife.bind(this);
+        context = this;
         setTopName("通讯录");
         setFragment();
     }
@@ -39,13 +42,21 @@ public class AddressActivity extends BaseActivity {
      * 设置fragment
      */
     private void setFragment() {
-        fragments = new ArrayList<>();
-        TeacherFragment teacherFragment = new TeacherFragment();
-        ParentFragment parentFragment = new ParentFragment();
-        fragments.add(teacherFragment);
-        fragments.add(parentFragment);
-        activityAddressViewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
-        activityAddressTab.setViewPager(activityAddressViewPager);
+        if(SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("0")){
+            fragments = new ArrayList<>();
+            TeacherFragment teacherFragment = new TeacherFragment();
+            fragments.add(teacherFragment);
+            activityAddressViewPager.setAdapter(new MyParentAdapter(getSupportFragmentManager()));
+            activityAddressTab.setViewPager(activityAddressViewPager);
+        }else{
+            fragments = new ArrayList<>();
+            TeacherFragment teacherFragment = new TeacherFragment();
+            ParentFragment parentFragment = new ParentFragment();
+            fragments.add(teacherFragment);
+            fragments.add(parentFragment);
+            activityAddressViewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
+            activityAddressTab.setViewPager(activityAddressViewPager);
+        }
     }
 
     @Override
@@ -61,6 +72,33 @@ public class AddressActivity extends BaseActivity {
         private String[] titles = {"老师", "家长"};
 
         public MyAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles[position];
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+    }
+
+    /**
+     * viewpager适配器
+     */
+    private class MyParentAdapter extends FragmentPagerAdapter {
+
+        private String[] titles = {"老师"};
+
+        public MyParentAdapter(FragmentManager fm) {
             super(fm);
         }
 

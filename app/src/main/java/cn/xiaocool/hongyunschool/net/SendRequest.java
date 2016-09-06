@@ -36,7 +36,7 @@ public class SendRequest {
      * Demo:http://wxt.xiaocool.net/index.php?g=apps&m=message&a=send_message&send_user_id=600&schoolid=1&send_user_name=呵呵
      * &message_content=222&receiver_user_id=597,600&picture_url=ajhsdiaho.png<>
      */
-    public void send_newsgroup(final String send_user_id,final String send_user_name,final String message_content, final String receiver_user_id, final String picture_url, final int KEY) {
+    public void send_newsgroup(final String send_user_id,final String schoolid,final String message_content, final String receiver_user_id, final String picture_url, final int KEY) {
         new Thread() {
             Message msg = Message.obtain();
 
@@ -44,10 +44,10 @@ public class SendRequest {
 
                 String data = "";
                 if (picture_url.equals("null")) {
-                    data = "&send_user_id=" + send_user_id + "&schoolid=" + 1 + "&send_user_name=" + send_user_name
+                    data = "&send_user_id=" + send_user_id + "&schoolid=" + schoolid + "&send_user_name=" + ""
                             + "&message_content=" + message_content + "&receiver_user_id=" + receiver_user_id;
                 } else {
-                    data = "&send_user_id=" + send_user_id + "&schoolid=" + 1 + "&send_user_name=" + send_user_name
+                    data = "&send_user_id=" + send_user_id + "&schoolid=" + schoolid + "&send_user_name=" + ""
                             + "&message_content=" + message_content + "&receiver_user_id=" + receiver_user_id + "&picture_url=" + picture_url;
                 }
                 Log.e("send_school_news",NetConstantUrl.SEND_SCHOOL_NEWS + data);
@@ -83,10 +83,10 @@ public class SendRequest {
 
                 String data = "";
                 if (picurl.equals("null")) {
-                    data = "&userid=" + userid + "&schoolid=" + 1 + "&type=" + "1"
+                    data = "&userid=" + userid + "&schoolid=" + schoolid + "&type=" + "1"
                             + "&content=" + content + "&classid=" + classid;
                 } else {
-                    data = "&userid=" + userid + "&schoolid=" + 1 + "&type=" + "1"
+                    data = "&userid=" + userid + "&schoolid=" + schoolid + "&type=" + "1"
                             + "&content=" + content + "&classid=" + classid + "&picurl=" + picurl;
                 }
                 String result_data = NetUtil.getResponse(NetConstantUrl.SEND_TREND, data);
@@ -151,10 +151,10 @@ public class SendRequest {
 
                 String data = "";
                 if (picture_url.equals("null")) {
-                    data = "&schoolid=" + "1" + "&teacherid=" + teacherid + "&title=" + title
+                    data = "&schoolid=" + schoolid + "&teacherid=" + teacherid + "&title=" + title
                             + "&content=" + content + "&receiverid=" + receiverid ;
                 } else {
-                    data = "&schoolid=" + "1" + "&teacherid=" + teacherid + "&title=" + title
+                    data = "&schoolid=" + schoolid + "&teacherid=" + teacherid + "&title=" + title
                             + "&content=" + content + "&receiverid=" + receiverid + "&picture_url=" + picture_url;
                 }
                 String result_data = NetUtil.getResponse(NetConstantUrl.SEND_CLASS_NEW, data);
@@ -331,7 +331,7 @@ public class SendRequest {
             Message msg = Message.obtain();
 
             public void run() {
-                String data = "&classid=" + classid + "&schoolid=" + "1" + "&userid=" + userid
+                String data = "&classid=" + classid + "&schoolid=" + schoolid + "&userid=" + userid
                             + "&content=" + content ;
                 String result_data = NetUtil.getResponse("http://hyx.xiaocool.net/index.php?g=apps&m=student&a=AddParentMessage", data);
                 Log.e("send_feedback-----",result_data);

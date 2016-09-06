@@ -26,6 +26,7 @@ import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 
 public class WebOtherListActivity extends BaseActivity {
@@ -79,24 +80,25 @@ public class WebOtherListActivity extends BaseActivity {
     @Override
     public void requsetData() {
         String url = "";
+        String schoolid = SPUtils.get(context,LocalConstant.SCHOOL_ID,"1").toString();
         switch (getIntent().getStringExtra("title")){
             case "学校作业":
-                url = NetConstantUrl.FIVE_PUBLIC_HOMEWORK;
+                url = NetConstantUrl.FIVE_PUBLIC_HOMEWORK +schoolid;
                 break;
             case "校本课程":
-                url = NetConstantUrl.FIVE_PUBLIC_SUBJECT1;
+                url = NetConstantUrl.FIVE_PUBLIC_SUBJECT1+schoolid;
                 break;
             case "选修课程":
-                url = NetConstantUrl.FIVE_PUBLIC_SUBJECT2;
+                url = NetConstantUrl.FIVE_PUBLIC_SUBJECT2+schoolid;
                 break;
             case "课时":
-                url = NetConstantUrl.FIVE_PUBLIC_SUBJECT_TIME;
+                url = NetConstantUrl.FIVE_PUBLIC_SUBJECT_TIME+schoolid;
                 break;
             case "期末检测":
-                url = NetConstantUrl.FIVE_PUBLIC_END;
+                url = NetConstantUrl.FIVE_PUBLIC_END+schoolid;
                 break;
             case "节假日":
-                url = NetConstantUrl.FIVE_PUBLIC_HOLIDAY;
+                url = NetConstantUrl.FIVE_PUBLIC_HOLIDAY+schoolid;
                 break;
         }
         VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {

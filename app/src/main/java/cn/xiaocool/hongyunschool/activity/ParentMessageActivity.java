@@ -128,7 +128,7 @@ public class ParentMessageActivity extends BaseActivity {
         if(type == 1){
             url = NetConstantUrl.GET_FEEDBACK_PARENT + SPUtils.get(context,LocalConstant.USER_ID,"");
         }else if(type == 2){
-            url = NetConstantUrl.GET_FEEDBACK_LEADER;
+            url = NetConstantUrl.GET_FEEDBACK_LEADER + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1");
         }else if(type == 3){
             url = NetConstantUrl.GET_FEEDBACK_CLASS + SPUtils.get(context,LocalConstant.USER_CLASSID,"");
         }

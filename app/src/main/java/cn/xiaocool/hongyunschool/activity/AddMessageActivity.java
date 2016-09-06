@@ -1,5 +1,6 @@
 package cn.xiaocool.hongyunschool.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -27,12 +28,14 @@ import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.adapter.LocalImgGridAdapter;
 import cn.xiaocool.hongyunschool.bean.PhotoWithPath;
 import cn.xiaocool.hongyunschool.callback.PushImage;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.net.SendRequest;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.GalleryFinalUtil;
 import cn.xiaocool.hongyunschool.utils.GetImageUtil;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.PushImageUtil;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.StringJoint;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.view.NoScrollGridView;
@@ -71,12 +74,14 @@ public class AddMessageActivity extends BaseActivity {
             }
         }
     };
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_school_news);
         ButterKnife.bind(this);
+        context = this;
         mPhotoList = new ArrayList<>();
         photoWithPaths = new ArrayList<>();
         galleryFinalUtil = new GalleryFinalUtil(9);
@@ -182,7 +187,9 @@ public class AddMessageActivity extends BaseActivity {
                     picArray.add(photo.getPicname());
                 }
                 String picname = StringJoint.arrayJointchar(picArray, ",");
-                new SendRequest(AddMessageActivity.this, handler).send_newsgroup("", "", addsnContent.getText().toString(), id, picname, ADD_KEY);
+                new SendRequest(AddMessageActivity.this, handler).send_newsgroup("",
+                        SPUtils.get(context, LocalConstant.SCHOOL_ID,"1").toString()
+                        , addsnContent.getText().toString(), id, picname, ADD_KEY);
             }
 
             @Override

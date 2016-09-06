@@ -112,7 +112,8 @@ public class ThirdFragment extends BaseFragment {
         beginId = 0;
         if(type == 1){
         }
-        url = NetConstantUrl.GET_TRENDS_PARENT +setParams(userid,classid,beginId+"");
+        url = NetConstantUrl.GET_TRENDS_PARENT +SPUtils.get(context,LocalConstant.SCHOOL_ID,"1")
+                +setParams(userid,classid,beginId+"");
 
         VolleyUtil.VolleyGetRequest(context, url, new
                 VolleyUtil.VolleyJsonCallback() {
@@ -166,7 +167,8 @@ public class ThirdFragment extends BaseFragment {
     private void loadTrend() {
         String url = "";
         beginId = beginId + trendsList.size();
-        url = NetConstantUrl.GET_TRENDS_PARENT +setParams(userid,classid,beginId+"");
+        url = NetConstantUrl.GET_TRENDS_PARENT +SPUtils.get(context,LocalConstant.SCHOOL_ID,"1")
+                +setParams(userid,classid,beginId+"");
 
         VolleyUtil.VolleyGetRequest(context, url, new
                 VolleyUtil.VolleyJsonCallback() {

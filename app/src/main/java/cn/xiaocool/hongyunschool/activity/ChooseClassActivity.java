@@ -1,5 +1,6 @@
 package cn.xiaocool.hongyunschool.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,10 +26,12 @@ import cn.xiaocool.hongyunschool.adapter.EListAdapter;
 import cn.xiaocool.hongyunschool.bean.Child;
 import cn.xiaocool.hongyunschool.bean.ChooseReciveBean;
 import cn.xiaocool.hongyunschool.bean.Group;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 
 public class ChooseClassActivity extends BaseActivity {
@@ -45,12 +48,14 @@ public class ChooseClassActivity extends BaseActivity {
     private List<ChooseReciveBean> chooseReciveBeans;
     private int size;
     private ArrayList<String> selectedIds, selectedNames;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_class);
         ButterKnife.bind(this);
+        context = this;
         setTopName("选择班级");
         setRightText("完成").setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +83,7 @@ public class ChooseClassActivity extends BaseActivity {
 
     @Override
     public void requsetData() {
-        String url = NetConstantUrl.GET_SCHOOL_CLASS;
+        String url = NetConstantUrl.GET_SCHOOL_CLASS + SPUtils.get(context, LocalConstant.SCHOOL_ID,"1");
         VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {

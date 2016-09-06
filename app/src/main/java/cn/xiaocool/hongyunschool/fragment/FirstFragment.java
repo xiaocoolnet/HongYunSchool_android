@@ -130,9 +130,7 @@ public class FirstFragment extends BaseFragment {
 
     @Override
     public void initData() {
-//http://wxt.xiaocool.net/index.php?g=apps&m=school&a=getSchoolNotices&schoolid=1
-        //getSchoolNews
-        String schoolid = (String) SPUtils.get(mActivity, "schoolid", "1");
+        String schoolid = (String) SPUtils.get(mActivity, LocalConstant.SCHOOL_ID, "1");
         String announceUrl = NetConstantUrl.GET_WEB_SCHOOL_NOTICE + schoolid;
         //获取校园公告
         VolleyUtil.VolleyGetRequest(mActivity, announceUrl, new VolleyUtil.VolleyJsonCallback() {

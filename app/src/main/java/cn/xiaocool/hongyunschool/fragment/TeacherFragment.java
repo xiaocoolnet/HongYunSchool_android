@@ -26,9 +26,11 @@ import cn.xiaocool.hongyunschool.adapter.AddressListAdapter;
 import cn.xiaocool.hongyunschool.bean.Child;
 import cn.xiaocool.hongyunschool.bean.ClassTeacher;
 import cn.xiaocool.hongyunschool.bean.Group;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 
 
 /**
@@ -70,7 +72,7 @@ public class TeacherFragment extends Fragment {
      * 加载数据
      */
     private void getData() {
-        String url = NetConstantUrl.GET_CLASS_TEACHER;
+        String url = NetConstantUrl.GET_CLASS_TEACHER + SPUtils.get(context, LocalConstant.SCHOOL_ID,"1");
         VolleyUtil.VolleyGetRequest(context, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
