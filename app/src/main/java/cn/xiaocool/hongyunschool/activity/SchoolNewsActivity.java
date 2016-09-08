@@ -14,6 +14,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -44,6 +46,7 @@ public class SchoolNewsActivity extends BaseActivity {
     private CommonAdapter adapter;
     private List<SchoolNewsSend> schoolNewsSendList;
     private List<SchoolNewsReceiver> schoolNewsReceiverList;
+    private List<SchoolNewsReceiver.ReceiveBean> receiveBeans;
     public static final String TAG = "学校消息";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class SchoolNewsActivity extends BaseActivity {
         ButterKnife.bind(this);
         schoolNewsSendList = new ArrayList<>();
         schoolNewsReceiverList = new ArrayList<>();
+        receiveBeans = new ArrayList<>();
         setTopName("学校消息");
         context = this;
         //判断身份
@@ -138,12 +142,19 @@ public class SchoolNewsActivity extends BaseActivity {
         if(type == 1||type ==3){
             schoolNewsReceiverList.clear();
             schoolNewsReceiverList.addAll(getBeanFromJsonReceive(result));
+            receiveBeans.addAll(changeBean(schoolNewsReceiverList));
+            Collections.sort(receiveBeans, new Comparator<SchoolNewsReceiver.ReceiveBean>() {
+                @Override
+                public int compare(SchoolNewsReceiver.ReceiveBean lhs, SchoolNewsReceiver.ReceiveBean rhs) {
+                    return (int) (Long.parseLong(rhs.getSend_message().getMessage_time()) - Long.parseLong(lhs.getSend_message().getMessage_time()));
+                }
+            });
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             } else {
-                adapter = new CommonAdapter<SchoolNewsReceiver>(getBaseContext(), schoolNewsReceiverList, R.layout.school_news_item) {
+                adapter = new CommonAdapter<SchoolNewsReceiver.ReceiveBean>(getBaseContext(), receiveBeans, R.layout.school_news_item) {
                     @Override
-                    public void convert(ViewHolder holder, SchoolNewsReceiver datas) {
+                    public void convert(ViewHolder holder, SchoolNewsReceiver.ReceiveBean datas) {
                         setReceiveItem(holder, datas);
                     }
                 };
@@ -167,18 +178,26 @@ public class SchoolNewsActivity extends BaseActivity {
 
     }
 
+    private List<SchoolNewsReceiver.ReceiveBean> changeBean(List<SchoolNewsReceiver> schoolNewsReceiverList) {
+        List<SchoolNewsReceiver.ReceiveBean> receiver = new ArrayList<>();
+        for(int i = 0;i<schoolNewsReceiverList.size();i++){
+            receiver.addAll(schoolNewsReceiverList.get(i).getReceive());
+        }
+        return receiver;
+    }
+
 
     /**
      * 对item 操作(接收)
      * @param holder
      * @param datas
      */
-    private void setReceiveItem(ViewHolder holder, SchoolNewsReceiver datas) {
+    private void setReceiveItem(ViewHolder holder, SchoolNewsReceiver.ReceiveBean datas) {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
-        for (int i=0;i<datas.getReceive().get(0).getPic().size();i++){
-            images.add(datas.getReceive().get(0).getPic().get(i).getPicture_url());
+        for (int i=0;i<datas.getPic().size();i++){
+            images.add(datas.getPic().get(i).getPicture_url());
         }
 
         /*//判断已读和未读
@@ -195,9 +214,10 @@ public class SchoolNewsActivity extends BaseActivity {
             }
         }*/
 
-        holder.setText(R.id.item_sn_content, datas.getReceive().get(0).getSend_message().getMessage_content())
-                .setTimeText(R.id.item_sn_time, datas.getReceive().get(0).getSend_message().getMessage_time())
-                .setText(R.id.item_sn_nickname,datas.getReceive().get(0).getSend_message().getSend_user_name())
+        holder.setText(R.id.item_sn_content, datas.getSend_message().getMessage_content())
+                .setTimeText(R.id.item_sn_time, datas.getSend_message().getMessage_time())
+                .setText(R.id.item_sn_nickname,datas.getSend_message().getSend_user_name())
+                .setImageByUrl(R.id.item_sn_head_iv,datas.getSend_message().getPhoto())
                 .setItemImages(this, R.id.item_sn_onepic, R.id.item_sn_gridpic, images);
                 //.setText(R.id.item_sn_read, "总发" + datas.getReceiver().size() + " 已读" + alreadyReads.size() + " 未读" + notReads.size());
     }
@@ -230,9 +250,10 @@ public class SchoolNewsActivity extends BaseActivity {
         }*/
 
         holder.setText(R.id.item_sn_content, datas.getMessage_content())
-        .setTimeText(R.id.item_sn_time,datas.getMessage_time())
-        .setText(R.id.item_sn_nickname,datas.getSend_user_name())
-        .setItemImages(this,R.id.item_sn_onepic,R.id.item_sn_gridpic,images);
+        .setTimeText(R.id.item_sn_time, datas.getMessage_time())
+        .setText(R.id.item_sn_nickname, datas.getSend_user_name())
+                .setImageByUrl(R.id.item_sn_head_iv, datas.getUserphoto())
+                .setItemImages(this, R.id.item_sn_onepic, R.id.item_sn_gridpic, images);
         //.setText(R.id.item_sn_read,"总发" + datas.getReceiver().size()+" 已读"+alreadyReads.size()+" 未读"+notReads.size());
 
         //进入已读未读界面

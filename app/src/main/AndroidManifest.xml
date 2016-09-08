@@ -121,8 +121,10 @@
 
         <activity android:name=".activity.WebOtherListActivity" />
         <activity android:name=".activity.FivePublicWebDetailActivity" />
-        <activity android:name=".activity.AddGroupMessageActivity"></activity>
-        <activity android:name=".activity.ChooseParentActivity"/>
+        <activity android:name=".activity.AddGroupMessageActivity" />
+        <activity android:name=".activity.ChooseParentActivity" />
+        <activity android:name=".activity.OnlineCommentActivity" />
+        <activity android:name=".activity.FeedbackActivity"></activity>
     </application>
 
 </manifest>

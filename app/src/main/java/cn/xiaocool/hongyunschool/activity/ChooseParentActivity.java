@@ -83,7 +83,12 @@ public class ChooseParentActivity extends BaseActivity {
 
     @Override
     public void requsetData() {
-        String url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context, LocalConstant.USER_ID, "");
+        String url = "";
+        if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")){
+            url = NetConstantUrl.GET_PARENT_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1");
+        }else{
+            url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context, LocalConstant.USER_ID, "");
+        }
         VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {

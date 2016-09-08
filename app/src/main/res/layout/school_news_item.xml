@@ -102,10 +102,9 @@
             android:verticalSpacing="10dp"
             android:visibility="gone" />
     </RelativeLayout>
+    
 
-    <include layout="@layout/divider_line_half" />
-
-    <RelativeLayout
+<!--    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/img_layout"
@@ -130,7 +129,7 @@
         </LinearLayout>
 
 
-    </RelativeLayout>
+    </RelativeLayout>-->
 
 
     <include layout="@layout/divider_line_10" />

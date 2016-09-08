@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
@@ -55,6 +56,9 @@ public class MainActivity extends BaseActivity {
         Log.e("TAG", SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE,"").toString()
                 + SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER,"").toString()
                 + SPUtils.get(context, LocalConstant.USER_CLASSID,"").toString());
+        TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        String DEVICE_ID = tm.getDeviceId();
+        Log.e("TAG",DEVICE_ID);
     }
 
     @Override
