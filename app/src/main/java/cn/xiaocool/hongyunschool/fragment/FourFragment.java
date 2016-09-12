@@ -27,6 +27,7 @@ import cn.xiaocool.hongyunschool.activity.MyIntegrationActivity;
 import cn.xiaocool.hongyunschool.activity.OnlineCommentActivity;
 import cn.xiaocool.hongyunschool.activity.PersonalInfoActivity;
 import cn.xiaocool.hongyunschool.activity.QRCodeActivity;
+import cn.xiaocool.hongyunschool.activity.ServiceBuyActivity;
 import cn.xiaocool.hongyunschool.activity.SettingActivity;
 import cn.xiaocool.hongyunschool.activity.WebListActivity;
 import cn.xiaocool.hongyunschool.bean.UserInfo;
@@ -123,6 +124,7 @@ public class FourFragment extends BaseFragment {
                 break;
             //服务购买
             case R.id.fragment_four_rl_service:
+                context.startActivity(new Intent(context, ServiceBuyActivity.class));
                 break;
             //通讯录
             case R.id.fragment_four_rl_address:

@@ -90,7 +90,7 @@ public class OnlineCommentActivity extends BaseActivity {
                                     .setTimeText(R.id.tv_comment_time,onlineComment.getSend_time())
                                     .setText(R.id.tv_feedback,onlineComment.getFeedback().equals("")?"客服还没有给回复":onlineComment.getFeedback())
                                     .setTimeText(R.id.tv_feedback_time,onlineComment.getFeed_time().equals("0")?date:onlineComment.getFeed_time())
-                                    .setImageResource(R.id.iv_feedback,onlineComment.getFeedback().equals("")?R.drawable.ic_jiantouxia:R.drawable.ic_jiantouyou);
+                                    .setImageResource(R.id.iv_feedback,onlineComment.getFeedback().equals("")?R.drawable.weihuifu:R.drawable.huifu);
                         }
                     };
                     fragmentThirdLvTrend.setAdapter(adapter);

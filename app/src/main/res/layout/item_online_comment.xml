@@ -13,7 +13,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/icon_load_ing"/>
+            android:src="@drawable/liuyan"/>
         <TextView
             android:id="@+id/tv_comment"
             android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             android:id="@+id/iv_feedback"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/icon_load_ing"/>
+            android:src="@drawable/weihuifu"/>
         <TextView
             android:id="@+id/tv_feedback"
             android:layout_width="match_parent"
