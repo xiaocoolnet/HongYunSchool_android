@@ -36,7 +36,7 @@ public class SendRequest {
      * Demo:http://wxt.xiaocool.net/index.php?g=apps&m=message&a=send_message&send_user_id=600&schoolid=1&send_user_name=呵呵
      * &message_content=222&receiver_user_id=597,600&picture_url=ajhsdiaho.png<>
      */
-    public void send_newsgroup(final String send_user_id,final String schoolid,final String message_content, final String receiver_user_id, final String picture_url, final int KEY) {
+    public void send_newsgroup(final String send_user_id,final String schoolid,final String message_content,final String sendName, final String receiver_user_id, final String picture_url, final int KEY) {
         new Thread() {
             Message msg = Message.obtain();
 
@@ -44,10 +44,10 @@ public class SendRequest {
 
                 String data = "";
                 if (picture_url.equals("null")) {
-                    data = "&send_user_id=" + send_user_id + "&schoolid=" + schoolid + "&send_user_name=" + ""
+                    data = "&send_user_id=" + send_user_id + "&schoolid=" + schoolid + "&send_user_name=" + sendName
                             + "&message_content=" + message_content + "&receiver_user_id=" + receiver_user_id;
                 } else {
-                    data = "&send_user_id=" + send_user_id + "&schoolid=" + schoolid + "&send_user_name=" + ""
+                    data = "&send_user_id=" + send_user_id + "&schoolid=" + schoolid + "&send_user_name=" + sendName
                             + "&message_content=" + message_content + "&receiver_user_id=" + receiver_user_id + "&picture_url=" + picture_url;
                 }
                 Log.e("send_school_news",NetConstantUrl.SEND_SCHOOL_NEWS + data);
@@ -378,6 +378,27 @@ public class SendRequest {
             public void run() {
                 String data = "&phone=" + phone + "&userid=" + userid + "&message=" + message;
                 String result_data = NetUtil.getResponse("http://hyx.xiaocool.net/index.php?g=apps&m=index&a=SendMessageInfo", data);
+                Log.e("sendGroup-----",result_data);
+                try {
+                    JSONObject obj = new JSONObject(result_data);
+                    msg.what = KEY;
+                    msg.obj = obj;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+        }.start();
+    }
+    //http://hyx.xiaocool.net/index.php?g=apps&m=index&a=ServiceOnline&userid=597&schoolid=1&content=%E7%95%99%E8%A8%80
+    public void sendFeedback(final String userid, final String schoolid, final String content,final int KEY) {
+        new Thread() {
+            Message msg = Message.obtain();
+
+            public void run() {
+                String data = "&userid=" + userid + "&schoolid=" + schoolid + "&content=" + content;
+                String result_data = NetUtil.getResponse("http://hyx.xiaocool.net/index.php?g=apps&m=index&a=ServiceOnline", data);
                 Log.e("sendGroup-----",result_data);
                 try {
                     JSONObject obj = new JSONObject(result_data);

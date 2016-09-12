@@ -88,6 +88,7 @@ public class MyApplication extends Application {
         setWeShare();
     }
 
+
     /**
      * 微信分享
      */

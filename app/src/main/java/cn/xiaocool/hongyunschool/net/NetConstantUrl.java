@@ -174,7 +174,7 @@ public class NetConstantUrl {
     /**
      * 获取全校班级和家长
      */
-    public static final String GET_PARENT_ALL = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=GetSchoolParent&schoolid=1";
+    public static final String GET_PARENT_ALL = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=GetSchoolParent&schoolid=";
 
     /**
      * 获取老师任教班级和家长
@@ -249,4 +249,9 @@ public class NetConstantUrl {
      * 五公开专栏（节假日）
      */
     public static final String FIVE_PUBLIC_HOLIDAY = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=getholiday&schoolid=";
+
+    /**
+     * 获取在线留言
+     */
+    public static final String GET_ONLINE_COMMENT = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=GetServiceFeed&userid=";
 }

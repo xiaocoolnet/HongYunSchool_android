@@ -189,7 +189,7 @@ public class AddMessageActivity extends BaseActivity {
                 String picname = StringJoint.arrayJointchar(picArray, ",");
                 new SendRequest(AddMessageActivity.this, handler).send_newsgroup("",
                         SPUtils.get(context, LocalConstant.SCHOOL_ID,"1").toString()
-                        , addsnContent.getText().toString(), id, picname, ADD_KEY);
+                        , addsnContent.getText().toString(), "",id, picname, ADD_KEY);
             }
 
             @Override

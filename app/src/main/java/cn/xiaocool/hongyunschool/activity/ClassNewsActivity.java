@@ -234,6 +234,7 @@ public class ClassNewsActivity extends BaseActivity {
         .setTimeText(R.id.item_sn_time,datas.getHomework_info().get(0).getCreate_time())
         .setText(R.id.item_sn_nickname,datas.getHomework_info().get(0).getName())
                 .setItemImages(this, R.id.item_sn_onepic, R.id.item_sn_gridpic, images)
+                .setImageByUrl(R.id.item_sn_head_iv,datas.getHomework_info().get(0).getPhoto())
                 .setText(R.id.item_sn_read, "总发" + datas.getReceive_list().size() + " 已读" + alreadyReads.size() + " 未读" + notReads.size());
 
     }
@@ -268,7 +269,8 @@ public class ClassNewsActivity extends BaseActivity {
         holder.setText(R.id.item_sn_content, datas.getContent())
                 .setTimeText(R.id.item_sn_time, datas.getCreate_time())
                 .setText(R.id.item_sn_nickname, datas.getTeacher_info().getName())
-                .setItemImages(this, R.id.item_sn_onepic, R.id.item_sn_gridpic,images)
+                .setItemImages(this, R.id.item_sn_onepic, R.id.item_sn_gridpic, images)
+                .setImageByUrl(R.id.item_sn_head_iv, datas.getTeacher_info().getPhoto())
                 .setText(R.id.item_sn_read, "总发" + datas.getReceiverlist().size() + " 已读" + alreadyReads.size() + " 未读" + notReads.size());
 
         //进入已读未读界面
@@ -313,7 +315,8 @@ public class ClassNewsActivity extends BaseActivity {
         holder.setText(R.id.item_sn_content, datas.getContent())
                 .setTimeText(R.id.item_sn_time, datas.getCreate_time())
                 .setText(R.id.item_sn_nickname, datas.getName())
-                .setItemImages(this, R.id.item_sn_onepic, R.id.item_sn_gridpic,images)
+                .setItemImages(this, R.id.item_sn_onepic, R.id.item_sn_gridpic, images)
+                .setImageByUrl(R.id.item_sn_head_iv, datas.getPhoto())
                 .setText(R.id.item_sn_read, "总发" + datas.getReceiverlist().size() + " 已读" + alreadyReads.size() + " 未读" + notReads.size());
 
         //进入已读未读界面

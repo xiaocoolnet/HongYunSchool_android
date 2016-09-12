@@ -28,7 +28,17 @@ public class SchoolNewsSend {
     private String message_content;
     private String message_time;
     private String message_type;
+    private String userphoto;
     private int receiver_num;
+
+    public String getUserphoto() {
+        return userphoto;
+    }
+
+    public void setUserphoto(String userphoto) {
+        this.userphoto = userphoto;
+    }
+
     /**
      * receiver_user_id : 647
      * receiver_user_name : 随便1
@@ -36,6 +46,7 @@ public class SchoolNewsSend {
      * photo : weixiaotong.png
      * phone :
      */
+
 
     private List<ReceiverBean> receiver;
     /**

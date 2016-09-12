@@ -159,7 +159,6 @@ public class AddClassNewsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 sendNews();
-                ProgressUtil.showLoadingDialog(AddClassNewsActivity.this);
             }
         });
     }
@@ -177,7 +176,7 @@ public class AddClassNewsActivity extends BaseActivity {
             ToastUtil.showShort(this,"请选择接收人!");
             return;
         }
-
+        ProgressUtil.showLoadingDialog(AddClassNewsActivity.this);
         //上传图片成功后发布
         new PushImageUtil().setPushIamge(this, photoWithPaths, new PushImage() {
             @Override
