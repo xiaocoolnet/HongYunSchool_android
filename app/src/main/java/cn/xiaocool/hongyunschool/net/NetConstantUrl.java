@@ -5,7 +5,31 @@ package cn.xiaocool.hongyunschool.net;
  */
 public class NetConstantUrl {
 
+    /**
+     * 获取验证码
+     * &phone
+     *
+     */
+    public static final String GET_PHONE_CODE = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=SendMobileCode";
 
+    /**
+     * 判断验证码是否正确
+     * &phone
+     * &code
+     */
+    public static final String PHONE_CODE_ISOK = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=UserVerify";
+    /**
+     * 忘记密码--设置密码
+     * phone
+     * pass
+     */
+    public static final String FORGET_SET_PSW = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=UpadataPass_Activate";
+    /**
+     * 修改密码
+     * userid
+     * pass
+     */
+    public static final String RESET_PSW = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=forgetPass_Activate";
     /**
      * 登录
      * 参数&phone=17862816935&password=123&type=1

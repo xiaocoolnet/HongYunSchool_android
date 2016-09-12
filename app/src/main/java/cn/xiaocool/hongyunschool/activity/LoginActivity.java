@@ -120,6 +120,7 @@ public class LoginActivity extends BaseActivity {
                 if (JsonResult.JSONparser(context, result)) {
                     loginReturn = new LoginReturn();
                     loginReturn = getBeanFromJson(result);
+                    SPUtils.put(context, LocalConstant.USER_PASSWORD, activityLoginEdPsw.getText().toString());
                     spInLocal();
                     getDuty();
                 }
@@ -281,7 +282,7 @@ public class LoginActivity extends BaseActivity {
         SPUtils.put(context, LocalConstant.USER_NAME, loginReturn.getName());
         SPUtils.put(context, LocalConstant.USER_PHOTO, loginReturn.getPhoto());
         SPUtils.put(context, LocalConstant.USER_TYPE, type);
-        SPUtils.put(context, LocalConstant.USER_PASSWORD, loginReturn.getPassword());
+
     }
 
     /**

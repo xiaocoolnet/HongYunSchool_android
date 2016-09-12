@@ -20,7 +20,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
+import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
+import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.ProgressUtil;
+import cn.xiaocool.hongyunschool.utils.ToastUtil;
 
 public class ForgetPswActivity extends BaseActivity {
     @BindView(R.id.activity_forget_psw_ed_phone)
@@ -42,7 +47,7 @@ public class ForgetPswActivity extends BaseActivity {
     private Context context;
 
     private int time = 30;
-
+    private int flag = 0;//是否发送验证码标志
     private Handler timeHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -65,7 +70,7 @@ public class ForgetPswActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_psw);
         ButterKnife.bind(this);
-        setTopName("修改密码");
+        setTopName("忘记密码");
         context = this;
     }
 
@@ -79,6 +84,7 @@ public class ForgetPswActivity extends BaseActivity {
         switch (view.getId()) {
             //获取验证码
             case R.id.activity_forget_psw_btn_getcode:
+                flag = 1;
                 getVerification();
                 break;
             //切换密码可见性
@@ -91,8 +97,88 @@ public class ForgetPswActivity extends BaseActivity {
                 break;
             //完成
             case R.id.activity_forget_psw_btn_finish:
+                sendForgetPsy();
                 break;
         }
+    }
+
+    /**
+     * 返回数据
+     */
+    private void sendForgetPsy() {
+
+        final String telephone = activityForgetPswEdPhone.getText().toString().trim();
+        String code = activityForgetPswEdCode.getText().toString().trim();
+        //手机号不能为空
+        //检查手机号码是否合理
+        if (!isMobile(telephone)) {
+            Toast.makeText(context, "手机号码有误，请检查！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //判断是否发送验证码
+        if (flag==0){
+            ToastUtil.showShort(this,"请获取验证码!");
+            return;
+        }
+        if (activityForgetPswEdCode.getText().toString().length()<1){
+            ToastUtil.showShort(this, "请输入验证码!");
+            return;
+        }
+
+        //判断两次输入密码是否相同
+        if (activityForgetPswEdPsw.getText().toString().length()<1||activityForgetPswEdConfirmpsw.getText().toString().length()<1){
+            ToastUtil.showShort(this,"请输入密码!");
+            return;
+        }
+        if (!activityForgetPswEdPsw.getText().toString().equals(activityForgetPswEdConfirmpsw.getText().toString())){
+            ToastUtil.showShort(this,"两次输入密码不同，请重新输入!");
+            return;
+        }
+        final String psw = activityForgetPswEdPsw.getText().toString();
+        //判断验证码是否正确
+        String url = NetConstantUrl.PHONE_CODE_ISOK + "&phone="+telephone+"&code="+code;
+        ProgressUtil.showLoadingDialog(this);
+        VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
+            @Override
+            public void onSuccess(String result) {
+                if (JsonResult.JSONparser(ForgetPswActivity.this,result)){
+
+                    String setPswUrl = NetConstantUrl.FORGET_SET_PSW+"&phone="+telephone+"&pass="+psw;
+                    VolleyUtil.VolleyGetRequest(ForgetPswActivity.this, setPswUrl, new VolleyUtil.VolleyJsonCallback() {
+                        @Override
+                        public void onSuccess(String result) {
+                            if (JsonResult.JSONparser(ForgetPswActivity.this, result)) {
+                                ToastUtil.showShort(ForgetPswActivity.this, "密码找回成功!");
+                                ProgressUtil.dissmisLoadingDialog();
+                                finish();
+
+                            }else {
+                                ToastUtil.showShort(ForgetPswActivity.this,"密码找回失败!");
+                                ProgressUtil.dissmisLoadingDialog();
+                            }
+                        }
+
+                        @Override
+                        public void onError() {
+                            ProgressUtil.dissmisLoadingDialog();
+                        }
+                    });
+
+                }else {
+                    ProgressUtil.dissmisLoadingDialog();
+                    ToastUtil.showShort(ForgetPswActivity.this, "验证码验证失败!");
+
+                }
+
+            }
+
+            @Override
+            public void onError() {
+                ProgressUtil.dissmisLoadingDialog();
+            }
+        });
+
     }
 
     /**
@@ -106,6 +192,22 @@ public class ForgetPswActivity extends BaseActivity {
             return;
         }
         timeHandler.sendEmptyMessageDelayed(1, 100);
+        String url = NetConstantUrl.GET_PHONE_CODE+"&phone="+telephone;
+        VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
+            @Override
+            public void onSuccess(String result) {
+                if (JsonResult.JSONparser(ForgetPswActivity.this,result)){
+                    ToastUtil.showShort(ForgetPswActivity.this,"验证码发送成功!");
+                }else {
+                    ToastUtil.showShort(ForgetPswActivity.this,"验证码发送失败，请稍后再试!");
+                }
+
+            }
+
+            @Override
+            public void onError() {
+            }
+        });
     }
 
     /**
