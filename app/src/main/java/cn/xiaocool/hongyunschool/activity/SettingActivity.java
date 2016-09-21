@@ -16,6 +16,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.android.api.JPushInterface;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.app.MyApplication;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
@@ -81,6 +82,7 @@ public class SettingActivity extends BaseActivity {
             //退出
             case R.id.activity_setting_tv_quit:
                 SPUtils.clear(context);
+                JPushInterface.stopPush(context);
                 startActivity(LoginActivity.class);
                 MyApplication.getInstance().onTerminate();
                 break;
