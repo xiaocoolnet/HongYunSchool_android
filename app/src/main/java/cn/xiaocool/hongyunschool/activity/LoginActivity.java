@@ -16,10 +16,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.bean.BabyInfo;
 import cn.xiaocool.hongyunschool.bean.ClassInfo;
@@ -29,6 +32,7 @@ import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.LogUtils;
 import cn.xiaocool.hongyunschool.utils.ProgressUtil;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
@@ -123,6 +127,7 @@ public class LoginActivity extends BaseActivity {
                     SPUtils.put(context, LocalConstant.USER_PASSWORD, activityLoginEdPsw.getText().toString());
                     spInLocal();
                     getDuty();
+                    setJpushAlias();
                 }
             }
 
@@ -131,6 +136,44 @@ public class LoginActivity extends BaseActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        JPushInterface.resumePush(context);
+    }
+
+    /**
+     * 极光设置别名
+     */
+    private void setJpushAlias() {
+        String userid = (String) SPUtils.get(context,LocalConstant.USER_ID,"");
+        LogUtils.i("userid",userid);
+        JPushInterface.setAlias(getApplicationContext(), userid, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                String logs;
+                switch (i) {
+                    case 0:
+                        logs = "Set tag and alias success";
+                        Log.i("setAlias", logs);
+                        // 建议这里往 SharePreference 里写一个成功设置的状态。成功设置一次后，以后不必再次设置了。
+                        break;
+                    case 6002:
+                        logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
+                        Log.i("setAlias", logs);
+                        // 延迟 60 秒来调用 Handler 设置别名
+//                        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_SET_ALIAS, alias), 1000 * 60);
+                        break;
+                    default:
+                        logs = "Failed with errorCode = " + i;
+                        Log.e("setAlias", logs);
+                }
+
+            }
+        });
+        JPushInterface.resumePush(context);
     }
 
     /**

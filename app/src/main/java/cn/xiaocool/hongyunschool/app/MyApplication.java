@@ -21,6 +21,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
+
 
 /**
  * Created by Administrator on 2016/3/14.
@@ -86,6 +88,15 @@ public class MyApplication extends Application {
         instance = this;
         initImageLoder();
         setWeShare();
+        setJpush();
+    }
+
+    /**
+     * 设置JPUSH
+     */
+    private void setJpush() {
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
     }
 
 
