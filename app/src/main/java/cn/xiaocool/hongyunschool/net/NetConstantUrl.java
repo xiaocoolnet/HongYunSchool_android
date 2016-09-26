@@ -155,7 +155,10 @@ public class NetConstantUrl {
      * 校网H5拼接地址
      */
     public final static String WEB_LINK = "http://wxt.xiaocool.net/index.php?g=portal&m=article";
-
+    /**
+     * 校网图片拼接地址
+     */
+    public final static String WEB_IMAGE_URL = "http://wxt.xiaocool.net";
     /**
      * 系统消息拼接地址
      */

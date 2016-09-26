@@ -28,7 +28,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginLeft="100dp"
             android:hint="请输入手机号"
-            android:text="15888708668"
+            android:text=""
             android:background="@color/white"
             android:drawableRight="@drawable/ic_shanchumima"
             android:textSize="@dimen/font_title_main"
@@ -57,9 +57,10 @@
             android:layout_marginRight="10dp"
             android:layout_marginLeft="100dp"
             android:hint="请输入密码"
-            android:text="123"
+            android:text=""
+            android:inputType="textPassword"
             android:background="@color/white"
-            android:drawableRight="@drawable/ic_arrow_right"
+            android:drawableRight="@drawable/ic_shanchumima"
             android:textSize="@dimen/font_title_main"
             android:textColor="@color/font_title_main"/>
     </RelativeLayout>

@@ -15,6 +15,7 @@ import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.app.MyApplication;
 import cn.xiaocool.hongyunschool.utils.LogUtils;
 import cn.xiaocool.hongyunschool.utils.MultiPartStringRequest;
+import cn.xiaocool.hongyunschool.utils.ProgressUtil;
 import cn.xiaocool.hongyunschool.utils.StringPostRequest;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 
@@ -49,7 +50,9 @@ public class VolleyUtil {
             @Override
             public void onErrorResponse(VolleyError error) {
                 callback.onError();
+                ProgressUtil.dissmisLoadingDialog();
                 ToastUtil.Toast(context, context.getString(R.string.net_error));
+
             }
         });
         MyApplication.getRequestQueue().add(stringRequest);
@@ -80,6 +83,7 @@ public class VolleyUtil {
             public void onErrorResponse(VolleyError volleyError) {
                 callback.onError();
                 ToastUtil.Toast(context, context.getString(R.string.net_error));
+                ProgressUtil.dissmisLoadingDialog();
             }
         });
         request.putMap(params);

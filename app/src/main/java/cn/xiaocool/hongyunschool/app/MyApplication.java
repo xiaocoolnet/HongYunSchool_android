@@ -95,7 +95,7 @@ public class MyApplication extends Application {
      * 设置JPUSH
      */
     private void setJpush() {
-        JPushInterface.setDebugMode(true);
+        JPushInterface.setDebugMode(false);
         JPushInterface.init(this);
     }
 

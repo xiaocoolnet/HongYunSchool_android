@@ -7,6 +7,10 @@ package cn.xiaocool.hongyunschool.net;
 public class LocalConstant {
 
     /**
+     * 用户账号
+     */
+    public static final String USER_ACCOUNT = "useraccount";
+    /**
      * 用户ID
      */
     public static final String USER_ID = "userid";

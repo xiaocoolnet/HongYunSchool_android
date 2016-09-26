@@ -19,6 +19,7 @@ import butterknife.OnClick;
 import cn.jpush.android.api.JPushInterface;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.app.MyApplication;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.view.NiceDialog;
@@ -81,7 +82,9 @@ public class SettingActivity extends BaseActivity {
                 break;
             //退出
             case R.id.activity_setting_tv_quit:
+                String account = String.valueOf(SPUtils.get(context, LocalConstant.USER_ACCOUNT, ""));
                 SPUtils.clear(context);
+                SPUtils.put(context, LocalConstant.USER_ACCOUNT, account);
                 JPushInterface.stopPush(context);
                 startActivity(LoginActivity.class);
                 MyApplication.getInstance().onTerminate();

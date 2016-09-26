@@ -67,6 +67,7 @@ public class LoginActivity extends BaseActivity {
         setTopName("泓云校");
         hideLeft();
         context = this;
+        activityLoginEdPhone.setText((String)SPUtils.get(context,LocalConstant.USER_ACCOUNT,""));
         licenceIS();
     }
 
@@ -81,7 +82,6 @@ public class LoginActivity extends BaseActivity {
             //登录
             case R.id.activity_login_btn_login:
                 login();
-                ProgressUtil.showLoadingDialog(this);
                 break;
             //忘记密码
             case R.id.activity_login_btn_forgetpsw:
@@ -103,11 +103,11 @@ public class LoginActivity extends BaseActivity {
         //licenceIS();
 
         //判断是否输入密码
-        if (activityLoginEdPsw.getText() == null) {
+        if (activityLoginEdPsw.getText().length() == 0) {
             ToastUtil.showShort(context, "请输入密码!");
             return;
         }
-
+        ProgressUtil.showLoadingDialog(this);
         //调用登录接口
         String url;
         //判断使用的身份网址
@@ -124,16 +124,20 @@ public class LoginActivity extends BaseActivity {
                 if (JsonResult.JSONparser(context, result)) {
                     loginReturn = new LoginReturn();
                     loginReturn = getBeanFromJson(result);
+                    SPUtils.put(context,LocalConstant.USER_ACCOUNT,activityLoginEdPhone.getText().toString());
                     SPUtils.put(context, LocalConstant.USER_PASSWORD, activityLoginEdPsw.getText().toString());
                     spInLocal();
                     getDuty();
                     setJpushAlias();
+                }else {
+                    ProgressUtil.dissmisLoadingDialog();
+                    ToastUtil.showShort(context,"密码错误！");
                 }
             }
 
             @Override
             public void onError() {
-
+                ProgressUtil.dissmisLoadingDialog();
             }
         });
     }

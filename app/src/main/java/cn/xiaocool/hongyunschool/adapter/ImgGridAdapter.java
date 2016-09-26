@@ -25,7 +25,7 @@ public class ImgGridAdapter extends BaseAdapter {
     private LayoutInflater mLayoutInflater;
     private ArrayList<String> mWorkImgs;
     private Context mContext;
-
+    public String TAG;
 
     public ImgGridAdapter(ArrayList<String> workImgs, Context context) {
         this.mContext = context;

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -25,6 +26,7 @@ import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
+import cn.xiaocool.hongyunschool.utils.ImgLoadUtil;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
@@ -120,7 +122,7 @@ public class WebListActivity extends BaseActivity {
             VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    if (JsonResult.JSONparser(WebListActivity.this,result)){
+                    if (JsonResult.JSONparser(WebListActivity.this, result)) {
                         systemNewses.clear();
                         systemNewses.addAll(getBeanFromJsonSystem(result));
                         setSystemAdapter();
@@ -136,7 +138,7 @@ public class WebListActivity extends BaseActivity {
             VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    if (JsonResult.JSONparser(WebListActivity.this,result)){
+                    if (JsonResult.JSONparser(WebListActivity.this, result)) {
                         webListInfoArrayList.clear();
                         webListInfoArrayList.addAll(getBeanFromJson(result));
                         setAdapter();
@@ -159,10 +161,15 @@ public class WebListActivity extends BaseActivity {
             adapter = new CommonAdapter<WebListInfo>(this,webListInfoArrayList,R.layout.item_web_list) {
                 @Override
                 public void convert(ViewHolder holder, WebListInfo webListInfo) {
-                    holder.setImageResource(R.id.teacher_img,R.drawable.hyx_default)
-                            .setText(R.id.post_title,webListInfo.getPost_title())
+                    holder.setText(R.id.post_title,webListInfo.getPost_title())
                             .setText(R.id.post_content,webListInfo.getPost_excerpt())
                             .setText(R.id.post_date,webListInfo.getPost_date());
+                    if (webListInfo.getThumb().equals("")){
+                        holder.getView(R.id.teacher_img).setVisibility(View.GONE);
+                    }else {
+                        holder.getView(R.id.teacher_img).setVisibility(View.VISIBLE);
+                        ImgLoadUtil.display(NetConstantUrl.WEB_IMAGE_URL+webListInfo.getThumb(), (ImageView)holder.getView(R.id.teacher_img));
+                    }
                 }
 
             };

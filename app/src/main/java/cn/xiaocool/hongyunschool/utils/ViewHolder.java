@@ -135,6 +135,7 @@ public class ViewHolder {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        LogUtils.e(images.toString());
                         Intent intent = new Intent();
                         intent.setClass(mContext, ImageDetailActivity.class);
                         intent.putStringArrayListExtra("Imgs", images);

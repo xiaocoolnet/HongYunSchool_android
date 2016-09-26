@@ -11,12 +11,13 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
 
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.bean.WebListInfo;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
+import cn.xiaocool.hongyunschool.utils.ImgLoadUtil;
 
 
 /**
@@ -66,11 +67,16 @@ public class WebMaxThreeAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+//        imageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
+//        holder.teacher_img.setImageResource(R.drawable.hyx_default);
+        if (list.get(position).getThumb().equals("")){
+            holder.teacher_img.setVisibility(View.GONE);
+        }else {
+            holder.teacher_img.setVisibility(View.VISIBLE);
+            ImgLoadUtil.display(NetConstantUrl.WEB_IMAGE_URL + list.get(position).getThumb(), holder.teacher_img);
+        }
 
 
-        imageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
-
-        holder.teacher_img.setImageResource(R.drawable.hyx_default);
 
 
         holder.post_title.setText(list.get(position).getPost_title());

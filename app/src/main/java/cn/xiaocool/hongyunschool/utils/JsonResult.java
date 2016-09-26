@@ -49,7 +49,7 @@ public class JsonResult {
                 flag = true;
             } else if (json.getString("status").equals("error")) {
                 flag = false;
-                ToastUtil.Toast(context, json.getString("data"));
+//                ToastUtil.Toast(context, json.getString("data"));
             }
 
         } catch (JSONException e) {
