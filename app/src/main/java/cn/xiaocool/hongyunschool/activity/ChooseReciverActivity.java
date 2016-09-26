@@ -24,7 +24,7 @@ import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.adapter.EListAdapter;
 import cn.xiaocool.hongyunschool.bean.Child;
-import cn.xiaocool.hongyunschool.bean.ClassAndStudent;
+import cn.xiaocool.hongyunschool.bean.ClassParent;
 import cn.xiaocool.hongyunschool.bean.Group;
 import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
@@ -42,7 +42,7 @@ public class ChooseReciverActivity extends BaseActivity {
     TextView downSelectedNum;
     @BindView(R.id.quan_check)
     CheckBox quanCheck;
-    private List<ClassAndStudent> classAndStudents;
+    private List<ClassParent> classParents;
 
     private ArrayList<Group> groups;
     private ArrayList<Child> childs;
@@ -76,20 +76,21 @@ public class ChooseReciverActivity extends BaseActivity {
                 }
             }
         });
-        classAndStudents = new ArrayList<>();
+        classParents = new ArrayList<>();
         groups = new ArrayList<>();
         childs = new ArrayList<>();
     }
 
     @Override
     public void requsetData() {
-        String url = NetConstantUrl.GET_CLASS_BYID + "&classid=" + SPUtils.get(context,LocalConstant.USER_CLASSID,"").toString();
+        String url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context, LocalConstant.USER_ID, "");
+        Log.e("child",url);
         VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
                 if (JsonResult.JSONparser(ChooseReciverActivity.this, result)) {
-                    classAndStudents.clear();
-                    classAndStudents.addAll(getBeanFromJson(result));
+                    classParents.clear();
+                    classParents.addAll(getBeanFromJson(result));
                     setAdapter();
                 }
             }
@@ -116,11 +117,12 @@ public class ChooseReciverActivity extends BaseActivity {
      * 转换模型
      */
     private void changeModelForElistmodel() {
-        for (int i = 0; i < classAndStudents.size(); i++) {
-            Group group = new Group(SPUtils.get(context, LocalConstant.USER_CLASSID,"1").toString(), classAndStudents.get(i).getClassname());
-            for (int j = 0; j < classAndStudents.get(i).getLists().size(); j++) {
-                Child child = new Child(classAndStudents.get(i).getLists().get(j).getId(), classAndStudents.get(i).getLists().get(j).getName(),
-                        classAndStudents.get(i).getLists().get(j).getName());
+        for (int i = 0; i < classParents.size(); i++) {
+            Group group = new Group(classParents.get(i).getClassid(), classParents.get(i).getClassname());
+            for (int j = 0; j < classParents.get(i).getStudent_list().size(); j++) {
+                Child child = new Child(classParents.get(i).getStudent_list().get(j).getId()
+                        , classParents.get(i).getStudent_list().get(j).getName(),
+                        classParents.get(i).getStudent_list().get(j).getName());
                 group.addChildrenItem(child);
             }
             groups.add(group);
@@ -134,7 +136,7 @@ public class ChooseReciverActivity extends BaseActivity {
      * @param result
      * @return
      */
-    private List<ClassAndStudent> getBeanFromJson(String result) {
+    private List<ClassParent> getBeanFromJson(String result) {
         String data = "";
         try {
             JSONObject json = new JSONObject(result);
@@ -142,7 +144,7 @@ public class ChooseReciverActivity extends BaseActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return new Gson().fromJson(data, new TypeToken<List<ClassAndStudent>>() {
+        return new Gson().fromJson(data, new TypeToken<List<ClassParent>>() {
         }.getType());
     }
 

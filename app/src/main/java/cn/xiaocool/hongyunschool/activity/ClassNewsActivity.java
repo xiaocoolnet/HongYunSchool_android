@@ -59,7 +59,7 @@ public class ClassNewsActivity extends BaseActivity {
         //判断身份
         checkIdentity();
         //班主任可以发班级消息
-        if(type == 3 || type == 4){
+        if(type == 2){
             setRightImg(R.drawable.ic_fabu).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -82,12 +82,13 @@ public class ClassNewsActivity extends BaseActivity {
         if(SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("0")){
             type = 1;
         }else {
-            if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")&&SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER,"").equals("y"))
+            /*if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")&&SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER,"").equals("y"))
                 type = 4;
             if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")&&SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER,"").equals("n"))
                 type = 2;
             if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("n")&&SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER,"").equals("y"))
-                type = 3;
+                type = 3;*/
+            type = 2;
         }
     }
 
@@ -110,13 +111,13 @@ public class ClassNewsActivity extends BaseActivity {
     @Override
     public void requsetData() {
         String url = "";
-        if(type == 3){
+        if(type == 2){
             url = NetConstantUrl.GET_CLASS_NEWS_SEND + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"").toString();
         }else if(type == 1){
             url = NetConstantUrl.GET_CLASS_NEWS_RECEIVE + "&receiverid=" + SPUtils.get(context,LocalConstant.USER_BABYID,"").toString();
-        }else if(type == 2||type == 4){
+        }/*else if(type == 2||type == 4){
             url = NetConstantUrl.GET_CLASS_NEWS_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1");
-        }
+        }*/
         VolleyUtil.VolleyGetRequest(this, url, new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
@@ -160,7 +161,7 @@ public class ClassNewsActivity extends BaseActivity {
                 };
                 schoolNewsLv.setAdapter(adapter);
             }
-        }else if(type == 3){
+        }else if(type == 2){
             classNewsSends.clear();
             classNewsSends.addAll(getBeanFromJsonSend(result));
             Collections.sort(classNewsSends, new Comparator<ClassNewsSend>() {
@@ -180,7 +181,7 @@ public class ClassNewsActivity extends BaseActivity {
                 };
                 schoolNewsLv.setAdapter(adapter);
             }
-        }else if(type == 2||type == 4) {
+        }/*else if(type == 2||type == 4) {
             classNewsAlls.clear();
             classNewsAlls.addAll(getBeanFromJsonAll(result));
             Collections.sort(classNewsAlls, new Comparator<ClassNewsAll>() {
@@ -200,7 +201,7 @@ public class ClassNewsActivity extends BaseActivity {
                 };
                 schoolNewsLv.setAdapter(adapter);
             }
-        }
+        }*/
     }
 
     /**
