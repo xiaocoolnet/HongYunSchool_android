@@ -191,17 +191,19 @@ public class LoginActivity extends BaseActivity {
                         //判断是否为校长
                         checkisPrinsiple(result);
                         //判断是否为班主任
-                        checkisClassleader(result);
+                        //checkisClassleader(result);
                         SPUtils.put(context, LocalConstant.USER_IS_PRINSIPLE, isPrinsiple);
-                        SPUtils.put(context, LocalConstant.USER_IS_CLASSLEADER, isClassleader);
-                        //如果是班主任，获取所任班级信息，否则跳转到主页面
+                        SPUtils.put(context, LocalConstant.USER_IS_CLASSLEADER, "y");
+                        /*//如果是班主任，获取所任班级信息，否则跳转到主页面
                         if (isClassleader.equals("y")) {
                             //获取班主任班级信息
                             getClassInfomation();
                         } else {
                             startActivity(MainActivity.class);
                             finish();
-                        }
+                        }*/
+                        startActivity(MainActivity.class);
+                        finish();
                     }
                 }
 
@@ -281,7 +283,7 @@ public class LoginActivity extends BaseActivity {
         }
         for (int i = 0; i < data.length(); i++) {
             JSONObject itemObject = data.optJSONObject(i);
-            if (itemObject.optString("id").equals("1")) {
+            if (Integer.parseInt(itemObject.optString("ispower"))>5) {
                 isPrinsiple = "y";
                 return;
             }

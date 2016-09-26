@@ -19,9 +19,7 @@ import cn.xiaocool.hongyunschool.activity.ClassNewsActivity;
 import cn.xiaocool.hongyunschool.activity.MessageActivity;
 import cn.xiaocool.hongyunschool.activity.SchoolAnnounceActivity;
 import cn.xiaocool.hongyunschool.activity.SchoolNewsActivity;
-import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.utils.BaseFragment;
-import cn.xiaocool.hongyunschool.utils.SPUtils;
 
 
 /**
@@ -84,11 +82,11 @@ public class SecondFragment extends BaseFragment {
             secondRlMessage.setVisibility(View.GONE);
         }*/
         //任课老师(隐藏班级消息)
-        if (SPUtils.get(context, LocalConstant.USER_TYPE, "").equals("1")
+        /*if (SPUtils.get(context, LocalConstant.USER_TYPE, "").equals("1")
                 && !SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER, "").equals("y")
                 && !SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE, "").equals("y")) {
             secondRlClassNews.setVisibility(View.GONE);
-        }
+        }*/
     }
 
     @OnClick({R.id.second_rl_school_news, R.id.second_rl_class_news, R.id.second_rl_school_announce, R.id.second_rl_message})

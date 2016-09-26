@@ -116,6 +116,7 @@ public class SchoolNewsFragment extends Fragment {
      */
     private void setAdapter(String result) {
         schoolNewsReceiverList.clear();
+        receiveBeans.clear();
         schoolNewsReceiverList.addAll(getBeanFromJsonReceive(result));
         receiveBeans.addAll(changeBean(schoolNewsReceiverList));
         Collections.sort(receiveBeans, new Comparator<SchoolNewsReceiver.ReceiveBean>() {
