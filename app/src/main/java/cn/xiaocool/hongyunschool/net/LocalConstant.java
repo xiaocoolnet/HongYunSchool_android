@@ -7,6 +7,12 @@ package cn.xiaocool.hongyunschool.net;
 public class LocalConstant {
 
     /**
+     * 判断是否任教
+     * 1任教
+     * 2没有任教
+     */
+    public static final String IS_TEACH = "ISTEACH";
+    /**
      * 用户账号
      */
     public static final String USER_ACCOUNT = "useraccount";
