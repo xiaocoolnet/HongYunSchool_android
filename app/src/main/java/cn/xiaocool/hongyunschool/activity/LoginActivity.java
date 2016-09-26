@@ -330,6 +330,7 @@ public class LoginActivity extends BaseActivity {
         SPUtils.put(context, LocalConstant.USER_ID, loginReturn.getId());
         SPUtils.put(context, LocalConstant.USER_NAME, loginReturn.getName());
         SPUtils.put(context, LocalConstant.USER_PHOTO, loginReturn.getPhoto());
+        SPUtils.put(context, LocalConstant.SCHOOL_NAME, loginReturn.getSchoolname());
         SPUtils.put(context, LocalConstant.USER_TYPE, type);
 
     }

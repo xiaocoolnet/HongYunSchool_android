@@ -40,6 +40,15 @@ public class LoginReturn {
     private String last_login_time;
     private String create_time;
     private String user_status;
+    private String schoolname;
+
+    public String getSchoolname() {
+        return schoolname;
+    }
+
+    public void setSchoolname(String schoolname) {
+        this.schoolname = schoolname;
+    }
 
     public String getId() {
         return id;

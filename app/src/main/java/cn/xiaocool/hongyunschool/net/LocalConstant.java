@@ -10,6 +10,12 @@ public class LocalConstant {
      * 用户账号
      */
     public static final String USER_ACCOUNT = "useraccount";
+
+    /**
+     * 学校名称
+     */
+    public static final String SCHOOL_NAME = "SCHOOL_NAME";
+
     /**
      * 用户ID
      */

@@ -116,7 +116,7 @@ public class ChooseClassActivity extends BaseActivity {
      * 转换模型
      */
     private void changeModelForElistmodel() {
-        Group group = new Group("1", "泓云校");
+        Group group = new Group("1", SPUtils.get(context,LocalConstant.SCHOOL_NAME,"").toString());
         for (int j = 0; j < chooseReciveBeans.size(); j++) {
             Child child = new Child(chooseReciveBeans.get(j).getClassid(), chooseReciveBeans.get(j).getClassname(),
                     chooseReciveBeans.get(j).getClassname());

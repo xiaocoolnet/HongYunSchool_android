@@ -95,16 +95,15 @@ public class ParentMessageActivity extends BaseActivity {
     /**
      * 判断身份
      * 1-----家长
-     * 2-----校长
-     * 3-----班主任
+     * 2-----老师
      */
     private void checkIdentity() {
         if(SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("0")){
             type = 1;
-        }else if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")){
+        }else {
             type = 2;
-        }else if(SPUtils.get(context,LocalConstant.USER_IS_CLASSLEADER,"").equals("y")){
-            type = 3;
+        /*}else if(SPUtils.get(context,LocalConstant.USER_IS_CLASSLEADER,"").equals("y")){
+            type = 3;*/
         }
     }
 
@@ -127,10 +126,9 @@ public class ParentMessageActivity extends BaseActivity {
         String url = "";
         if(type == 1){
             url = NetConstantUrl.GET_FEEDBACK_PARENT + SPUtils.get(context,LocalConstant.USER_ID,"");
-        }else if(type == 2){
-            url = NetConstantUrl.GET_FEEDBACK_LEADER + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1");
-        }else if(type == 3){
-            url = NetConstantUrl.GET_FEEDBACK_CLASS + SPUtils.get(context,LocalConstant.USER_CLASSID,"");
+        }else {
+            url = NetConstantUrl.GET_FEEDBACK_CLASS + SPUtils.get(context,LocalConstant.USER_CLASSID,"")
+            +"&userid="+SPUtils.get(context,LocalConstant.USER_ID,"");
         }
         VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
