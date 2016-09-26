@@ -19,7 +19,10 @@ import cn.xiaocool.hongyunschool.fragment.SecondFragment;
 import cn.xiaocool.hongyunschool.fragment.SecondParentFragment;
 import cn.xiaocool.hongyunschool.fragment.ThirdFragment;
 import cn.xiaocool.hongyunschool.net.LocalConstant;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
+import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
+import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 
 
@@ -62,7 +65,23 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void requsetData() {
+        String url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context, LocalConstant.USER_ID, "");
+        Log.e("child",url);
+        VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
+            @Override
+            public void onSuccess(String result) {
+                if (JsonResult.JSONparser(MainActivity.this, result)) {
+                  SPUtils.put(MainActivity.this,LocalConstant.IS_TEACH,"1");
+                }else {
+                    SPUtils.put(MainActivity.this,LocalConstant.IS_TEACH,"2");
+                }
+            }
 
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     private void init() {

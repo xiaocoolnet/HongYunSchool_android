@@ -30,6 +30,7 @@ import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
+import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 
 public class ClassNewsActivity extends BaseActivity {
@@ -63,7 +64,15 @@ public class ClassNewsActivity extends BaseActivity {
             setRightImg(R.drawable.ic_fabu).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(AddClassNewsActivity.class);
+                    String isTeach = String.valueOf(SPUtils.get(context, LocalConstant.IS_TEACH, "0"));
+                    if (isTeach.equals("1")){
+                        startActivity(AddClassNewsActivity.class);
+                    }else if (isTeach.equals("2")){
+                        ToastUtil.showShort(context,"您没有任教的班级！");
+                    }else {
+                        ToastUtil.showShort(context,"网络很忙，请稍后在试！");
+                    }
+
 
                 }
             });
