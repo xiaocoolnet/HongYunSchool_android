@@ -144,13 +144,20 @@ public class ViewHolder {
                         mContext.startActivity(intent);
                     }
                 });
+            }else {
+                    images.clear();
+                    view.setVisibility(View.GONE);
+                    gv.setVisibility(View.VISIBLE);
+                    gv.setAdapter(new ImgGridAdapter(images, mContext));
             }
 
 
 
         }else {
+            images.clear();
             view.setVisibility(View.GONE);
-            gv.setVisibility(View.GONE);
+            gv.setVisibility(View.VISIBLE);
+            gv.setAdapter(new ImgGridAdapter(images, mContext));
         }
 
         return this;
