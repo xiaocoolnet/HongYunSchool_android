@@ -76,6 +76,11 @@ public class LocalConstant {
     public static final String USER_BABYID = "userbabyid";
 
     /**
+     * 班级名称
+     */
+    public static final String CLASS_NAME = "CLASS_NAME";
+
+    /**
      * WEB_FLAG  校网传递标识
      * WEB_INTROUCE 学校概况
      * WEB_TEACHER  教师风采
@@ -93,4 +98,5 @@ public class LocalConstant {
     public static final String WEB_NOTICE = "WEB_NOTICE";
     public static final String WEB_NEWS = "WEB_NEWS";
     public static final String SYSTEN_NEWS = "SYSTEN_NEWS";
+
 }
