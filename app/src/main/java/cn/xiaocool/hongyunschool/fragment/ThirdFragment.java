@@ -122,6 +122,8 @@ public class ThirdFragment extends BaseFragment {
                         if (JsonResult.JSONparser(context, result)) {
                             fragmentThirdSrlTrend.setRefreshing(false);
                             setAdapter(result);
+                        }else {
+                            fragmentThirdSrlTrend.setRefreshing(false);
                         }
                     }
 
@@ -142,6 +144,13 @@ public class ThirdFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 initData();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        fragmentThirdSrlTrend.setRefreshing(false);
+                    }
+                }, 5000);
             }
         });
         //上拉加载
@@ -177,6 +186,8 @@ public class ThirdFragment extends BaseFragment {
                         if (JsonResult.JSONparser(context, result)) {
                             fragmentThirdSrlTrend.setRefreshing(false);
                             setAdapter(result);
+                        }else {
+                            fragmentThirdSrlTrend.setRefreshing(false);
                         }
                     }
 

@@ -1,6 +1,7 @@
 package cn.xiaocool.hongyunschool.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
@@ -63,6 +64,13 @@ public class WebListActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 requsetData();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        webListSwip.setRefreshing(false);
+                    }
+                }, 5000);
             }
         });
 
@@ -125,7 +133,10 @@ public class WebListActivity extends BaseActivity {
                     if (JsonResult.JSONparser(WebListActivity.this, result)) {
                         systemNewses.clear();
                         systemNewses.addAll(getBeanFromJsonSystem(result));
+                        webListSwip.setRefreshing(false);
                         setSystemAdapter();
+                    }else {
+                        webListSwip.setRefreshing(false);
                     }
                 }
 
@@ -141,7 +152,10 @@ public class WebListActivity extends BaseActivity {
                     if (JsonResult.JSONparser(WebListActivity.this, result)) {
                         webListInfoArrayList.clear();
                         webListInfoArrayList.addAll(getBeanFromJson(result));
+                        webListSwip.setRefreshing(false);
                         setAdapter();
+                    }else {
+                        webListSwip.setRefreshing(false);
                     }
                 }
 
@@ -184,10 +198,15 @@ public class WebListActivity extends BaseActivity {
             adapter = new CommonAdapter<SystemNews>(this,systemNewses,R.layout.item_web_list) {
                 @Override
                 public void convert(ViewHolder holder, SystemNews webListInfo) {
-                    holder.setImageResource(R.id.teacher_img,R.drawable.hyx_default)
-                            .setText(R.id.post_title,webListInfo.getPost_title())
+                    holder.setText(R.id.post_title, webListInfo.getPost_title())
                             .setText(R.id.post_content,webListInfo.getPost_excerpt())
                             .setText(R.id.post_date,webListInfo.getPost_date());
+                    if (webListInfo.getThumb().equals("")){
+                        holder.getView(R.id.teacher_img).setVisibility(View.GONE);
+                    }else {
+                        holder.getView(R.id.teacher_img).setVisibility(View.VISIBLE);
+                        ImgLoadUtil.display(NetConstantUrl.WEB_IMAGE_URL+webListInfo.getThumb(), (ImageView)holder.getView(R.id.teacher_img));
+                    }
                 }
 
             };

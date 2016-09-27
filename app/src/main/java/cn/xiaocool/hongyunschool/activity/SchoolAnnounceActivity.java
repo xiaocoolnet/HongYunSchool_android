@@ -2,7 +2,9 @@ package cn.xiaocool.hongyunschool.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -91,8 +93,16 @@ public class SchoolAnnounceActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 requsetData();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        schoolNewsSrl.setRefreshing(false);
+                    }
+                }, 5000);
             }
         });
+
     }
 
     @Override
@@ -103,6 +113,7 @@ public class SchoolAnnounceActivity extends BaseActivity {
         }else if(type == 2){
             url = NetConstantUrl.GET_ANNOUNCE_RECEIVE + "&receiverid=" + SPUtils.get(context,LocalConstant.USER_ID,"");
         }
+        Log.e("requsetData",url);
         VolleyUtil.VolleyGetRequest(this, url, new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
@@ -110,6 +121,8 @@ public class SchoolAnnounceActivity extends BaseActivity {
                         if (JsonResult.JSONparser(getBaseContext(), result)) {
                             schoolNewsSrl.setRefreshing(false);
                             setAdapter(result);
+                        }else {
+                            schoolNewsSrl.setRefreshing(false);
                         }
                     }
 

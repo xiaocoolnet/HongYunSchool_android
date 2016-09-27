@@ -3,6 +3,7 @@ package cn.xiaocool.hongyunschool.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -82,8 +83,16 @@ public class ClassNewsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 getData();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        schoolNewsSrl.setRefreshing(false);
+                    }
+                }, 5000);
             }
         });
+
     }
 
     /**
@@ -98,6 +107,8 @@ public class ClassNewsFragment extends Fragment {
                         if (JsonResult.JSONparser(context, result)) {
                             schoolNewsSrl.setRefreshing(false);
                             setAdapter(result);
+                        }else {
+                            schoolNewsSrl.setRefreshing(false);
                         }
                     }
 

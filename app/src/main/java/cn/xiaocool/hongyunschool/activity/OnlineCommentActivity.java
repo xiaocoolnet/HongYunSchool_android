@@ -2,6 +2,7 @@ package cn.xiaocool.hongyunschool.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ListView;
@@ -68,6 +69,13 @@ public class OnlineCommentActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 requsetData();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        fragmentThirdSrlTrend.setRefreshing(false);
+                    }
+                }, 5000);
             }
         });
     }
@@ -94,6 +102,8 @@ public class OnlineCommentActivity extends BaseActivity {
                         }
                     };
                     fragmentThirdLvTrend.setAdapter(adapter);
+                }else {
+                    fragmentThirdSrlTrend.setRefreshing(false);
                 }
             }
 

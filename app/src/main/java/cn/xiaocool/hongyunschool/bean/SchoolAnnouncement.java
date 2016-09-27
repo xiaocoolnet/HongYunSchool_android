@@ -1,6 +1,5 @@
 package cn.xiaocool.hongyunschool.bean;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,16 +8,16 @@ import java.util.List;
 public class SchoolAnnouncement {
 
     /**
-     * id : 3
-     * userid : 599
-     * title : 标题
-     * content : 内容
+     * id : 17
+     * userid : 687
+     * title : 测试
+     * content : 好好补补吧
      * type : 0
-     * create_time : 1472609603
-     * username : 校长
-     * avatar : weixiaotong.png
-     * receive_list : [{"name":"王志恒","photo":"weixiaotong.png","phone":"17862816935","id":"3","noticeid":"3","receiverid":"604","receivertype":"0","create_time":"0"}]
-     * pic : [{"id":"5","pictureurl":"hyx8221472460032673.jpg","create_time":"0"},{"id":"6","pictureurl":"hyx9381472460032660.jpg","create_time":"0"}]
+     * create_time : 1474944805
+     * username : 董桂华
+     * avatar : 20160926112031687.png
+     * receive_list : [{"name":"赵华伟","photo":"weixiaotong.png","phone":"18865511109","id":"21","noticeid":"17","receiverid":"636","receivertype":"0","create_time":"0"},{"name":"董桂华","photo":"20160926112031687.png","phone":"13805358219","id":"44","noticeid":"17","receiverid":"687","receivertype":"0","create_time":"0"}]
+     * pic : [{"id":"52","pictureurl":"hyx3091474944805642.jpg","create_time":"0"}]
      * comment : []
      * like : []
      */
@@ -32,20 +31,20 @@ public class SchoolAnnouncement {
     private String username;
     private String avatar;
     /**
-     * name : 王志恒
+     * name : 赵华伟
      * photo : weixiaotong.png
-     * phone : 17862816935
-     * id : 3
-     * noticeid : 3
-     * receiverid : 604
+     * phone : 18865511109
+     * id : 21
+     * noticeid : 17
+     * receiverid : 636
      * receivertype : 0
      * create_time : 0
      */
 
     private List<ReceiveListBean> receive_list;
     /**
-     * id : 5
-     * pictureurl : hyx8221472460032673.jpg
+     * id : 52
+     * pictureurl : hyx3091474944805642.jpg
      * create_time : 0
      */
 
@@ -149,7 +148,7 @@ public class SchoolAnnouncement {
         this.like = like;
     }
 
-    public static class ReceiveListBean implements Serializable {
+    public static class ReceiveListBean {
         private String name;
         private String photo;
         private String phone;

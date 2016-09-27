@@ -150,19 +150,19 @@ public class NetConstantUrl {
     /**
      * 校网系统消息
      */
-    public static final String GET_WEB_SYSTEM_NEWS = "http://wxt.xiaocool.net/index.php?g=apps&m=index&a=getSystemMessages&term_id=3";
+    public static final String GET_WEB_SYSTEM_NEWS = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=getSystemMessages&term_id=3";
     /**
      * 校网H5拼接地址
      */
-    public final static String WEB_LINK = "http://wxt.xiaocool.net/index.php?g=portal&m=article";
+    public final static String WEB_LINK = "http://hyx.xiaocool.net/index.php?g=portal&m=article";
     /**
      * 校网图片拼接地址
      */
-    public final static String WEB_IMAGE_URL = "http://wxt.xiaocool.net";
+    public final static String WEB_IMAGE_URL = "http://hyx.xiaocool.net";
     /**
      * 系统消息拼接地址
      */
-    public final static String SYSTEM_H5 = "http://wxt.xiaocool.net/index.php?g=portal&m=article&a=system&id=";
+    public final static String SYSTEM_H5 = "http://hyx.xiaocool.net/index.php?g=portal&m=article&a=system&id=";
 
     /**
      * 获取个人信息

@@ -190,7 +190,8 @@ public class AddSchoolAnnounceActivity extends BaseActivity {
                     picArray.add(photo.getPicname());
                 }
                 String picname = StringJoint.arrayJointchar(picArray,",");
-                new SendRequest(AddSchoolAnnounceActivity.this,handler).send_school_announce(userid, "测试", addsnContent.getText().toString(), picname, id, ADD_KEY);
+                String schoolid = String.valueOf(SPUtils.get(context, LocalConstant.SCHOOL_ID, ""));
+                new SendRequest(AddSchoolAnnounceActivity.this,handler).send_school_announce(userid, "测试", addsnContent.getText().toString(), picname, id, schoolid,ADD_KEY);
             }
 
             @Override

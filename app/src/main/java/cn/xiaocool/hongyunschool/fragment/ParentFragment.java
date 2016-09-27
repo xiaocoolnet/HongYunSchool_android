@@ -29,6 +29,7 @@ import cn.xiaocool.hongyunschool.bean.Group;
 import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
+import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 
 
@@ -98,9 +99,14 @@ public class ParentFragment extends Fragment {
         VolleyUtil.VolleyGetRequest(context, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
-                classParents.clear();
-                classParents.addAll(getBeanFromJson(result));
-                setAdapter();
+                if (JsonResult.JSONparser(context,result)){
+                    classParents.clear();
+                    classParents.addAll(getBeanFromJson(result));
+                    setAdapter();
+                }else {
+
+                }
+
             }
 
             @Override

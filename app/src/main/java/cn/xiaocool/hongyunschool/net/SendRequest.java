@@ -113,7 +113,7 @@ public class SendRequest {
      * @param reciveid
      * @param KEY
      */
-    public void send_school_announce(final String userid, final String title, final String content, final String photo, final String reciveid,final int KEY) {
+    public void send_school_announce(final String userid, final String title, final String content, final String photo, final String reciveid, final String schoolid,final int KEY) {
         new Thread() {
             Message msg = Message.obtain();
 
@@ -122,13 +122,13 @@ public class SendRequest {
                 String data = "";
                 if (photo.equals("null")) {
                     data = "&userid=" + userid + "&title=" + title + "&content=" + content
-                            + "&reciveid=" + reciveid ;
+                            + "&reciveid=" + reciveid +"&schoolid=" + schoolid;
                 } else {
                     data = "&userid=" + userid + "&title=" + title + "&content=" + content
-                            + "&reciveid=" + reciveid + "&photo=" + photo ;
+                            + "&reciveid=" + reciveid + "&photo=" + photo + "&schoolid=" + schoolid;
                 }
                 String result_data = NetUtil.getResponse(NetConstantUrl.SEND_ANNOUNCEMENT, data);
-                Log.e("send_trend-----",result_data);
+                Log.e("send_trend-----",NetConstantUrl.SEND_ANNOUNCEMENT+data);
                 try {
                     JSONObject obj = new JSONObject(result_data);
                     msg.what = KEY;

@@ -156,15 +156,15 @@ public class TeacherFragment extends Fragment {
      * 转换家长模型模型
      */
     private void changeParentModelForElistmodel() {
-//        groups.clear();
-//        Group group = new Group(SPUtils.get(context,LocalConstant.USER_CLASSID,""), SPUtils.get(context,LocalConstant.USER_));
-//        for (int j = 0; j < classTeachers.get(i).getTeacherlist().size(); j++) {
-//            Child child = new Child(classTeachers.get(i).getTeacherlist().get(j).getId(), classTeachers.get(i).getTeacherlist().get(j).getName(),
-//                    classTeachers.get(i).getTeacherlist().get(j).getName());
-//            child.setPhone(classTeachers.get(i).getTeacherlist().get(j).getPhone());
-//            group.addChildrenItem(child);
-//        }
-//        groups.add(group);
+        groups.clear();
+        Group group = new Group(String.valueOf(SPUtils.get(context, LocalConstant.USER_CLASSID, "")),String.valueOf(SPUtils.get(context, LocalConstant.CLASS_NAME, "")));
+        for (int j = 0; j < classTeacherParents.size(); j++) {
+            Child child = new Child(classTeacherParents.get(j).getId(), classTeacherParents.get(j).getName(),
+                    classTeacherParents.get(j).getName());
+            child.setPhone(classTeacherParents.get(j).getPhone());
+            group.addChildrenItem(child);
+        }
+        groups.add(group);
 
 
     }

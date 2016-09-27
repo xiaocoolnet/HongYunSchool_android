@@ -2,6 +2,7 @@ package cn.xiaocool.hongyunschool.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ListView;
@@ -113,8 +114,16 @@ public class ClassNewsActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 requsetData();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        schoolNewsSrl.setRefreshing(false);
+                    }
+                }, 5000);
             }
         });
+
     }
 
     @Override
@@ -134,6 +143,8 @@ public class ClassNewsActivity extends BaseActivity {
                         if (JsonResult.JSONparser(getBaseContext(), result)) {
                             schoolNewsSrl.setRefreshing(false);
                             setAdapter(result);
+                        }else {
+                            schoolNewsSrl.setRefreshing(false);
                         }
                     }
 
