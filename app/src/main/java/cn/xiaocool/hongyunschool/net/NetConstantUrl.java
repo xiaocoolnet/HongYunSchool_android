@@ -257,4 +257,8 @@ public class NetConstantUrl {
      * 获取在线留言
      */
     public static final String GET_ONLINE_COMMENT = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=GetServiceFeed&userid=";
+    /**
+     * 获取家长所在班级的老师
+     */
+    public static final String GET_MTCLASS_TEACHER = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=getTeacher&classid=";
 }

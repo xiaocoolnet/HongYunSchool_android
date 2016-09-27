@@ -11,13 +11,11 @@ import com.android.volley.toolbox.StringRequest;
 import java.io.File;
 import java.util.Map;
 
-import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.app.MyApplication;
 import cn.xiaocool.hongyunschool.utils.LogUtils;
 import cn.xiaocool.hongyunschool.utils.MultiPartStringRequest;
 import cn.xiaocool.hongyunschool.utils.ProgressUtil;
 import cn.xiaocool.hongyunschool.utils.StringPostRequest;
-import cn.xiaocool.hongyunschool.utils.ToastUtil;
 
 
 /**
@@ -51,7 +49,7 @@ public class VolleyUtil {
             public void onErrorResponse(VolleyError error) {
                 callback.onError();
                 ProgressUtil.dissmisLoadingDialog();
-                ToastUtil.Toast(context, context.getString(R.string.net_error));
+//                ToastUtil.Toast(context, context.getString(R.string.net_error));
 
             }
         });
@@ -82,7 +80,7 @@ public class VolleyUtil {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 callback.onError();
-                ToastUtil.Toast(context, context.getString(R.string.net_error));
+//                ToastUtil.Toast(context, context.getString(R.string.net_error));
                 ProgressUtil.dissmisLoadingDialog();
             }
         });

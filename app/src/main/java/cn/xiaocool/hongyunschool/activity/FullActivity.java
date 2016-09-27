@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import cn.jpush.android.api.JPushInterface;
 import cn.xiaocool.hongyunschool.R;
 
 
@@ -26,5 +27,17 @@ public class FullActivity extends Activity {
                 }
             }
         }.start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        JPushInterface.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        JPushInterface.onPause(this);
     }
 }
