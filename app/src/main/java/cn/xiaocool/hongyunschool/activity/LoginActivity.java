@@ -234,6 +234,7 @@ public class LoginActivity extends BaseActivity {
                 BabyInfo babyInfo = getBabyInfoFromJson(result).get(0);
                 SPUtils.put(context, LocalConstant.USER_BABYID, babyInfo.getStudentid());
                 SPUtils.put(context, LocalConstant.USER_CLASSID, babyInfo.getClasslist().get(0).getClassid());
+                SPUtils.put(context,LocalConstant.CLASS_NAME,babyInfo.getClasslist().get(0).getClassname());
                 SPUtils.put(context, LocalConstant.SCHOOL_ID,babyInfo.getClasslist().get(0).getSchoolid());
                 startActivity(MainActivity.class);
                 finish();
