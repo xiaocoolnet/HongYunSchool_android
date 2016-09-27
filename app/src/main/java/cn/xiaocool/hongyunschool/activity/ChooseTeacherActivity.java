@@ -50,6 +50,8 @@ public class ChooseTeacherActivity extends BaseActivity {
     private int size;
     private ArrayList<String> selectedIds, selectedNames;
     private Context context;
+    private String type;
+    private String hasData = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +59,16 @@ public class ChooseTeacherActivity extends BaseActivity {
         setContentView(R.layout.activity_choose_reciver);
         ButterKnife.bind(this);
         setTopName("选择接收人");
+        getIntentData();
         context = this;
         setRightText("完成").setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                if (hasData.equals("error")){
+                    ToastUtil.showShort(context, "暂无接收人！");
+                    return;
+                }
                 getAllMenbers();
                 if (selectedIds.size() > 0) {
 
@@ -81,6 +88,10 @@ public class ChooseTeacherActivity extends BaseActivity {
         childs = new ArrayList<>();
     }
 
+    private void getIntentData() {
+        type = getIntent().getStringExtra("type");
+    }
+
     @Override
     public void requsetData() {
         String url = NetConstantUrl.GET_SCHOOL_TEACHER + SPUtils.get(context, LocalConstant.SCHOOL_ID,"1");
@@ -91,6 +102,8 @@ public class ChooseTeacherActivity extends BaseActivity {
                     teacherInfos.clear();
                     teacherInfos.addAll(getBeanFromJson(result));
                     setAdapter();
+                }else {
+                    hasData = "error";
                 }
             }
 
@@ -116,15 +129,29 @@ public class ChooseTeacherActivity extends BaseActivity {
      * 转换模型
      */
     private void changeModelForElistmodel() {
-        for (int i = 0; i < teacherInfos.size(); i++) {
-            Group group = new Group(teacherInfos.get(i).getId(), teacherInfos.get(i).getName());
-            for (int j = 0; j < teacherInfos.get(i).getTeacherinfo().size(); j++) {
-                Child child = new Child(teacherInfos.get(i).getTeacherinfo().get(j).getId(), teacherInfos.get(i).getTeacherinfo().get(j).getName(),
-                        teacherInfos.get(i).getTeacherinfo().get(j).getName());
-                group.addChildrenItem(child);
+        if (type.equals("message")){
+            for (int i = 0; i < teacherInfos.size(); i++) {
+                Group group = new Group(teacherInfos.get(i).getId(), teacherInfos.get(i).getName());
+                for (int j = 0; j < teacherInfos.get(i).getTeacherinfo().size(); j++) {
+                    Child child = new Child(teacherInfos.get(i).getTeacherinfo().get(j).getPhone(), teacherInfos.get(i).getTeacherinfo().get(j).getName(),
+                            teacherInfos.get(i).getTeacherinfo().get(j).getName());
+                    group.addChildrenItem(child);
+                }
+                groups.add(group);
             }
-            groups.add(group);
+
+        }else {
+            for (int i = 0; i < teacherInfos.size(); i++) {
+                Group group = new Group(teacherInfos.get(i).getId(), teacherInfos.get(i).getName());
+                for (int j = 0; j < teacherInfos.get(i).getTeacherinfo().size(); j++) {
+                    Child child = new Child(teacherInfos.get(i).getTeacherinfo().get(j).getId(), teacherInfos.get(i).getTeacherinfo().get(j).getName(),
+                            teacherInfos.get(i).getTeacherinfo().get(j).getName());
+                    group.addChildrenItem(child);
+                }
+                groups.add(group);
+            }
         }
+
 
     }
 
@@ -148,6 +175,10 @@ public class ChooseTeacherActivity extends BaseActivity {
 
     @OnClick(R.id.quan_check)
     public void onClick() {
+        if (hasData.equals("error")){
+            ToastUtil.showShort(context, "暂无接收人！");
+            return;
+        }
         if (quanCheck.isChecked()) {
             size = 0;
             for (int i = 0; i < groups.size(); i++) {

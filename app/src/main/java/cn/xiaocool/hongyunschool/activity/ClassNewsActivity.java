@@ -66,6 +66,10 @@ public class ClassNewsActivity extends BaseActivity {
             setRightImg(R.drawable.ic_fabu).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if ( SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE, "").equals("y")){
+                        startActivity(AddClassNewsActivity.class);
+                        return;
+                    }
                     String isTeach = String.valueOf(SPUtils.get(context, LocalConstant.IS_TEACH, "0"));
                     if (isTeach.equals("1")){
                         startActivity(AddClassNewsActivity.class);

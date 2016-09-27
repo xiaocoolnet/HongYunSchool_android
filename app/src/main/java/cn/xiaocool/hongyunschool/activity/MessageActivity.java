@@ -1,11 +1,18 @@
 package cn.xiaocool.hongyunschool.activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -40,7 +47,7 @@ public class MessageActivity extends BaseActivity {
     private CommonAdapter adapter;
     private List<ShortMessage> shortMessages;
     private Context context;
-
+    private View rightLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +56,14 @@ public class MessageActivity extends BaseActivity {
         shortMessages = new ArrayList<>();
         context = this;
         setTopName("短信列表");
-        setRightImg(R.drawable.ic_fabu).setOnClickListener(new View.OnClickListener() {
+        rightLocation = setRightImg(R.drawable.ic_fabu);
+        rightLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE, "").equals("y")) {
+                    showPopupMenu();
+                    return;
+                }
                 startActivity(AddGroupMessageActivity.class);
             }
         });
@@ -59,6 +71,83 @@ public class MessageActivity extends BaseActivity {
     }
 
 
+    /**
+     *显示选择菜单
+     * */
+    private void showPopupMenu() {
+
+        //自定义布局
+        View layout = LayoutInflater.from(this).inflate(R.layout.address_add_menu, null);
+        //初始化popwindow
+        final PopupWindow popupWindow = new PopupWindow(layout, FrameLayout.LayoutParams.WRAP_CONTENT,FrameLayout.LayoutParams.WRAP_CONTENT);
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+
+        //设置弹出位置
+        int[] location = new int[2];
+        rightLocation.getLocationOnScreen(location);
+
+        popupWindow.showAsDropDown(rightLocation);
+
+        final TextView add_qun = (TextView)layout.findViewById(R.id.add_qun);
+        TextView tong_bu = (TextView)layout.findViewById(R.id.tong_bu);
+
+        add_qun.setText("群发教师");
+        tong_bu.setText("群发学生");
+
+        // 设置背景颜色变暗
+        final WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = 0.7f;
+        getWindow().setAttributes(lp);
+        //监听popwindow消失事件，取消遮盖层
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                lp.alpha = 1.0f;
+                getWindow().setAttributes(lp);
+            }
+        });
+
+        add_qun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                history();
+                popupWindow.dismiss();
+            }
+        });
+        tong_bu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tongbu();
+                popupWindow.dismiss();
+            }
+        });
+
+
+
+    }
+
+    /**
+     * 学生短信
+     * */
+    private void tongbu() {
+
+        Intent intent = new Intent(this,AddGroupMessageActivity.class);
+        intent.putExtra("type", "");
+        startActivity(intent);
+    }
+
+    /**
+     * 教师短信
+     * */
+    private void history() {
+
+
+        Intent intent = new Intent(this,AddGroupMessageActivity.class);
+        intent.putExtra("type", "teacher");
+        startActivity(intent);
+    }
 
     /**
      * 设置

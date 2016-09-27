@@ -277,6 +277,9 @@ public class LoginActivity extends BaseActivity {
      *
      * @param result
      * @return
+     * s 校长
+     * y >5时有高级权限
+     * n 无高级权限
      */
     private void checkisPrinsiple(String result) {
         JSONArray data = null;
@@ -288,6 +291,10 @@ public class LoginActivity extends BaseActivity {
         }
         for (int i = 0; i < data.length(); i++) {
             JSONObject itemObject = data.optJSONObject(i);
+            if (Integer.parseInt(itemObject.optString("ispower"))==10){
+                isPrinsiple = "s";
+                return;
+            }
             if (Integer.parseInt(itemObject.optString("ispower"))>5) {
                 isPrinsiple = "y";
                 return;

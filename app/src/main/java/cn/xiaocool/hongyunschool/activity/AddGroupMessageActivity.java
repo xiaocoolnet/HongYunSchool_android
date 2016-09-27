@@ -33,15 +33,16 @@ public class AddGroupMessageActivity extends BaseActivity {
     EditText addsnContent;
     private Context context;
     private String id;
-    private Handler handler = new Handler(){
+    private String type;
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0x110:
-                    if (msg.obj!=null){
-                        if (JsonResult.JSONparser(AddGroupMessageActivity.this, String.valueOf(msg.obj))){
-                            ToastUtil.showShort(context,"发布成功");
+                    if (msg.obj != null) {
+                        if (JsonResult.JSONparser(AddGroupMessageActivity.this, String.valueOf(msg.obj))) {
+                            ToastUtil.showShort(context, "发布成功");
                             finish();
                         }
 
@@ -59,6 +60,17 @@ public class AddGroupMessageActivity extends BaseActivity {
         context = this;
         setTopName("短信发布");
         setRight();
+        getIntentData();
+    }
+
+    /**
+     * 高级权限获取传递数据
+     */
+    private void getIntentData() {
+        type = getIntent().getStringExtra("type");
+        if (type==null){
+            type = "";
+        }
     }
 
     /**
@@ -79,17 +91,18 @@ public class AddGroupMessageActivity extends BaseActivity {
      */
     private void sendNews() {
         //判断必填项
-        if (!(addsnContent.getText().toString().length()>0)){
+        if (!(addsnContent.getText().toString().length() > 0)) {
             ToastUtil.showShort(this, "发送内容不能为空!");
             return;
         }
-        if (id==null){
-            ToastUtil.showShort(this,"请选择接收人!");
+        if (id == null) {
+            ToastUtil.showShort(this, "请选择接收人!");
             return;
         }
-        new SendRequest(AddGroupMessageActivity.this, handler).sendGroupMessage(id, SPUtils.get(context, LocalConstant.USER_ID,"").toString(), addsnContent.getText().toString(), 0x110);
+        new SendRequest(AddGroupMessageActivity.this, handler).sendGroupMessage(id, SPUtils.get(context, LocalConstant.USER_ID, "").toString(), addsnContent.getText().toString(), 0x110);
 
     }
+
     @Override
     public void requsetData() {
 
@@ -97,13 +110,21 @@ public class AddGroupMessageActivity extends BaseActivity {
 
     @OnClick(R.id.addsn_tv_choose_class)
     public void onClick() {
-        Intent intent = new Intent(AddGroupMessageActivity.this, ChooseParentActivity.class);
-        intent.putExtra("type", "");
-        startActivityForResult(intent, 101);
+        if (type.equals("teacher")){
+            Intent intent = new Intent(AddGroupMessageActivity.this, ChooseTeacherActivity.class);
+            intent.putExtra("type", "message");
+            startActivityForResult(intent, 101);
+        }else {
+            Intent intent = new Intent(AddGroupMessageActivity.this, ChooseParentActivity.class);
+            intent.putExtra("type", "");
+            startActivityForResult(intent, 101);
+        }
+
     }
 
     /**
      * 获取返回的接收人
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -129,7 +150,7 @@ public class AddGroupMessageActivity extends BaseActivity {
 
                         }
 
-                        id =null;
+                        id = null;
                         for (int i = 0; i < ids.size(); i++) {
                             id = id + "," + ids.get(i);
                         }
@@ -143,4 +164,5 @@ public class AddGroupMessageActivity extends BaseActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
 }

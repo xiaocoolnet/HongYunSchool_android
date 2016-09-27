@@ -49,6 +49,7 @@ public class ChooseClassActivity extends BaseActivity {
     private int size;
     private ArrayList<String> selectedIds, selectedNames;
     private Context context;
+    private String hasData = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,10 @@ public class ChooseClassActivity extends BaseActivity {
         setRightText("完成").setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (hasData.equals("error")){
+                    ToastUtil.showShort(context, "暂无接收班级！");
+                    return;
+                }
                 getAllMenbers();
                 if (selectedIds.size() > 0) {
 
@@ -91,6 +95,8 @@ public class ChooseClassActivity extends BaseActivity {
                     chooseReciveBeans.clear();
                     chooseReciveBeans.addAll(getBeanFromJson(result));
                     setAdapter();
+                }else {
+                    hasData = "error";
                 }
             }
 
@@ -146,6 +152,10 @@ public class ChooseClassActivity extends BaseActivity {
 
     @OnClick(R.id.quan_check)
     public void onClick() {
+        if (hasData.equals("error")){
+            ToastUtil.showShort(context, "暂无接收班级！");
+            return;
+        }
         if (quanCheck.isChecked()) {
             size = 0;
             for (int i = 0; i < groups.size(); i++) {

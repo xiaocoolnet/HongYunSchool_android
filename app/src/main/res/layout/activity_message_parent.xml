@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@color/bg_main_gray"
     tools:context="cn.xiaocool.hongyunschool.activity.AddressActivity">
     <include layout="@layout/title_bar_second"></include>
     <com.lzy.widget.tab.PagerSlidingTabStrip

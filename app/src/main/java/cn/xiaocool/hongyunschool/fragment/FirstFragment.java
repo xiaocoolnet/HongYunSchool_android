@@ -26,7 +26,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.activity.FivePublicActivity;
-import cn.xiaocool.hongyunschool.activity.ParentMessageActivity;
 import cn.xiaocool.hongyunschool.activity.SchoolWebDetailActivity;
 import cn.xiaocool.hongyunschool.activity.WebListActivity;
 import cn.xiaocool.hongyunschool.adapter.WebMaxThreeAdapter;
@@ -37,6 +36,7 @@ import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseFragment;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
+import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.view.ImageCycleView;
 import cn.xiaocool.hongyunschool.view.NoScrollListView;
 
@@ -246,9 +246,10 @@ public class FirstFragment extends BaseFragment {
                 startActivity(intent);
                 break;
             case R.id.web_rl_parent_message:
-                intent = new Intent(mActivity, ParentMessageActivity.class);
+                ToastUtil.showShort(mActivity,"该功能暂未开放！");
+                /*intent = new Intent(mActivity, ParentMessageActivity.class);
                 intent.putExtra("title", "家长信箱");
-                startActivity(intent);
+                startActivity(intent);*/
                 break;
             case R.id.gonggao_more:
                 intent = new Intent(mActivity, WebListActivity.class);
