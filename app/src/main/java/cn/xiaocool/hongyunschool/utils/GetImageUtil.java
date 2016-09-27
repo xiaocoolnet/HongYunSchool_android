@@ -25,7 +25,7 @@ public class GetImageUtil {
         List<PhotoWithPath> photoWithPathList = new ArrayList<>();
         Bitmap bitmap;
         for (PhotoInfo photoInfo : resultList) {
-            bitmap = BitmapFactory.decodeFile(photoInfo.getPhotoPath(), getBitmapOption(2));
+            bitmap = BitmapFactory.decodeFile(photoInfo.getPhotoPath(), getBitmapOption(1));
             photoWithPathList.add(getImageToView(bitmap, photoInfo.getPhotoId()));
 
         }
@@ -71,7 +71,7 @@ public class GetImageUtil {
         try {
             imagefile.createNewFile();
             FileOutputStream fos = new FileOutputStream(imagefile);
-            colorImage.compress(Bitmap.CompressFormat.JPEG, 10, fos);
+            colorImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
             return imagefile.getPath();

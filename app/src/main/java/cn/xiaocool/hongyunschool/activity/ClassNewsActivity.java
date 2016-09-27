@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -136,6 +137,7 @@ public class ClassNewsActivity extends BaseActivity {
         }/*else if(type == 2||type == 4){
             url = NetConstantUrl.GET_CLASS_NEWS_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1");
         }*/
+        Log.e("getclassnew",url);
         VolleyUtil.VolleyGetRequest(this, url, new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override

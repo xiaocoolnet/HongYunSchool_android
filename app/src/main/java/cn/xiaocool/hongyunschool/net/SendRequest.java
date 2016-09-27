@@ -158,6 +158,7 @@ public class SendRequest {
                             + "&content=" + content + "&receiverid=" + receiverid + "&picture_url=" + picture_url;
                 }
                 String result_data = NetUtil.getResponse(NetConstantUrl.SEND_CLASS_NEW, data);
+                Log.e("classnews",NetConstantUrl.SEND_CLASS_NEW+data);
                 Log.e("send_class_new-----",result_data);
                 try {
                     JSONObject obj = new JSONObject(result_data);
