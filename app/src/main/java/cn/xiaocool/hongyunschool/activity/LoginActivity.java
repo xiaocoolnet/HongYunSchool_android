@@ -291,10 +291,6 @@ public class LoginActivity extends BaseActivity {
         }
         for (int i = 0; i < data.length(); i++) {
             JSONObject itemObject = data.optJSONObject(i);
-            if (Integer.parseInt(itemObject.optString("ispower"))==10){
-                isPrinsiple = "s";
-                return;
-            }
             if (Integer.parseInt(itemObject.optString("ispower"))>5) {
                 isPrinsiple = "y";
                 return;
