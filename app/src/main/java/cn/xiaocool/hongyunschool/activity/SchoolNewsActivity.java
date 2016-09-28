@@ -31,7 +31,6 @@ import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
-import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 
 public class SchoolNewsActivity extends BaseActivity {
@@ -67,7 +66,6 @@ public class SchoolNewsActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     startActivity(AddSchoolNewsActivity.class);
-                    ToastUtil.Toast(getBaseContext(), "发布");
                 }
             });
         }
