@@ -210,13 +210,13 @@ public class NetConstantUrl {
     public static final String GET_FEEDBACK_PARENT = "http://hyx.xiaocool.net/index.php?g=apps&m=student&a=ParentGetParentMessage&userid=";
 
     /**
-     * 获取家长信箱（校长）
+     * 获取家长信箱（老师有回复的）
      */
-    public static final String GET_FEEDBACK_LEADER = "http://hyx.xiaocool.net/index.php?g=apps&m=student&a=TeacherGetParentMessage&schoolid=";
+    public static final String GET_FEEDBACK_BE = "http://hyx.xiaocool.net/index.php?g=apps&m=student&a=GetParentMessageBe&schoolid=";
     /**
-     * 获取家长信箱（班主任）
+     * 获取家长信箱（老师无回复的）
      */
-    public static final String GET_FEEDBACK_CLASS = "http://hyx.xiaocool.net/index.php?g=apps&m=student&a=TeacherGetParentMessage&classid=";
+    public static final String GET_FEEDBACK_NULL = "http://hyx.xiaocool.net/index.php?g=apps&m=student&a=GetParentMessageNull&schoolid=";
 
     /**
      * 获取教师群发的短信（班主任）
@@ -261,4 +261,14 @@ public class NetConstantUrl {
      * 获取家长所在班级的老师
      */
     public static final String GET_MTCLASS_TEACHER = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=getTeacher&classid=";
+
+    /**
+     * 检查链接
+     */
+    public static final String CHECK_VERSION = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=CheckVersion&type=android&versionid=";
+
+    /**
+     * 获取轮播图
+     */
+    public static final String GET_SLIDER_URL = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=GetRotatePic&schoolid=";
 }

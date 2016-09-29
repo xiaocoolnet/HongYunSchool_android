@@ -33,7 +33,7 @@ public class UpdateService extends Service {
     @Override
     public void onCreate() {
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        filePath = Environment.getExternalStorageDirectory() + "/autoupdate/hongyunxiao.apk";
+        filePath = Environment.getExternalStorageDirectory() + "/autoupdate/hyx.apk";
     }
 
     @Override
@@ -97,9 +97,25 @@ public class UpdateService extends Service {
         build.setAutoCancel(false);
         build.setWhen(System.currentTimeMillis());
         build.setTicker(result);
-        build.setContentIntent(progress >= 100 ? getContentIntent() : PendingIntent.getActivity(this, 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT));
+        if(progress<100){
+            build.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT));
+        }else{
+            File apkFile = new File(filePath);
+            Intent intent = new Intent();
+            //执行动作
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //执行的数据类型
+            intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
+            startActivity(intent);
+            /*Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setDataAndType(Uri.parse("file://" + apkFile.getAbsolutePath()), "application/vnd.android.package-archive");*/
+            //startActivity(intent);
+        }
         mNotification = build.build();
         notificationManager.notify(0, mNotification);
+
     }
 
     public PendingIntent getContentIntent() {

@@ -6,28 +6,33 @@
     android:background="@color/bg_main_gray"
     tools:context="cn.xiaocool.baseApp.fragment.FirstFragment">
     <include layout="@layout/title_bar_first"></include>
-    <cn.xiaocool.hongyunschool.view.ReboundScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/school_news_srl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <cn.xiaocool.hongyunschool.view.ReboundScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <include layout="@layout/web_slide_image"></include>
+            android:layout_height="match_parent">
 
-            <include layout="@layout/divider_line_10"/>
-            <include layout="@layout/web_button_layout"></include>
-            <include layout="@layout/divider_line_10"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <include layout="@layout/web_slide_image"></include>
 
-            <include layout="@layout/web_announcement"></include>
-            <include layout="@layout/web_trends"></include>
+                <include layout="@layout/divider_line_10"/>
+                <include layout="@layout/web_button_layout"></include>
+                <include layout="@layout/divider_line_10"/>
 
-        </LinearLayout>
+                <include layout="@layout/web_announcement"></include>
+                <include layout="@layout/web_trends"></include>
+
+            </LinearLayout>
 
 
-    </cn.xiaocool.hongyunschool.view.ReboundScrollView>
+        </cn.xiaocool.hongyunschool.view.ReboundScrollView>
 
-
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

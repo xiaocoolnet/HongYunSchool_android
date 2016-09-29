@@ -88,6 +88,7 @@ public class LocalConstant {
      * WEB_ACTIVITY  精彩活动
      * WEB_NOTICE   校园公告
      * WEB_NEWS     新闻动态
+     * PARENT_MESSAGE_FLAG 回复家长信箱的标识（进入家长信箱的入口不同）
      */
     public static final String WEB_FLAG = "WEB_FLAG";
     public static final String WEB_FLAG_FIVE = "WEB_FLAG_FIVE";
@@ -99,4 +100,5 @@ public class LocalConstant {
     public static final String WEB_NEWS = "WEB_NEWS";
     public static final String SYSTEN_NEWS = "SYSTEN_NEWS";
 
+    public static final String PARENT_MESSAGE_FLAG = "PARENT_MESSAGE_FLAG";
 }

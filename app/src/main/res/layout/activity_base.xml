@@ -10,11 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/themeColor"></View>
-    <RelativeLayout
+    <LinearLayout
         android:background="@color/themeColor"
         android:layout_width="match_parent"
         android:id="@+id/top_bar"
-        android:layout_height="45dp">
+        android:layout_height="45dp"
+        android:orientation="horizontal">
         <RelativeLayout
             android:layout_width="wrap_content"
             android:id="@+id/top_back"
@@ -39,7 +40,10 @@
             android:text="这是bar"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"/>
 
         <RelativeLayout
             android:id="@+id/top_right"
@@ -73,7 +77,7 @@
         </RelativeLayout>
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/base_container"

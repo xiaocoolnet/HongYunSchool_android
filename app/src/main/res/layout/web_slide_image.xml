@@ -5,11 +5,10 @@
     android:layout_height="wrap_content">
 
 
-    <cn.xiaocool.hongyunschool.view.ImageCycleView
-        android:id="@+id/icv_topView"
+    <com.daimajia.slider.library.SliderLayout
+        android:id="@+id/slider"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
-
-    </cn.xiaocool.hongyunschool.view.ImageCycleView>
+        android:layout_height="200dp"
+        />
 
 </FrameLayout>

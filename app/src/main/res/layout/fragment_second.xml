@@ -21,6 +21,7 @@
             <include layout="@layout/second_class_news_layout"/>
             <include layout="@layout/second_school_announce_layout"/>
             <include layout="@layout/second_message_layout"/>
+            <include layout="@layout/second_message_back_layout"/>
 
 
         </LinearLayout>

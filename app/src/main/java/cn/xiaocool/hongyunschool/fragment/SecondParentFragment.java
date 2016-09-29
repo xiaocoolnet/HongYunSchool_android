@@ -67,8 +67,8 @@ public class SecondParentFragment extends BaseFragment {
         fragments = new ArrayList<>();
         SchoolNewsFragment schoolNewsFragment = new SchoolNewsFragment();
         ClassNewsFragment classNewsFragment = new ClassNewsFragment();
-        fragments.add(schoolNewsFragment);
         fragments.add(classNewsFragment);
+        fragments.add(schoolNewsFragment);
         activityAddressViewPager.setAdapter(new MyAdapter(mActivity.getSupportFragmentManager()));
         activityAddressTab.setViewPager(activityAddressViewPager);
     }
@@ -78,7 +78,7 @@ public class SecondParentFragment extends BaseFragment {
      */
     private class MyAdapter extends FragmentPagerAdapter {
 
-        private String[] titles = {"学校消息", "班级消息"};
+        private String[] titles = {"班级消息", "学校消息"};
 
         public MyAdapter(FragmentManager fm) {
             super(fm);

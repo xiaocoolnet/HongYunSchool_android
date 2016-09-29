@@ -8,10 +8,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,8 +26,12 @@ import butterknife.OnClick;
 import cn.jpush.android.api.JPushInterface;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.app.MyApplication;
+import cn.xiaocool.hongyunschool.bean.CheckVersionModel;
 import cn.xiaocool.hongyunschool.net.LocalConstant;
+import cn.xiaocool.hongyunschool.net.NetConstantUrl;
+import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
+import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.view.NiceDialog;
 import cn.xiaocool.hongyunschool.view.update.UpdateService;
@@ -39,7 +50,7 @@ public class SettingActivity extends BaseActivity {
     @BindView(R.id.activity_setting_tv_quit)
     TextView activitySettingTvQuit;
     private Context context;
-
+    private CheckVersionModel versionModel;
 
 
     private static final int REQUEST_WRITE_STORAGE = 111;
@@ -52,6 +63,7 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
+        mDialog = new NiceDialog(SettingActivity.this);
         context = this;
         setTopName("设置");
     }
@@ -93,31 +105,99 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void chechVersion() {
-        mDialog = new NiceDialog(SettingActivity.this);
-        mDialog.setTitle("发现新版本");
-        mDialog.setContent("为了给大家提供更好的用户体验，每次应用的更新都包含速度和稳定性的提升，感谢您的使用！");
-        mDialog.setOKButton("立即更新", new View.OnClickListener() {
+
+        String versionId = getResources().getString(R.string.versionid).toString();
+        String url =  NetConstantUrl.CHECK_VERSION + versionId;
+        VolleyUtil.VolleyGetRequest(context, url, new VolleyUtil.VolleyJsonCallback() {
+            @Override
+            public void onSuccess(String result) {
+                if (JsonResult.JSONparser(context, result)){
+                    versionModel = getBeanFromJson(result);
+                    showDialogByYorNo(versionModel.getVersionid());
+                }else {
+                    mDialog.setTitle("暂无最新版本");
+                    mDialog.setContent("感谢您的使用！");
+                    mDialog.setOKButton("确定", new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            mDialog.dismiss();
+                        }
+                    });
+                    mDialog.show();
+                }
+            }
 
             @Override
-            public void onClick(View v) {
-
-                //请求存储权限
-                boolean hasPermission = (ContextCompat.checkSelfPermission(SettingActivity.this,
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-                if (!hasPermission) {
-                    ActivityCompat.requestPermissions(SettingActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
-                    ActivityCompat.shouldShowRequestPermissionRationale(SettingActivity.this,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                } else {
-                    //下载
-                    startDownload();
-                }
+            public void onError() {
 
             }
         });
-        mDialog.show();
+//        mDialog = new NiceDialog(SettingActivity.this);
+//        mDialog.setTitle("发现新版本");
+//        mDialog.setContent("为了给大家提供更好的用户体验，每次应用的更新都包含速度和稳定性的提升，感谢您的使用！");
+//        mDialog.setOKButton("立即更新", new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//
+//                //请求存储权限
+//                boolean hasPermission = (ContextCompat.checkSelfPermission(SettingActivity.this,
+//                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+//                if (!hasPermission) {
+//                    ActivityCompat.requestPermissions(SettingActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
+//                    ActivityCompat.shouldShowRequestPermissionRationale(SettingActivity.this,
+//                            Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//                } else {
+//                    //下载
+//                    startDownload();
+//                }
+//
+//            }
+//        });
+//        mDialog.show();
     }
 
+
+    //展示dialog
+    private void showDialogByYorNo(String versionid) {
+
+        if (Integer.valueOf(versionid)>Integer.valueOf(getResources().getString(R.string.versionid).toString())){
+            mDialog.setTitle("发现新版本");
+            mDialog.setContent(versionModel.getDescription());
+            mDialog.setOKButton("立即更新", new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+
+                    //请求存储权限
+                    boolean hasPermission = (ContextCompat.checkSelfPermission(SettingActivity.this,
+                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+                    if (!hasPermission) {
+                        ActivityCompat.requestPermissions(SettingActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
+                        ActivityCompat.shouldShowRequestPermissionRationale(SettingActivity.this,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    } else {
+                        //下载
+                        startDownload();
+                    }
+
+                }
+            });
+            mDialog.show();
+        }else {
+            mDialog.setTitle("已经是最新版本");
+            mDialog.setContent("感谢您的使用！");
+            mDialog.setOKButton("确定", new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    mDialog.dismiss();
+                }
+            });
+            mDialog.show();
+        }
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -139,8 +219,26 @@ public class SettingActivity extends BaseActivity {
     private void startDownload() {
         Intent it = new Intent(SettingActivity.this, UpdateService.class);
         //下载地址
-        it.putExtra("apkUrl", APK_DOWNLOAD_URL);
+        Log.e("apkUrl",versionModel.getUrl());
+        it.putExtra("apkUrl", versionModel.getUrl());
         startService(it);
         mDialog.dismiss();
+    }
+
+    /**
+     * 字符串转模型
+     * @param result
+     * @return
+     */
+    private CheckVersionModel getBeanFromJson(String result) {
+        String data = "";
+        try {
+            JSONObject json = new JSONObject(result);
+            data = json.getString("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new Gson().fromJson(data, new TypeToken<CheckVersionModel>() {
+        }.getType());
     }
 }

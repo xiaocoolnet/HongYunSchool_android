@@ -17,9 +17,12 @@ import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.activity.ClassNewsActivity;
 import cn.xiaocool.hongyunschool.activity.MessageActivity;
+import cn.xiaocool.hongyunschool.activity.ParentMessageActivity;
 import cn.xiaocool.hongyunschool.activity.SchoolAnnounceActivity;
 import cn.xiaocool.hongyunschool.activity.SchoolNewsActivity;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.utils.BaseFragment;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 
 
 /**
@@ -46,7 +49,8 @@ public class SecondFragment extends BaseFragment {
     RelativeLayout secondRlSchoolAnnounce;
     @BindView(R.id.second_rl_message)
     RelativeLayout secondRlMessage;
-
+    @BindView(R.id.second_rl_message_back)
+    RelativeLayout secondRlMessageBack;
     private Context context;
 
 
@@ -87,9 +91,15 @@ public class SecondFragment extends BaseFragment {
                 && !SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE, "").equals("y")) {
             secondRlClassNews.setVisibility(View.GONE);
         }*/
+
+        if (SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")){
+            secondRlMessageBack.setVisibility(View.VISIBLE);
+        }else {
+            secondRlMessageBack.setVisibility(View.GONE);
+        }
     }
 
-    @OnClick({R.id.second_rl_school_news, R.id.second_rl_class_news, R.id.second_rl_school_announce, R.id.second_rl_message})
+    @OnClick({R.id.second_rl_school_news, R.id.second_rl_class_news, R.id.second_rl_school_announce, R.id.second_rl_message, R.id.second_rl_message_back})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.second_rl_school_news:
@@ -103,6 +113,12 @@ public class SecondFragment extends BaseFragment {
                 break;
             case R.id.second_rl_message:
                 startActivity(new Intent(mActivity, MessageActivity.class));
+                break;
+            case R.id.second_rl_message_back:
+                Intent intent = new Intent();
+                intent.putExtra(LocalConstant.PARENT_MESSAGE_FLAG,"back");
+                intent.setClass(mActivity, ParentMessageActivity.class);
+                startActivity(intent);
                 break;
         }
     }

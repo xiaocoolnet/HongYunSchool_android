@@ -105,6 +105,9 @@ public class ParentMessageActivity extends BaseActivity {
         /*}else if(SPUtils.get(context,LocalConstant.USER_IS_CLASSLEADER,"").equals("y")){
             type = 3;*/
         }
+        if (getIntent().getStringExtra(LocalConstant.PARENT_MESSAGE_FLAG)!=null){
+            type = 3;
+        }
     }
 
     /**
@@ -117,7 +120,15 @@ public class ParentMessageActivity extends BaseActivity {
         webParentSwip.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        webParentSwip.setRefreshing(false);
+                    }
+                }, 5000);
                 requsetData();
+
             }
         });
     }
@@ -126,9 +137,10 @@ public class ParentMessageActivity extends BaseActivity {
         String url = "";
         if(type == 1){
             url = NetConstantUrl.GET_FEEDBACK_PARENT + SPUtils.get(context,LocalConstant.USER_ID,"");
+        }else if (type == 2){
+            url = NetConstantUrl.GET_FEEDBACK_BE + SPUtils.get(context,LocalConstant.SCHOOL_ID,"");
         }else {
-            url = NetConstantUrl.GET_FEEDBACK_CLASS + SPUtils.get(context,LocalConstant.USER_CLASSID,"")
-            +"&userid="+SPUtils.get(context,LocalConstant.USER_ID,"");
+            url = NetConstantUrl.GET_FEEDBACK_NULL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"");
         }
         VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
@@ -145,6 +157,8 @@ public class ParentMessageActivity extends BaseActivity {
                         feedbackLeaders.addAll(getBeanFromJsonLeader(result));
                         setAdapterLeader(result);
                     }
+                }else {
+                    webParentSwip.setRefreshing(false);
                 }
             }
 
