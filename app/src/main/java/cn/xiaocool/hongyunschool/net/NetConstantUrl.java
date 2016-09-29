@@ -39,7 +39,7 @@ public class NetConstantUrl {
     /**
      * 图片拼接地址
      */
-    public static final String IMAGE_URL = "http://hyx.xiaocool.net/uploads/microblog/";
+    public static final String IMAGE_URL = "http://hyx.xiaocool.net/data/upload/";
     /**
      * 上传图片地址
      */
