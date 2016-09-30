@@ -88,7 +88,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void requsetData() {
         chechVersion();
-        String url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context, LocalConstant.USER_ID, "");
+        String url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context, LocalConstant.USER_ID, "")+"&schoolid="+SPUtils.get(context, LocalConstant.SCHOOL_ID, "");;
         Log.e("child",url);
         VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
             @Override

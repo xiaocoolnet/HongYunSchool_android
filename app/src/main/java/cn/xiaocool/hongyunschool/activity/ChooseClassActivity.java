@@ -94,8 +94,10 @@ public class ChooseClassActivity extends BaseActivity {
                 if (JsonResult.JSONparser(ChooseClassActivity.this, result)) {
                     chooseReciveBeans.clear();
                     chooseReciveBeans.addAll(getBeanFromJson(result));
+                    groups.clear();
+                    childs.clear();
                     setAdapter();
-                }else {
+                } else {
                     hasData = "error";
                 }
             }
@@ -113,8 +115,13 @@ public class ChooseClassActivity extends BaseActivity {
     private void setAdapter() {
 
         changeModelForElistmodel();
-        adapter = new EListAdapter(ChooseClassActivity.this, groups, quanCheck, downSelectedNum ,"1");
-        listView.setAdapter(adapter);
+        if (adapter==null){
+            adapter = new EListAdapter(ChooseClassActivity.this, groups, quanCheck, downSelectedNum ,"1");
+            listView.setAdapter(adapter);
+        }else {
+            adapter.notifyDataSetChanged();
+        }
+
         listView.setGroupIndicator(null);
     }
 

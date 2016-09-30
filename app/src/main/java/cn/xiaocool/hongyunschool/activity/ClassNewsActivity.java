@@ -135,7 +135,8 @@ public class ClassNewsActivity extends BaseActivity {
     public void requsetData() {
         String url = "";
         if(type == 2){
-            url = NetConstantUrl.GET_CLASS_NEWS_SEND + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"").toString();
+            url = NetConstantUrl.GET_CLASS_NEWS_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1")+"&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"");
+//            url = NetConstantUrl.GET_CLASS_NEWS_SEND + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"").toString();
         }else if(type == 1){
             url = NetConstantUrl.GET_CLASS_NEWS_RECEIVE + "&receiverid=" + SPUtils.get(context,LocalConstant.USER_BABYID,"").toString()+"&userid="+SPUtils.get(context,LocalConstant.USER_ID,"");
         }/*else if(type == 2||type == 4){
@@ -187,7 +188,7 @@ public class ClassNewsActivity extends BaseActivity {
                 };
                 schoolNewsLv.setAdapter(adapter);
             }
-        }else if(type == 2){
+        }/*else if(type == 2){
             classNewsSends.clear();
             classNewsSends.addAll(getBeanFromJsonSend(result));
             Collections.sort(classNewsSends, new Comparator<ClassNewsSend>() {
@@ -207,7 +208,7 @@ public class ClassNewsActivity extends BaseActivity {
                 };
                 schoolNewsLv.setAdapter(adapter);
             }
-        }/*else if(type == 2||type == 4) {
+        }*/else if(type == 2||type == 4) {
             classNewsAlls.clear();
             classNewsAlls.addAll(getBeanFromJsonAll(result));
             Collections.sort(classNewsAlls, new Comparator<ClassNewsAll>() {
@@ -227,7 +228,7 @@ public class ClassNewsActivity extends BaseActivity {
                 };
                 schoolNewsLv.setAdapter(adapter);
             }
-        }*/
+        }
     }
 
     /**

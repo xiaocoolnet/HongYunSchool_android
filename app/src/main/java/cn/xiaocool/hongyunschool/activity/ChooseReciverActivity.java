@@ -51,6 +51,7 @@ public class ChooseReciverActivity extends BaseActivity {
     private ArrayList<String> selectedIds, selectedNames;
     private Context context;
     private String hasData = "";
+    private String selectedClassid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,7 @@ public class ChooseReciverActivity extends BaseActivity {
                     return;
                 }
                 getAllMenbers();
+                getAllClasses();
                 if (selectedIds.size() > 0) {
 
                     Intent intent = new Intent();
@@ -85,18 +87,22 @@ public class ChooseReciverActivity extends BaseActivity {
         childs = new ArrayList<>();
     }
 
+
+
     @Override
     public void requsetData() {
-        String url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context, LocalConstant.USER_ID, "");
-        Log.e("child",url);
+        String url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context, LocalConstant.USER_ID, "")+"&schoolid="+SPUtils.get(context, LocalConstant.SCHOOL_ID, "");
+        Log.e("child", url);
         VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
                 if (JsonResult.JSONparser(ChooseReciverActivity.this, result)) {
                     classParents.clear();
                     classParents.addAll(getBeanFromJson(result));
+                    groups.clear();
+                    childs.clear();
                     setAdapter();
-                }else {
+                } else {
                     hasData = "error";
                 }
             }
@@ -114,8 +120,13 @@ public class ChooseReciverActivity extends BaseActivity {
     private void setAdapter() {
 
         changeModelForElistmodel();
-        adapter = new EListAdapter(ChooseReciverActivity.this, groups, quanCheck, downSelectedNum ,"2");
-        listView.setAdapter(adapter);
+        if (adapter==null){
+            adapter = new EListAdapter(ChooseReciverActivity.this, groups, quanCheck, downSelectedNum ,"2");
+            listView.setAdapter(adapter);
+        }else {
+            adapter.notifyDataSetChanged();
+        }
+
         listView.setGroupIndicator(null);
     }
 
@@ -211,6 +222,14 @@ public class ChooseReciverActivity extends BaseActivity {
 
             }
         }
+
+    }
+
+    /**
+     * 判断获取选择人的班级
+     */
+    private void getAllClasses() {
+
 
     }
 }

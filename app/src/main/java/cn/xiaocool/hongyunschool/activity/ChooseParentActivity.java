@@ -93,7 +93,7 @@ public class ChooseParentActivity extends BaseActivity {
         if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")){
             url = NetConstantUrl.GET_PARENT_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1");
         }else{
-            url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context, LocalConstant.USER_ID, "");
+            url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context, LocalConstant.USER_ID, "")+"&schoolid="+SPUtils.get(context, LocalConstant.SCHOOL_ID, "");
         }
         VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
@@ -101,9 +101,11 @@ public class ChooseParentActivity extends BaseActivity {
                 if (JsonResult.JSONparser(ChooseParentActivity.this, result)) {
                     classParents.clear();
                     classParents.addAll(getBeanFromJson(result));
+                    groups.clear();
+                    childs.clear();
                     hasData = "success";
                     setAdapter();
-                }else {
+                } else {
                     hasData = "error";
                 }
             }
@@ -121,8 +123,13 @@ public class ChooseParentActivity extends BaseActivity {
     private void setAdapter() {
 
         changeModelForElistmodel();
-        adapter = new EListAdapter(ChooseParentActivity.this, groups, quanCheck, downSelectedNum ,"2");
-        listView.setAdapter(adapter);
+        if (adapter==null){
+            adapter = new EListAdapter(ChooseParentActivity.this, groups, quanCheck, downSelectedNum ,"2");
+            listView.setAdapter(adapter);
+        }else {
+            adapter.notifyDataSetChanged();
+        }
+
         listView.setGroupIndicator(null);
     }
 

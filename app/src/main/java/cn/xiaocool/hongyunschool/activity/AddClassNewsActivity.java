@@ -275,7 +275,7 @@ public class AddClassNewsActivity extends BaseActivity {
                         }
                         id = id.substring(5, id.length());
                         tvSelectCount.setText("共选择" + ids.size() + "人");
-                        addsnTvChooseClass.setText(haschoose);
+//                        addsnTvChooseClass.setText(haschoose);
                     }
 
                     break;

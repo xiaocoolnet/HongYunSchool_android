@@ -99,7 +99,7 @@ public class AddGroupMessageActivity extends BaseActivity {
             ToastUtil.showShort(this, "请选择接收人!");
             return;
         }
-        new SendRequest(AddGroupMessageActivity.this, handler).sendGroupMessage(id, SPUtils.get(context, LocalConstant.USER_ID, "").toString(), addsnContent.getText().toString(), 0x110);
+        new SendRequest(AddGroupMessageActivity.this, handler).sendGroupMessage(id, SPUtils.get(context, LocalConstant.USER_ID, "").toString(), SPUtils.get(context, LocalConstant.SCHOOL_ID, "").toString(),addsnContent.getText().toString(), 0x110);
 
     }
 

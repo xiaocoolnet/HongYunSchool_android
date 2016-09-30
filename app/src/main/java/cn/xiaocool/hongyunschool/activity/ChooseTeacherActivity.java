@@ -101,8 +101,10 @@ public class ChooseTeacherActivity extends BaseActivity {
                 if (JsonResult.JSONparser(ChooseTeacherActivity.this, result)) {
                     teacherInfos.clear();
                     teacherInfos.addAll(getBeanFromJson(result));
+                    groups.clear();
+                    childs.clear();
                     setAdapter();
-                }else {
+                } else {
                     hasData = "error";
                 }
             }
@@ -120,8 +122,13 @@ public class ChooseTeacherActivity extends BaseActivity {
     private void setAdapter() {
 
         changeModelForElistmodel();
-        adapter = new EListAdapter(ChooseTeacherActivity.this, groups, quanCheck, downSelectedNum ,"2");
-        listView.setAdapter(adapter);
+        if (adapter==null){
+            adapter = new EListAdapter(ChooseTeacherActivity.this, groups, quanCheck, downSelectedNum ,"2");
+            listView.setAdapter(adapter);
+        }else {
+            adapter.notifyDataSetChanged();
+        }
+
         listView.setGroupIndicator(null);
     }
 

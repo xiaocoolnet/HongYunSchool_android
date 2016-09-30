@@ -280,7 +280,7 @@ public class AddSchoolNewsActivity extends BaseActivity {
                         }
                         id = id.substring(5, id.length());
                         tvSelectCount.setText("共选择" + ids.size() + "个班级");
-                        addsnTvChooseClass.setText(haschoose);
+//                        addsnTvChooseClass.setText(haschoose);
                     }
 
                     break;
