@@ -36,6 +36,8 @@ public class MyApplication extends Application {
     public IWXAPI api; //第三方app与微信通信的openapi接口
     public static final String APP_ID = "wxc72796fa99c1cdea";
 
+
+
     /**打开的activity**/
     private List<Activity> activities = new ArrayList<Activity>();
     /**应用实例**/
@@ -150,6 +152,5 @@ public class MyApplication extends Application {
     public static Application getApplication() {
         return myApplication;
     }
-
 
 }

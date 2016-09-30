@@ -29,7 +29,7 @@ import cn.xiaocool.hongyunschool.R;
 /**
  *  <Pre>
  * 自定义图片自动轮播控件，自定轮播指示器样式，支持点击，无限轮播，网络下载图片</br>
- * 可是使用XUtil的BitmapUtils也可是使用smart-image-view加载图片，支持轮播文字切�?</br>
+ * 可是使用XUtil的BitmapUtils也可是使用smart-image-vie��持轮播文字切�?</br>
  * 此插件是基于viewpager实现�?,�?要导入android-support-v4.jar</br></br>
  *
  * 如果使用网络图片记得加权限�??</br>

@@ -26,6 +26,7 @@ public class NiceDialog extends Dialog {
 		setContentView(view);
 		// 初始化view
 		intiView();
+		setCancelable(false);
 	}
 
 	// 初始化view
