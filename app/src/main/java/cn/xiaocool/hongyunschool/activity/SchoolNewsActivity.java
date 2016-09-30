@@ -151,6 +151,7 @@ public class SchoolNewsActivity extends BaseActivity {
         if(type == 1||type ==3){
             schoolNewsReceiverList.clear();
             schoolNewsReceiverList.addAll(getBeanFromJsonReceive(result));
+            receiveBeans.clear();
             receiveBeans.addAll(changeBean(schoolNewsReceiverList));
             Collections.sort(receiveBeans, new Comparator<SchoolNewsReceiver.ReceiveBean>() {
                 @Override
