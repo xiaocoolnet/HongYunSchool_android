@@ -35,6 +35,7 @@ import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 public class MessageActivity extends BaseActivity {
 
@@ -42,12 +43,13 @@ public class MessageActivity extends BaseActivity {
     @BindView(R.id.school_news_lv)
     ListView schoolNewsLv;
     @BindView(R.id.school_news_srl)
-    SwipeRefreshLayout schoolNewsSrl;
+    RefreshLayout schoolNewsSrl;
 
     private CommonAdapter adapter;
     private List<ShortMessage> shortMessages;
     private Context context;
     private View rightLocation;
+    private int beginid = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,6 +161,7 @@ public class MessageActivity extends BaseActivity {
         schoolNewsSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                beginid = 0;
                 requsetData();
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -170,11 +173,28 @@ public class MessageActivity extends BaseActivity {
             }
         });
 
+        //上拉加载
+        schoolNewsSrl.setOnLoadListener(new RefreshLayout.OnLoadListener() {
+
+            @Override
+            public void onLoad() {
+                schoolNewsSrl.postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        beginid = shortMessages.size();
+                        requsetData();
+                        schoolNewsSrl.setLoading(false);
+                    }
+                }, 1000);
+            }
+        });
+
     }
 
     @Override
     public void requsetData() {
-        String url = NetConstantUrl.GET_SHORT_MESSAGE + SPUtils.get(context, LocalConstant.USER_ID,"");
+        String url = NetConstantUrl.GET_SHORT_MESSAGE + SPUtils.get(context, LocalConstant.USER_ID,"")+"&beginid=" + beginid;
         VolleyUtil.VolleyGetRequest(this, url, new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override

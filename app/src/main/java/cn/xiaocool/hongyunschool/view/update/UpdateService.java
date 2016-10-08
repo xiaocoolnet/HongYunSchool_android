@@ -33,7 +33,7 @@ public class UpdateService extends Service {
     @Override
     public void onCreate() {
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        filePath = Environment.getExternalStorageDirectory() + "/autoupdate/hyx.apk";
+        filePath = Environment.getExternalStorageDirectory() + "/autoupdate/zhixiaoyuan.apk";
     }
 
     @Override
@@ -50,7 +50,7 @@ public class UpdateService extends Service {
     }
 
     private void startDownload() {
-        UpdateManager.getInstance().startDownloads(apkURL, filePath, new UpdateDownloadListener() {
+        cn.xiaocool.hongyunschool.view.update.UpdateManager.getInstance().startDownloads(apkURL, filePath, new UpdateDownloadListener() {
 
             @Override
             public void onStarted() {
@@ -115,7 +115,6 @@ public class UpdateService extends Service {
         }
         mNotification = build.build();
         notificationManager.notify(0, mNotification);
-
     }
 
     public PendingIntent getContentIntent() {

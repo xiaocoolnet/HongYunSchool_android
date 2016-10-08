@@ -126,13 +126,23 @@
             android:screenOrientation="behind" />
         <!-- 支付宝集成 -->
 
-        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.SchoolNewsActivity" />
         <activity android:name=".activity.ClassNewsActivity" />
         <activity android:name=".activity.SchoolAnnounceActivity" />
         <activity android:name=".activity.MessageActivity" />
         <activity android:name=".activity.ImageDetailActivity" />
-        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.SettingActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.AddressActivity" />
         <activity android:name=".activity.MyIntegrationActivity" />
         <activity android:name=".activity.SystemNewsActivity" />

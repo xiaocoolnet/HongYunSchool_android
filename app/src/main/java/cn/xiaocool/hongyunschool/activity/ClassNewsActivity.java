@@ -34,6 +34,7 @@ import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 public class ClassNewsActivity extends BaseActivity {
 
@@ -41,7 +42,7 @@ public class ClassNewsActivity extends BaseActivity {
     @BindView(R.id.school_news_lv)
     ListView schoolNewsLv;
     @BindView(R.id.school_news_srl)
-    SwipeRefreshLayout schoolNewsSrl;
+    RefreshLayout schoolNewsSrl;
 
     private CommonAdapter adapter;
     private List<ClassNewsSend> classNewsSends;
@@ -49,6 +50,7 @@ public class ClassNewsActivity extends BaseActivity {
     private List<ClassNewsReceive> classNewsReceives;
     private Context context;
     private int type;
+    private int beginid = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +120,7 @@ public class ClassNewsActivity extends BaseActivity {
         schoolNewsSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                beginid = 0;
                 requsetData();
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -128,6 +131,26 @@ public class ClassNewsActivity extends BaseActivity {
                 }, 5000);
             }
         });
+        //上拉加载
+        schoolNewsSrl.setOnLoadListener(new RefreshLayout.OnLoadListener() {
+
+            @Override
+            public void onLoad() {
+                schoolNewsSrl.postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (type == 2||type == 4) {
+                            beginid = classNewsAlls.size();
+                        } else if (type == 1) {
+                            beginid = classNewsReceives.size();
+                        }
+                        requsetData();
+                        schoolNewsSrl.setLoading(false);
+                    }
+                }, 1000);
+            }
+        });
 
     }
 
@@ -135,10 +158,10 @@ public class ClassNewsActivity extends BaseActivity {
     public void requsetData() {
         String url = "";
         if(type == 2){
-            url = NetConstantUrl.GET_CLASS_NEWS_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1")+"&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"");
+            url = NetConstantUrl.GET_CLASS_NEWS_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1")+"&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid;
 //            url = NetConstantUrl.GET_CLASS_NEWS_SEND + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"").toString();
         }else if(type == 1){
-            url = NetConstantUrl.GET_CLASS_NEWS_RECEIVE + "&receiverid=" + SPUtils.get(context,LocalConstant.USER_BABYID,"").toString()+"&userid="+SPUtils.get(context,LocalConstant.USER_ID,"");
+            url = NetConstantUrl.GET_CLASS_NEWS_RECEIVE + "&receiverid=" + SPUtils.get(context,LocalConstant.USER_BABYID,"").toString()+"&userid="+SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid;
         }/*else if(type == 2||type == 4){
             url = NetConstantUrl.GET_CLASS_NEWS_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1");
         }*/

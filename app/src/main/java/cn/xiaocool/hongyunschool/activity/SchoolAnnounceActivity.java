@@ -32,6 +32,7 @@ import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 public class SchoolAnnounceActivity extends BaseActivity {
 
@@ -39,13 +40,14 @@ public class SchoolAnnounceActivity extends BaseActivity {
     @BindView(R.id.school_news_lv)
     ListView schoolNewsLv;
     @BindView(R.id.school_news_srl)
-    SwipeRefreshLayout schoolNewsSrl;
+    RefreshLayout schoolNewsSrl;
 
     private CommonAdapter adapter;
     private List<SchoolAnnouncement> schoolAnnouncements;
     private List<SchoolAnnouceReceive> schoolAnnouceReceives;
     private Context context;
     private int type;
+    private int beginid = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +94,7 @@ public class SchoolAnnounceActivity extends BaseActivity {
         schoolNewsSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                beginid = 0;
                 requsetData();
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -103,15 +106,36 @@ public class SchoolAnnounceActivity extends BaseActivity {
             }
         });
 
+        //上拉加载
+        schoolNewsSrl.setOnLoadListener(new RefreshLayout.OnLoadListener() {
+
+            @Override
+            public void onLoad() {
+                schoolNewsSrl.postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (type == 2) {
+                            beginid = schoolAnnouceReceives.size();
+                        } else if (type == 1) {
+                            beginid = schoolAnnouncements.size();
+                        }
+                        requsetData();
+                        schoolNewsSrl.setLoading(false);
+                    }
+                }, 1000);
+            }
+        });
+
     }
 
     @Override
     public void requsetData() {
         String url = "";
         if(type == 1){
-            url = NetConstantUrl.GET_ANNOUNCE_SEND + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"");
+            url = NetConstantUrl.GET_ANNOUNCE_SEND + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid;
         }else if(type == 2){
-            url = NetConstantUrl.GET_ANNOUNCE_RECEIVE + "&receiverid=" + SPUtils.get(context,LocalConstant.USER_ID,"");
+            url = NetConstantUrl.GET_ANNOUNCE_RECEIVE + "&receiverid=" + SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid;
         }
         Log.e("requsetData",url);
         VolleyUtil.VolleyGetRequest(this, url, new

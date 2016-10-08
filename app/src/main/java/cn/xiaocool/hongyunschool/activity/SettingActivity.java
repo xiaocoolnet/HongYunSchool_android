@@ -1,15 +1,14 @@
 package cn.xiaocool.hongyunschool.activity;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +33,6 @@ import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.view.NiceDialog;
-import cn.xiaocool.hongyunschool.view.update.UpdateService;
 
 public class SettingActivity extends BaseActivity {
     @BindView(R.id.activity_setting_rl_help)
@@ -56,16 +54,27 @@ public class SettingActivity extends BaseActivity {
     private static final int REQUEST_WRITE_STORAGE = 111;
     private NiceDialog mDialog = null;
     //apk下载链接
-    private static final String APK_DOWNLOAD_URL = "http://app.xiaomi.com/download/421138?ref=search";
+    private static final String APK_DOWNLOAD_URL = "http://hyx.xiaocool.net/hyx.apk";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
-        mDialog = new NiceDialog(SettingActivity.this);
         context = this;
+        setVersionDialog();
         setTopName("设置");
+    }
+
+    private void setVersionDialog() {
+        mDialog = new NiceDialog(SettingActivity.this);
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        WindowManager.LayoutParams layoutParams = mDialog.getWindow().getAttributes();
+        layoutParams.width = width-300;
+        layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        mDialog.getWindow().setAttributes(layoutParams);
     }
 
     @Override
@@ -171,16 +180,16 @@ public class SettingActivity extends BaseActivity {
                 public void onClick(View v) {
 
                     //请求存储权限
-                    boolean hasPermission = (ContextCompat.checkSelfPermission(SettingActivity.this,
-                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-                    if (!hasPermission) {
-                        ActivityCompat.requestPermissions(SettingActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
-                        ActivityCompat.shouldShowRequestPermissionRationale(SettingActivity.this,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    } else {
+//                    boolean hasPermission = (ContextCompat.checkSelfPermission(SettingActivity.this,
+//                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+//                    if (!hasPermission) {
+//                        ActivityCompat.requestPermissions(SettingActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
+//                        ActivityCompat.shouldShowRequestPermissionRationale(SettingActivity.this,
+//                                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//                    } else {
                         //下载
                         startDownload();
-                    }
+//                    }
 
                 }
             });
@@ -217,11 +226,14 @@ public class SettingActivity extends BaseActivity {
      * 启动下载
      */
     private void startDownload() {
-        Intent it = new Intent(SettingActivity.this, UpdateService.class);
-        //下载地址
-        Log.e("apkUrl",versionModel.getUrl());
-        it.putExtra("apkUrl", versionModel.getUrl());
-        startService(it);
+        Uri uri = Uri.parse(APK_DOWNLOAD_URL);
+        Intent it = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(it);
+//        Intent it = new Intent(SettingActivity.this, UpdateService.class);
+//        //下载地址
+//        Log.e("apkUrl",versionModel.getUrl());
+//        it.putExtra("apkUrl", APK_DOWNLOAD_URL);
+//        startService(it);
         mDialog.dismiss();
     }
 

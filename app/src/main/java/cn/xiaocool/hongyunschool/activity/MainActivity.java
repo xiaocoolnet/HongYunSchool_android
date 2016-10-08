@@ -1,18 +1,17 @@
 package cn.xiaocool.hongyunschool.activity;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -40,7 +39,6 @@ import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.view.NiceDialog;
-import cn.xiaocool.hongyunschool.view.update.UpdateService;
 
 
 public class MainActivity extends BaseActivity {
@@ -68,6 +66,8 @@ public class MainActivity extends BaseActivity {
     private NiceDialog mDialog = null;
     private CheckVersionModel versionModel;
     private static final int REQUEST_WRITE_STORAGE = 111;
+    //apk下载链接
+    private static final String APK_DOWNLOAD_URL = "http://hyx.xiaocool.net/hyx.apk";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         hideTopView();
         context = this;
-        mDialog = new NiceDialog(context);
+        setVersionDialog();
         init();
         Log.e("TAG", SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE,"").toString()
                 + SPUtils.get(context, LocalConstant.USER_IS_CLASSLEADER,"").toString()
@@ -85,6 +85,16 @@ public class MainActivity extends BaseActivity {
         Log.e("TAG",DEVICE_ID);*/
     }
 
+    private void setVersionDialog() {
+        mDialog = new NiceDialog(MainActivity.this);
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        WindowManager.LayoutParams layoutParams = mDialog.getWindow().getAttributes();
+        layoutParams.width = width-300;
+        layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        mDialog.getWindow().setAttributes(layoutParams);
+    }
     @Override
     public void requsetData() {
         chechVersion();
@@ -201,16 +211,16 @@ public class MainActivity extends BaseActivity {
                 public void onClick(View v) {
 
                     //请求存储权限
-                    boolean hasPermission = (ContextCompat.checkSelfPermission(getBaseContext(),
-                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-                    if (!hasPermission) {
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
-                        ActivityCompat.shouldShowRequestPermissionRationale((Activity) getBaseContext(),
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    } else {
+//                    boolean hasPermission = (ContextCompat.checkSelfPermission(getBaseContext(),
+//                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+//                    if (!hasPermission) {
+//                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
+//                        ActivityCompat.shouldShowRequestPermissionRationale((Activity) getBaseContext(),
+//                                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//                    } else {
                         //下载
                         startDownload();
-                    }
+//                    }
 
                 }
             });
@@ -253,11 +263,14 @@ public class MainActivity extends BaseActivity {
      * 启动下载
      */
     private void startDownload() {
-        Intent it = new Intent(getBaseContext(), UpdateService.class);
-        //下载地址
-        Log.e("apkUrl", versionModel.getUrl());
-        it.putExtra("apkUrl", versionModel.getUrl());
-        startService(it);
+        Uri uri = Uri.parse(APK_DOWNLOAD_URL);
+        Intent it = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(it);
+//        Intent it = new Intent(getBaseContext(), UpdateService.class);
+//        //下载地址
+//        Log.e("apkUrl", versionModel.getUrl());
+//        it.putExtra("apkUrl", APK_DOWNLOAD_URL);
+//        startService(it);
         mDialog.dismiss();
     }
 

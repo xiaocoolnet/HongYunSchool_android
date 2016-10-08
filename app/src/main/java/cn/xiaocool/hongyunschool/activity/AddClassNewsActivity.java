@@ -177,6 +177,13 @@ public class AddClassNewsActivity extends BaseActivity {
             return;
         }
         ProgressUtil.showLoadingDialog(AddClassNewsActivity.this);
+        if (photoWithPaths.size()==0){
+            new SendRequest(AddClassNewsActivity.this,handler).send_class_new(
+                    SPUtils.get(context, LocalConstant.SCHOOL_ID,"1").toString(),
+                    SPUtils.get(context, LocalConstant.USER_ID,"").toString(),
+                    "标题", addsnContent.getText().toString(), id, "null", ADD_KEY);
+            return;
+        }
         //上传图片成功后发布
         new PushImageUtil().setPushIamge(this, photoWithPaths, new PushImage() {
             @Override

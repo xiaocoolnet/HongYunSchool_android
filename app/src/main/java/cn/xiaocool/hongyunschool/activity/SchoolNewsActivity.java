@@ -32,6 +32,7 @@ import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 public class SchoolNewsActivity extends BaseActivity {
 
@@ -39,9 +40,10 @@ public class SchoolNewsActivity extends BaseActivity {
     @BindView(R.id.school_news_lv)
     ListView schoolNewsLv;
     @BindView(R.id.school_news_srl)
-    SwipeRefreshLayout schoolNewsSrl;
+    RefreshLayout schoolNewsSrl;
     private Context context;
     private int type;
+    private int beginid = 0;
 
     private CommonAdapter adapter;
     private List<SchoolNewsSend> schoolNewsSendList;
@@ -99,6 +101,7 @@ public class SchoolNewsActivity extends BaseActivity {
         schoolNewsSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                beginid = 0;
                 requsetData();
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -110,6 +113,27 @@ public class SchoolNewsActivity extends BaseActivity {
             }
         });
 
+        //上拉加载
+        schoolNewsSrl.setOnLoadListener(new RefreshLayout.OnLoadListener() {
+
+            @Override
+            public void onLoad() {
+                schoolNewsSrl.postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if(type == 1||type ==3){
+                            beginid = schoolNewsReceiverList.size();
+                        }else if (type == 2){
+                            beginid = schoolNewsSendList.size();
+                        }
+                        requsetData();
+                        schoolNewsSrl.setLoading(false);
+                    }
+                }, 1000);
+            }
+        });
+
     }
 
     @Override
@@ -117,11 +141,11 @@ public class SchoolNewsActivity extends BaseActivity {
         String url = "";
         //判断身份并请求对应数据
         if(type == 1){
-            url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"");
+            url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid;
         }else if(type == 2){
-            url = NetConstantUrl.GET_SCHOOL_NEWS_SEND + "&send_user_id=" +SPUtils.get(context,LocalConstant.USER_ID,"");
+            url = NetConstantUrl.GET_SCHOOL_NEWS_SEND + "&send_user_id=" +SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid;
         }else if(type == 3){
-            url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"") + "&type=1";
+            url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"") + "&type=1"+"&beginid=" + beginid;
         }
         Log.e(TAG, url);
         VolleyUtil.VolleyGetRequest(this, url, new

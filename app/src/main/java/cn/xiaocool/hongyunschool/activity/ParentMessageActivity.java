@@ -37,6 +37,7 @@ import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 import cn.xiaocool.hongyunschool.view.CommentPopupWindow;
+import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 public class ParentMessageActivity extends BaseActivity {
 
@@ -44,13 +45,14 @@ public class ParentMessageActivity extends BaseActivity {
     @BindView(R.id.web_parent_lv)
     ListView webParentLv;
     @BindView(R.id.web_parent_swip)
-    SwipeRefreshLayout webParentSwip;
+    RefreshLayout webParentSwip;
 
     private CommonAdapter adapter;
     private ArrayList<FeedbackSend> feedbackSends;
     private ArrayList<FeedbackLeader> feedbackLeaders;
     private Context context;
     private int type ;
+    private int beginid = 0;
     private CommentPopupWindow commentPopupWindow;
     private Handler handler = new Handler(){
         @Override
@@ -127,8 +129,30 @@ public class ParentMessageActivity extends BaseActivity {
                         webParentSwip.setRefreshing(false);
                     }
                 }, 5000);
+                beginid = 0;
                 requsetData();
 
+            }
+        });
+
+        //上拉加载
+        webParentSwip.setOnLoadListener(new RefreshLayout.OnLoadListener() {
+
+            @Override
+            public void onLoad() {
+                webParentSwip.postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (type == 1) {
+                            beginid = feedbackSends.size();
+                        } else if (type == 2||type ==3) {
+                            beginid = feedbackLeaders.size();
+                        }
+                        requsetData();
+                        webParentSwip.setLoading(false);
+                    }
+                }, 1000);
             }
         });
     }
@@ -136,11 +160,11 @@ public class ParentMessageActivity extends BaseActivity {
     public void requsetData() {
         String url = "";
         if(type == 1){
-            url = NetConstantUrl.GET_FEEDBACK_PARENT + SPUtils.get(context,LocalConstant.USER_ID,"");
+            url = NetConstantUrl.GET_FEEDBACK_PARENT + SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid;
         }else if (type == 2){
-            url = NetConstantUrl.GET_FEEDBACK_BE + SPUtils.get(context,LocalConstant.SCHOOL_ID,"");
+            url = NetConstantUrl.GET_FEEDBACK_BE + SPUtils.get(context,LocalConstant.SCHOOL_ID,"")+"&beginid=" + beginid;
         }else {
-            url = NetConstantUrl.GET_FEEDBACK_NULL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"");
+            url = NetConstantUrl.GET_FEEDBACK_NULL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"")+"&beginid=" + beginid;
         }
         VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
             @Override

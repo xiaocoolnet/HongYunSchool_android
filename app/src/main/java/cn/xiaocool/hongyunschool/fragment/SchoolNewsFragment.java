@@ -34,6 +34,7 @@ import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 
 /**
@@ -45,12 +46,12 @@ public class SchoolNewsFragment extends Fragment {
     @BindView(R.id.school_news_lv)
     ListView schoolNewsLv;
     @BindView(R.id.school_news_srl)
-    SwipeRefreshLayout schoolNewsSrl;
+    RefreshLayout schoolNewsSrl;
     private List<SchoolNewsReceiver> schoolNewsReceiverList;
     private List<SchoolNewsReceiver.ReceiveBean> receiveBeans;
     private CommonAdapter adapter;
     private Context context;
-
+    private int beginid = 0;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class SchoolNewsFragment extends Fragment {
         schoolNewsSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                beginid = 0;
                 getData();
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -89,6 +91,23 @@ public class SchoolNewsFragment extends Fragment {
                 }, 5000);
             }
         });
+        //上拉加载
+        schoolNewsSrl.setOnLoadListener(new RefreshLayout.OnLoadListener() {
+
+            @Override
+            public void onLoad() {
+                schoolNewsSrl.postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        beginid = receiveBeans.size();
+                        getData();
+                        schoolNewsSrl.setLoading(false);
+                    }
+                }, 1000);
+            }
+        });
+
 
     }
 
@@ -102,7 +121,7 @@ public class SchoolNewsFragment extends Fragment {
      * 加载数据
      */
     private void getData() {
-        String url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&userid=" + SPUtils.get(context, LocalConstant.USER_ID, "");
+        String url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&userid=" + SPUtils.get(context, LocalConstant.USER_ID, "")+"&beginid=" + beginid;
         VolleyUtil.VolleyGetRequest(context, url, new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override

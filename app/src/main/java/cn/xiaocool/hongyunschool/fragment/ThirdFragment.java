@@ -175,7 +175,7 @@ public class ThirdFragment extends BaseFragment {
      */
     private void loadTrend() {
         String url = "";
-        beginId = beginId + trendsList.size();
+        beginId = trendsList.size();
         url = NetConstantUrl.GET_TRENDS_PARENT +SPUtils.get(context,LocalConstant.SCHOOL_ID,"1")
                 +setParams(userid,classid,beginId+"");
 

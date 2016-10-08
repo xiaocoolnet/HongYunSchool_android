@@ -180,6 +180,11 @@ public class AddSchoolAnnounceActivity extends BaseActivity {
             return;
         }
 
+        if (photoWithPaths.size()==0){
+            String schoolid = String.valueOf(SPUtils.get(context, LocalConstant.SCHOOL_ID, ""));
+            new SendRequest(AddSchoolAnnounceActivity.this,handler).send_school_announce(userid, "测试", addsnContent.getText().toString(), "null", id, schoolid,ADD_KEY);
+            return;
+        }
         //上传图片成功后发布
         new PushImageUtil().setPushIamge(this, photoWithPaths, new PushImage() {
             @Override

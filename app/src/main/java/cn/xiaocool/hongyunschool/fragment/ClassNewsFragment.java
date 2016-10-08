@@ -34,6 +34,7 @@ import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 
 /**
@@ -45,10 +46,11 @@ public class ClassNewsFragment extends Fragment {
     @BindView(R.id.school_news_lv)
     ListView schoolNewsLv;
     @BindView(R.id.school_news_srl)
-    SwipeRefreshLayout schoolNewsSrl;
+    RefreshLayout schoolNewsSrl;
     private CommonAdapter adapter;
     private List<ClassNewsReceive> classNewsReceives;
     private Context context;
+    private int beginid = 0;
 
     @Nullable
     @Override
@@ -82,6 +84,7 @@ public class ClassNewsFragment extends Fragment {
         schoolNewsSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                beginid = 0;
                 getData();
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -93,13 +96,30 @@ public class ClassNewsFragment extends Fragment {
             }
         });
 
+        //上拉加载
+        schoolNewsSrl.setOnLoadListener(new RefreshLayout.OnLoadListener() {
+
+            @Override
+            public void onLoad() {
+                schoolNewsSrl.postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        beginid = classNewsReceives.size();
+                        getData();
+                        schoolNewsSrl.setLoading(false);
+                    }
+                }, 1000);
+            }
+        });
+
     }
 
     /**
      * 加载数据
      */
     private void getData() {
-        String url = NetConstantUrl.GET_CLASS_NEWS_RECEIVE + "&receiverid=" + SPUtils.get(context, LocalConstant.USER_BABYID, "").toString();
+        String url = NetConstantUrl.GET_CLASS_NEWS_RECEIVE + "&receiverid=" + SPUtils.get(context, LocalConstant.USER_BABYID, "").toString()+"&beginid=" + beginid;
         VolleyUtil.VolleyGetRequest(context, url, new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
