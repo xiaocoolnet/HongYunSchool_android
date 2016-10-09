@@ -31,6 +31,7 @@ import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
+import cn.xiaocool.hongyunschool.utils.ProgressUtil;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.view.NiceDialog;
 
@@ -114,16 +115,18 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void chechVersion() {
-
+        ProgressUtil.showLoadingDialog(this);
         String versionId = getResources().getString(R.string.versionid).toString();
         String url =  NetConstantUrl.CHECK_VERSION + versionId;
         VolleyUtil.VolleyGetRequest(context, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
                 if (JsonResult.JSONparser(context, result)){
+                    ProgressUtil.dissmisLoadingDialog();
                     versionModel = getBeanFromJson(result);
                     showDialogByYorNo(versionModel.getVersionid());
                 }else {
+                    ProgressUtil.dissmisLoadingDialog();
                     mDialog.setTitle("暂无最新版本");
                     mDialog.setContent("感谢您的使用！");
                     mDialog.setOKButton("确定", new View.OnClickListener() {
@@ -139,7 +142,7 @@ public class SettingActivity extends BaseActivity {
 
             @Override
             public void onError() {
-
+                ProgressUtil.dissmisLoadingDialog();
             }
         });
 //        mDialog = new NiceDialog(SettingActivity.this);

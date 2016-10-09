@@ -194,7 +194,7 @@ public class MessageActivity extends BaseActivity {
 
     @Override
     public void requsetData() {
-        String url = NetConstantUrl.GET_SHORT_MESSAGE + SPUtils.get(context, LocalConstant.USER_ID,"")+"&beginid=" + beginid;
+        String url = NetConstantUrl.GET_SHORT_MESSAGE + SPUtils.get(context, LocalConstant.USER_ID,"")+"&beginid=" + beginid + "&schoolid="+SPUtils.get(context, LocalConstant.SCHOOL_ID,"");
         VolleyUtil.VolleyGetRequest(this, url, new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
