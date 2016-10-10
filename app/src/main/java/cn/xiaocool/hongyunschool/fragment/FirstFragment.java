@@ -138,10 +138,12 @@ public class FirstFragment extends BaseFragment implements BaseSliderView.OnSlid
     //轮播图片
     private void showViewPager(HashMap<String,String> file_maps) {
         if(tag==0) {
+            int i = 0;
             for (String name : file_maps.keySet()) {
                 TextSliderView textSliderView = new TextSliderView(getActivity());
                 // initialize a SliderLayout
                 textSliderView
+                        .description(picBeans.get(i).getDescription())
                         .image(file_maps.get(name))
                         .setScaleType(BaseSliderView.ScaleType.Fit)
                         .setOnSliderClickListener(this);
@@ -150,11 +152,11 @@ public class FirstFragment extends BaseFragment implements BaseSliderView.OnSlid
                 textSliderView.bundle(new Bundle());
                 textSliderView.getBundle()
                         .putString("extra", name);
-
+                i++;
                 slider.addSlider(textSliderView);
             }
             slider.setPresetTransformer(SliderLayout.Transformer.Stack);
-            slider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+            slider.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
             slider.setCustomAnimation(new DescriptionAnimation());
             slider.setDuration(4000);
             slider.addOnPageChangeListener(this);

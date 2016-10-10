@@ -69,22 +69,22 @@ public class FivePublicWebDetailActivity extends BaseActivity {
         String id = webOther.getId();
         switch (getIntent().getStringExtra("title")){
             case "学校作业":
-                url = "http://hyx.xiaocool.net/index.php?g=portal&m=article&a=schoolsyl&id=16" + id;
+                url = "http://hyx.xiaocool.net/index.php?g=portal&m=article&a=homeworknotice&id=" + id;
                 break;
             case "校本课程":
-                url = "http://hyx.xiaocool.net/index.php?g=portal&m=article&a=schoolsyl&id=16" + id;
+                url = "http://hyx.xiaocool.net/index.php?g=portal&m=article&a=schoolsyl&id=" + id;
                 break;
             case "选修课程":
-                url = "http://hyx.xiaocool.net/index.php?g=portal&m=article&a=schoolsylchoice&id=16" + id;
+                url = "http://hyx.xiaocool.net/index.php?g=portal&m=article&a=schoolsylchoice&id=" + id;
                 break;
             case "课时":
-                url = "http://hyx.xiaocool.net/index.php?g=portal&m=article&a=classtime&id=16" + id;
+                url = "http://hyx.xiaocool.net/index.php?g=portal&m=article&a=classtime&id=" + id;
                 break;
             case "期末检测":
-                url = "http://hyx.xiaocool.net/index.php?g=portal&m=article&a=endtest&id=16" + id;
+                url = "http://hyx.xiaocool.net/index.php?g=portal&m=article&a=endtest&id=" + id;
                 break;
             case "节假日":
-                url = "http://hyx.xiaocool.net/index.php?g=portal&m=article&a=holiday&id=16" + id;
+                url = "http://hyx.xiaocool.net/index.php?g=portal&m=article&a=holiday&id=" + id;
                 break;
         }
         swdWebview.loadUrl(url);
