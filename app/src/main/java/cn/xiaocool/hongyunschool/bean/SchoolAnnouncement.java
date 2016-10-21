@@ -1,11 +1,12 @@
 package cn.xiaocool.hongyunschool.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Administrator on 2016/8/31 0031.
  */
-public class SchoolAnnouncement {
+public class SchoolAnnouncement implements Serializable{
 
     /**
      * id : 17
@@ -148,7 +149,7 @@ public class SchoolAnnouncement {
         this.like = like;
     }
 
-    public static class ReceiveListBean {
+    public static class ReceiveListBean implements Serializable{
         private String name;
         private String photo;
         private String phone;
@@ -223,7 +224,7 @@ public class SchoolAnnouncement {
         }
     }
 
-    public static class PicBean {
+    public static class PicBean implements Serializable{
         private String id;
         private String pictureurl;
         private String create_time;

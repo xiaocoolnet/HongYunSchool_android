@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
@@ -63,16 +64,19 @@
 
             <include layout="@layout/divider_line_10"/>
 
-            <EditText
+            <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/addsn_content"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="200dp"
                 android:background="@null"
                 android:gravity="top"
                 android:hint="短信内容输入"
                 android:textSize="@dimen/font_title_minor"
                 android:textColor="@color/font_title_minor"
-                android:padding="10dip"></EditText>
+                android:padding="10dip"
+                app:met_maxCharacters="200"
+                app:met_helperText="不能超过两百字！"
+                ></com.rengwuxian.materialedittext.MaterialEditText>
 
             <include layout="@layout/divider_line_10"/>
 

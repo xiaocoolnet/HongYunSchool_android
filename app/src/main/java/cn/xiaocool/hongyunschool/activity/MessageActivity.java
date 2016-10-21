@@ -35,6 +35,7 @@ import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.PopWindowManager;
 import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 public class MessageActivity extends BaseActivity {
@@ -202,10 +203,11 @@ public class MessageActivity extends BaseActivity {
                         if (JsonResult.JSONparser(getBaseContext(), result)) {
                             schoolNewsSrl.setRefreshing(false);
                             setAdapter(result);
-                        }else {
+                        } else {
                             schoolNewsSrl.setRefreshing(false);
                         }
                     }
+
                     @Override
                     public void onError() {
 
@@ -238,12 +240,21 @@ public class MessageActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setItem(ViewHolder holder, ShortMessage datas) {
+    private void setItem(final ViewHolder holder, ShortMessage datas) {
 
         holder.setText(R.id.item_sn_content, datas.getMessage_content())
                 .setTimeText(R.id.item_sn_time,datas.getCreate_time())
                 .setText(R.id.item_sn_nickname,datas.getName())
-                .setImageByUrl(R.id.item_sn_head_iv,datas.getPhoto());
+                .setImageByUrl(R.id.item_sn_head_iv, datas.getPhoto());
+        //长按复制
+        holder.getView(R.id.item_sn_content).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                PopWindowManager.showCopyDialg(context, (TextView) holder.getView(R.id.item_sn_content));
+                return true;
+            }
+        });
+
     }
 
     /**

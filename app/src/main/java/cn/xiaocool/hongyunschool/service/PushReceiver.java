@@ -10,7 +10,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.xiaocool.hongyunschool.activity.ClassNewsActivity;
 import cn.xiaocool.hongyunschool.activity.MainActivity;
+import cn.xiaocool.hongyunschool.activity.SchoolAnnounceActivity;
+import cn.xiaocool.hongyunschool.activity.SchoolNewsActivity;
+import cn.xiaocool.hongyunschool.net.LocalConstant;
+import cn.xiaocool.hongyunschool.utils.SPUtils;
 
 
 /**
@@ -101,38 +106,49 @@ public class PushReceiver extends BroadcastReceiver {
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             Log.i(TAG, "[PushReceiver] 用户点击打开了通知");
 
-                if (str.equals("message")) {//信息群发
-                    Intent i = new Intent(context, MainActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
-                    context.startActivity(i);
-                }else if (str.equals("trust")){//家长叮嘱
-                    Intent i = new Intent(context, MainActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
-                    context.startActivity(i);
-                }else if (str.equals("notice")){//通知公告
-                    Intent i = new Intent(context, MainActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
-                    context.startActivity(i);
-                }else if (str.equals("schedule")){//待办事项
-                    Intent i = new Intent(context, MainActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
-                    context.startActivity(i);
-                }else if (str.equals("delivery")){//待解确认
-                    Intent i = new Intent(context, MainActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
-                    context.startActivity(i);
-                }else if (str.equals("homework")){//家庭作业
 
-                }else if (str.equals("leave")){//在线请假
+                if (str.equals("message")) {//学校消息
+                    if (isTeacher(context)){
+                        Intent i = new Intent(context, SchoolNewsActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                        context.startActivity(i);
+                    }else {
+                        Intent i = new Intent(context, MainActivity.class);
+                        i.putExtra("isParent",true);
+                        i.putExtra("pushtype","school");
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                        context.startActivity(i);
+                    }
+
+                }else if (str.equals("notice")){//学校通知
+                    if (isTeacher(context)){
+                        Intent i = new Intent(context, SchoolAnnounceActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                        context.startActivity(i);
+                    }else {
+                        Intent i = new Intent(context, MainActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                        context.startActivity(i);
+                    }
+
+                }else if (str.equals("classinfo")){//班级消息
+                    if (isTeacher(context)){
+                        Intent i = new Intent(context, ClassNewsActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                        context.startActivity(i);
+                    }else {
+                        Intent i = new Intent(context, MainActivity.class);
+                        i.putExtra("isParent",true);
+                        i.putExtra("pushtype","class");
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                        context.startActivity(i);
+                    }
+
+                }else{
                     Intent i = new Intent(context, MainActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
                     context.startActivity(i);
-                }else if (str.equals("activity")){//班级活动
-
-                }else if (str.equals("comment")){//教师点评
-
                 }
-
 
 
 
@@ -146,6 +162,13 @@ public class PushReceiver extends BroadcastReceiver {
         } else {
             Log.i(TAG, "[PushReceiver] Unhandled intent - " + intent.getAction());
         }
+    }
+
+    private boolean isTeacher(Context context) {
+        if (SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("1")){
+            return true;
+        }
+        return false;
     }
 
     // 打印所有的 intent extra 数据
@@ -163,5 +186,6 @@ public class PushReceiver extends BroadcastReceiver {
         }
         return sb.toString();
     }
+
 
 }

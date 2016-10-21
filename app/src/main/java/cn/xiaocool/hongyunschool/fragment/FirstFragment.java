@@ -1,6 +1,7 @@
 package cn.xiaocool.hongyunschool.fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,21 +11,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.daimajia.slider.library.Animations.DescriptionAnimation;
-import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.Transformer;
+import com.youth.banner.loader.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -65,7 +70,7 @@ public class FirstFragment extends BaseFragment implements BaseSliderView.OnSlid
     @BindView(R.id.web_news_list)
     NoScrollListView webNewsList;
     @BindView(R.id.slider)
-    SliderLayout slider;
+    Banner slider;
     @BindView(R.id.school_news_srl)
     SwipeRefreshLayout schoolNewsSrl;
     private int tag = 0;
@@ -137,31 +142,49 @@ public class FirstFragment extends BaseFragment implements BaseSliderView.OnSlid
 
     //轮播图片
     private void showViewPager(HashMap<String,String> file_maps) {
-        if(tag==0) {
-            int i = 0;
-            for (String name : file_maps.keySet()) {
-                TextSliderView textSliderView = new TextSliderView(getActivity());
-                // initialize a SliderLayout
-                textSliderView
-                        .description(picBeans.get(i).getDescription())
-                        .image(file_maps.get(name))
-                        .setScaleType(BaseSliderView.ScaleType.Fit)
-                        .setOnSliderClickListener(this);
-
-                //add your extra information
-                textSliderView.bundle(new Bundle());
-                textSliderView.getBundle()
-                        .putString("extra", name);
-                i++;
-                slider.addSlider(textSliderView);
-            }
-            slider.setPresetTransformer(SliderLayout.Transformer.Stack);
-            slider.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
-            slider.setCustomAnimation(new DescriptionAnimation());
-            slider.setDuration(4000);
-            slider.addOnPageChangeListener(this);
-            tag = 1;
+//        if(tag==0) {
+//            int i = 0;
+//            for (String name : file_maps.keySet()) {
+//                TextSliderView textSliderView = new TextSliderView(getActivity());
+//                // initialize a SliderLayout
+//                textSliderView
+//                        .description(picBeans.get(i).getDescription())
+//                        .image(file_maps.get(name))
+//                        .setScaleType(BaseSliderView.ScaleType.Fit)
+//                        .setOnSliderClickListener(this);
+//
+//                //add your extra information
+//                textSliderView.bundle(new Bundle());
+//                textSliderView.getBundle()
+//                        .putString("extra", name);
+//                i++;
+//                slider.addSlider(textSliderView);
+//            }
+//            slider.setPresetTransformer(SliderLayout.Transformer.Stack);
+//            slider.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
+//            slider.setCustomAnimation(new DescriptionAnimation());
+//            slider.setDuration(4000);
+//            slider.addOnPageChangeListener(this);
+//            tag = 1;
+//        }
+        ArrayList<String> images = new ArrayList<>();
+        String[] titles = new String[file_maps.size()];
+        int i = 0;
+        for (String name : file_maps.keySet()) {
+            images.add(file_maps.get(name));
+            titles[i] = picBeans.get(i).getDescription();
+            i++;
         }
+        Banner banner = (Banner) getView().findViewById(R.id.slider);
+        banner.setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE);
+        banner.setImageLoader(new GlideImageLoader());
+        banner.setImages(images);
+        banner.setBannerAnimation(Transformer.Accordion);
+        banner.setBannerTitles(Arrays.asList(titles));
+        banner.isAutoPlay(true);
+        banner.setDelayTime(2500);
+        banner.setIndicatorGravity(BannerConfig.CENTER);
+        banner.start();
     }
 //    private void showViewPager(List<ImageCycleView.ImageInfo> list) {
 //        icvTopView.setAutoCycle(true); //自动播放
@@ -398,5 +421,12 @@ public class FirstFragment extends BaseFragment implements BaseSliderView.OnSlid
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    private class GlideImageLoader implements ImageLoader {
+        @Override
+        public void displayImage(Context context, Object path, ImageView imageView) {
+            Picasso.with(context).load((String) path).into(imageView);
+        }
     }
 }

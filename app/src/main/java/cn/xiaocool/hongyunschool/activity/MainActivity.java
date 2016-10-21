@@ -83,6 +83,9 @@ public class MainActivity extends BaseActivity {
         /*TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
        *//* String DEVICE_ID = tm.getDeviceId();
         Log.e("TAG",DEVICE_ID);*/
+        if (getIntent().getBooleanExtra("isParent",false)){
+            showSecondParentFragment();
+        }
     }
 
     private void setVersionDialog() {
@@ -104,9 +107,9 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onSuccess(String result) {
                 if (JsonResult.JSONparser(MainActivity.this, result)) {
-                  SPUtils.put(MainActivity.this,LocalConstant.IS_TEACH,"1");
-                }else {
-                    SPUtils.put(MainActivity.this,LocalConstant.IS_TEACH,"2");
+                    SPUtils.put(MainActivity.this, LocalConstant.IS_TEACH, "1");
+                } else {
+                    SPUtils.put(MainActivity.this, LocalConstant.IS_TEACH, "2");
                 }
             }
 
@@ -198,6 +201,24 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    private void showSecondParentFragment(){
+        mainTabSort.setChecked(true);
+        if (currentTabIndex != 1) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.hide(fragments[currentTabIndex]);
+            if (!fragments[1].isAdded()) {
+                transaction.add(R.id.fragment_container, fragments[1]);
+            }
+            transaction.show(fragments[1]);
+            transaction.commit();
+
+        }
+        currentTabIndex = 1;
+        if (getIntent().getStringExtra("pushtype").equals("school")){
+            secondParentFragment.pushtype = 1;
+        }
+
+    }
 
     //展示dialog
     private void showDialogByYorNo(String versionid) {

@@ -35,6 +35,8 @@ public class SecondParentFragment extends BaseFragment {
     @BindView(R.id.activity_address_viewPager)
     ViewPager activityAddressViewPager;
 
+    public int pushtype = 0;
+
     private Context context;
     private ArrayList<Fragment> fragments;
 
@@ -100,4 +102,10 @@ public class SecondParentFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        activityAddressViewPager.setCurrentItem(pushtype);
+        pushtype = 0;
+    }
 }

@@ -5,10 +5,14 @@
     android:layout_height="wrap_content">
 
 
-    <com.daimajia.slider.library.SliderLayout
+    <!--<com.daimajia.slider.library.SliderLayout-->
+        <!--android:id="@+id/slider"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="200dp"-->
+        <!--/>-->
+
+    <com.youth.banner.Banner
         android:id="@+id/slider"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        />
-
+        android:layout_height="200dp" />
 </FrameLayout>

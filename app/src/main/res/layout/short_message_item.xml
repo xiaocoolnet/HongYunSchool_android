@@ -68,7 +68,8 @@
             android:lineSpacingMultiplier="1.2"
             android:text="由于今天天气原因"
             android:textColor="@color/font_content_gray"
-            android:textSize="@dimen/font_content_main" />
+            android:textSize="@dimen/font_content_main"
+            android:textIsSelectable="true"/>
 
     </RelativeLayout>
     <include layout="@layout/divider_line_10" />

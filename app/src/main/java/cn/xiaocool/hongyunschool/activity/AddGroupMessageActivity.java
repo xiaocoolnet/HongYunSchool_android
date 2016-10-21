@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
+
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
 
@@ -23,14 +24,14 @@ import cn.xiaocool.hongyunschool.utils.ProgressUtil;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 
-public class AddGroupMessageActivity extends BaseActivity {
+public class AddGroupMessageActivity extends BaseActivity{
 
     @BindView(R.id.addsn_tv_choose_class)
     TextView addsnTvChooseClass;
     @BindView(R.id.tv_select_count)
     TextView tvSelectCount;
     @BindView(R.id.addsn_content)
-    EditText addsnContent;
+    MaterialEditText addsnContent;
     private Context context;
     private String id;
     private String type;
@@ -81,7 +82,6 @@ public class AddGroupMessageActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 sendNews();
-                ProgressUtil.showLoadingDialog(AddGroupMessageActivity.this);
             }
         });
     }
@@ -99,6 +99,12 @@ public class AddGroupMessageActivity extends BaseActivity {
             ToastUtil.showShort(this, "请选择接收人!");
             return;
         }
+        if (addsnContent.getText().length()>addsnContent.getMaxCharacters()){
+            ToastUtil.showShort(this, "超出字数限制，请减少文字!");
+            addsnContent.setError("已超出字数限制！");
+            return;
+        }
+        ProgressUtil.showLoadingDialog(AddGroupMessageActivity.this);
         new SendRequest(AddGroupMessageActivity.this, handler).sendGroupMessage(id, SPUtils.get(context, LocalConstant.USER_ID, "").toString(), SPUtils.get(context, LocalConstant.SCHOOL_ID, "").toString(),addsnContent.getText().toString(), 0x110);
 
     }
@@ -164,5 +170,4 @@ public class AddGroupMessageActivity extends BaseActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 }

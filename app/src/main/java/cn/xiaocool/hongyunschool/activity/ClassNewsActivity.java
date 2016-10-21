@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -34,6 +35,7 @@ import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.PopWindowManager;
 import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 public class ClassNewsActivity extends BaseActivity {
@@ -259,7 +261,7 @@ public class ClassNewsActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setItemReceive(ViewHolder holder, ClassNewsReceive datas) {
+    private void setItemReceive(final ViewHolder holder, ClassNewsReceive datas) {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
@@ -288,6 +290,14 @@ public class ClassNewsActivity extends BaseActivity {
                 .setImageByUrl(R.id.item_sn_head_iv,datas.getHomework_info().get(0).getPhoto())
                 .setText(R.id.item_sn_read, "总发" + datas.getReceive_list().size() + " 已读" + alreadyReads.size() + " 未读" + notReads.size());
 
+        //长按复制
+        holder.getView(R.id.item_sn_content).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                PopWindowManager.showCopyDialg(context, (TextView) holder.getView(R.id.item_sn_content));
+                return true;
+            }
+        });
     }
 
     /**
@@ -341,7 +351,7 @@ public class ClassNewsActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setItemAll(ViewHolder holder, ClassNewsAll datas) {
+    private void setItemAll(final ViewHolder holder, ClassNewsAll datas) {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
@@ -375,9 +385,18 @@ public class ClassNewsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("yidu",alreadyReads);
-                bundle.putSerializable("weidu",notReads);
+                bundle.putSerializable("yidu", alreadyReads);
+                bundle.putSerializable("weidu", notReads);
                 startActivity(ReadListClassNewLeaderActivity.class, bundle);
+            }
+        });
+
+        //长按复制
+        holder.getView(R.id.item_sn_content).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                PopWindowManager.showCopyDialg(context, (TextView) holder.getView(R.id.item_sn_content));
+                return true;
             }
         });
     }

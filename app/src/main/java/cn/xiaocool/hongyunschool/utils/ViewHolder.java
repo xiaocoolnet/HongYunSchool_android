@@ -48,12 +48,13 @@ public class ViewHolder {
         mConvertView = LayoutInflater.from(context).inflate(layoutId,parent,false);
         mConvertView.setTag(this);
     }
-    public static ViewHolder get(Context context,View convertView,ViewGroup parent,int layoutId,int posiion){
+    public static ViewHolder get(final Context context,View convertView,ViewGroup parent,int layoutId,int posiion){
         if(convertView==null){
             return new ViewHolder(context,parent,layoutId,posiion);
         }else{
-            ViewHolder holder = (ViewHolder) convertView.getTag();
+            final ViewHolder holder = (ViewHolder) convertView.getTag();
             holder.mPosition = posiion;
+
             return holder;
         }
     }

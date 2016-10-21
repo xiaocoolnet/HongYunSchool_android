@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,6 +33,7 @@ import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.PopWindowManager;
 import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 public class SchoolAnnounceActivity extends BaseActivity {
@@ -204,7 +206,7 @@ public class SchoolAnnounceActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setSendItem(ViewHolder holder, SchoolAnnouncement datas) {
+    private void setSendItem(final ViewHolder holder, SchoolAnnouncement datas) {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
@@ -238,9 +240,19 @@ public class SchoolAnnounceActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("yidu",alreadyReads);
-                bundle.putSerializable("weidu",notReads);
-                startActivity(ReadListSchoolAnnonceActivity.class,bundle);
+                bundle.putSerializable("yidu", alreadyReads);
+                bundle.putSerializable("weidu", notReads);
+                startActivity(ReadListSchoolAnnonceActivity.class, bundle);
+//                startActivity(ReadListSchoolAnnonceActivity.class);
+            }
+        });
+
+        //长按复制
+        holder.getView(R.id.item_sn_content).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                PopWindowManager.showCopyDialg(context, (TextView) holder.getView(R.id.item_sn_content));
+                return true;
             }
         });
     }
@@ -250,7 +262,7 @@ public class SchoolAnnounceActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setReceiveItem(ViewHolder holder, SchoolAnnouceReceive datas) {
+    private void setReceiveItem(final ViewHolder holder, SchoolAnnouceReceive datas) {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
@@ -279,6 +291,14 @@ public class SchoolAnnounceActivity extends BaseActivity {
                 .setImageByUrl(R.id.item_sn_head_iv, datas.getNotice_info().get(0).getPhoto())
                 .setText(R.id.item_sn_read, "总发" + datas.getReceiv_list().size() + " 已读" + alreadyReads.size() + " 未读" + notReads.size());
 
+        //长按复制
+        holder.getView(R.id.item_sn_content).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                PopWindowManager.showCopyDialg(context, (TextView) holder.getView(R.id.item_sn_content));
+                return true;
+            }
+        });
     }
 
     /**

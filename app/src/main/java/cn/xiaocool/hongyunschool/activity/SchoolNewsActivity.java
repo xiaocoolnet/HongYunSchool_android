@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,6 +33,7 @@ import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.PopWindowManager;
 import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 public class SchoolNewsActivity extends BaseActivity {
@@ -226,7 +228,7 @@ public class SchoolNewsActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setReceiveItem(ViewHolder holder, SchoolNewsReceiver.ReceiveBean datas) {
+    private void setReceiveItem(final ViewHolder holder, SchoolNewsReceiver.ReceiveBean datas) {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
@@ -254,6 +256,15 @@ public class SchoolNewsActivity extends BaseActivity {
                 .setImageByUrl(R.id.item_sn_head_iv,datas.getSend_message().getPhoto())
                 .setItemImages(this, R.id.item_sn_onepic, R.id.item_sn_gridpic, images);
                 //.setText(R.id.item_sn_read, "总发" + datas.getReceiver().size() + " 已读" + alreadyReads.size() + " 未读" + notReads.size());
+        //长按复制
+        holder.getView(R.id.item_sn_content).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                PopWindowManager.showCopyDialg(context, (TextView) holder.getView(R.id.item_sn_content));
+                return true;
+            }
+        });
+
     }
 
     /**
@@ -261,7 +272,7 @@ public class SchoolNewsActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setSendItem(ViewHolder holder, SchoolNewsSend datas) {
+    private void setSendItem(final ViewHolder holder, SchoolNewsSend datas) {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
@@ -300,6 +311,15 @@ public class SchoolNewsActivity extends BaseActivity {
                 startActivity(ReadListSchoolAnnonceActivity.class,bundle);
             }
         });*/
+
+        //长按复制
+        holder.getView(R.id.item_sn_content).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                PopWindowManager.showCopyDialg(context, (TextView) holder.getView(R.id.item_sn_content));
+                return true;
+            }
+        });
     }
 
     /**
