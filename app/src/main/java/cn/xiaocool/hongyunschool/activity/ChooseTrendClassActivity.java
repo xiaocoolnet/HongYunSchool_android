@@ -34,7 +34,7 @@ import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 
-public class ChooseParentActivity extends BaseActivity {
+public class ChooseTrendClassActivity extends BaseActivity {
 
     @BindView(R.id.listView)
     ExpandableListView listView;
@@ -42,32 +42,29 @@ public class ChooseParentActivity extends BaseActivity {
     TextView downSelectedNum;
     @BindView(R.id.quan_check)
     CheckBox quanCheck;
-    private List<ClassParent> classParents;
-
     private ArrayList<Group> groups;
     private ArrayList<Child> childs;
     private EListAdapter adapter;
+    private List<ClassParent> classParents;
     private int size;
-    private Context context;
     private ArrayList<String> selectedIds, selectedNames;
+    private Context context;
     private String hasData = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_reciver);
+        setContentView(R.layout.activity_choose_class);
         ButterKnife.bind(this);
         context = this;
-        setTopName("选择接收人");
+        setTopName("选择班级");
         setRightText("完成").setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (hasData.equals("error")){
-                    ToastUtil.showShort(context, "暂无接收人！");
+                    ToastUtil.showShort(context, "暂无接收班级！");
                     return;
                 }
-
                 getAllMenbers();
                 if (selectedIds.size() > 0) {
 
@@ -78,7 +75,7 @@ public class ChooseParentActivity extends BaseActivity {
                     finish();
                 } else {
 
-                    ToastUtil.showShort(ChooseParentActivity.this, "请选择接收人！");
+                    ToastUtil.showShort(context, "请选择接收班级！");
                 }
             }
         });
@@ -87,27 +84,22 @@ public class ChooseParentActivity extends BaseActivity {
         childs = new ArrayList<>();
     }
 
+
     @Override
     public void requsetData() {
-        String url = "";
-      /*  if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")){
-            url = NetConstantUrl.GET_PARENT_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1");
-        }else{*/
-            url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context, LocalConstant.USER_ID, "")+"&schoolid="+SPUtils.get(context, LocalConstant.SCHOOL_ID, "");
-//        }
-        VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
+        String url = NetConstantUrl.GET_SCHOOL_CLASS + SPUtils.get(context, LocalConstant.SCHOOL_ID,"1");
+        url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context,LocalConstant.USER_ID,"")+"&schoolid="+SPUtils.get(context, LocalConstant.SCHOOL_ID, "");
+        VolleyUtil.VolleyGetRequest(context, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
-                if (JsonResult.JSONparser(ChooseParentActivity.this, result)) {
+                if (JsonResult.JSONparser(context,result)){
                     classParents.clear();
                     classParents.addAll(getBeanFromJson(result));
-                    groups.clear();
-                    childs.clear();
-                    hasData = "success";
                     setAdapter();
-                } else {
-                    hasData = "error";
+                }else {
+
                 }
+
             }
 
             @Override
@@ -124,7 +116,7 @@ public class ChooseParentActivity extends BaseActivity {
 
         changeModelForElistmodel();
         if (adapter==null){
-            adapter = new EListAdapter(ChooseParentActivity.this, groups, quanCheck, downSelectedNum ,"2");
+            adapter = new EListAdapter(context, groups, quanCheck, downSelectedNum ,"1");
             listView.setAdapter(adapter);
         }else {
             adapter.notifyDataSetChanged();
@@ -137,18 +129,15 @@ public class ChooseParentActivity extends BaseActivity {
      * 转换模型
      */
     private void changeModelForElistmodel() {
-        for (int i = 0; i < classParents.size(); i++) {
-            Group group = new Group(classParents.get(i).getClassid(), classParents.get(i).getClassname());
-            for (int j = 0; j < classParents.get(i).getStudent_list().size(); j++) {
-                Child child = new Child(classParents.get(i).getStudent_list().get(j).getParent_list().get(0).getPhone()
-                        , classParents.get(i).getStudent_list().get(j).getParent_list().get(0).getName()+"（"+classParents.get(i).getStudent_list().get(j).getName()+"）",
-                        classParents.get(i).getStudent_list().get(j).getParent_list().get(0).getName()+"（"+classParents.get(i).getStudent_list().get(j).getName()+"）");
-                group.addChildrenItem(child);
-            }
-            groups.add(group);
+        Group group = new Group("1", SPUtils.get(context,LocalConstant.SCHOOL_NAME,"").toString());
+        for (int j = 0; j < classParents.size(); j++) {
+            Child child = new Child(classParents.get(j).getClassid(), classParents.get(j).getClassname(),
+                    classParents.get(j).getClassname());
+            group.addChildrenItem(child);
         }
-
+        groups.add(group);
     }
+
 
     /**
      * 字符串转模型
@@ -170,9 +159,8 @@ public class ChooseParentActivity extends BaseActivity {
 
     @OnClick(R.id.quan_check)
     public void onClick() {
-
         if (hasData.equals("error")){
-            ToastUtil.showShort(ChooseParentActivity.this, "暂无接收人！");
+            ToastUtil.showShort(context, "暂无接收班级！");
             return;
         }
         if (quanCheck.isChecked()) {
@@ -189,7 +177,7 @@ public class ChooseParentActivity extends BaseActivity {
             for (int i = 0; i < groups.size(); i++) {
                 listView.expandGroup(i);
             }
-            downSelectedNum.setText("已选择" + size + "人");
+            downSelectedNum.setText("已选择" + size + "个班级");
 
         } else {
             for (int i = 0; i < groups.size(); i++) {
@@ -203,7 +191,7 @@ public class ChooseParentActivity extends BaseActivity {
             for (int i = 0; i < groups.size(); i++) {
                 listView.expandGroup(i);
             }
-            downSelectedNum.setText("已选择0人");
+            downSelectedNum.setText("已选择0个班级");
         }
     }
 
@@ -228,4 +216,5 @@ public class ChooseParentActivity extends BaseActivity {
         }
 
     }
+
 }

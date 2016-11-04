@@ -1,18 +1,28 @@
 package cn.xiaocool.hongyunschool.utils;
 
 import android.content.Context;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
+
+import com.android.internal.http.multipart.FilePart;
+import com.android.internal.http.multipart.Part;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.xiaocool.hongyunschool.app.MyApplication;
 import cn.xiaocool.hongyunschool.bean.PhotoWithPath;
 import cn.xiaocool.hongyunschool.callback.PushImage;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
@@ -34,6 +44,7 @@ public class PushImageUtil {
     private static Context mContext;
     private int imgNums = 0;
     private ArrayList<PhotoWithPath> photoWithPaths;
+    private List<String> arrayList=new ArrayList<>();
     private boolean isOk;
     private PushImage pushIamge;
 
@@ -53,7 +64,6 @@ public class PushImageUtil {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-
                 case ADD_IMG_KEY1:
                     if (msg.obj != null) {
                       if (JsonResult.JSONparser(mContext, String.valueOf((JSONObject)msg.obj))){
@@ -208,7 +218,7 @@ public class PushImageUtil {
     };
 
     private void pushImage(PhotoWithPath photoWithPath, int addImgKey) {
-        pushImg(photoWithPath.getPicPath(),addImgKey);
+        compressImageWithRatio(photoWithPath, addImgKey);
     }
 
     public void pushImg(final String picPath,final int KEY){
@@ -232,4 +242,56 @@ public class PushImageUtil {
         }.start();
     }
 
+
+    public void compressImageWithRatio(PhotoWithPath photoWithPath,int addImgKey){
+        File appDir = new File(Environment.getExternalStorageDirectory(), "hyschool");
+        if (!appDir.exists()) {
+            appDir.mkdir();
+        }
+        String fileName =photoWithPath.getPicname();
+        File file = new File(appDir, fileName);
+        updatePhoto(ImageCompress.compressPicture(photoWithPath.getPicPath(), file), addImgKey);
+
+    }
+
+    public void updatePhoto(final File f,final int KEY){
+
+        new Thread(){
+            Message msg = Message.obtain();
+            @Override
+            public void run() {
+                List<Part> list=new ArrayList<Part>();
+                try {
+                    list.add(new FilePart("upfile",f));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                String url1= NetConstantUrl.PUSH_IMAGE;
+                VolleyPostFileRequest request=new VolleyPostFileRequest(url1, list.toArray(new Part[list.size()]),new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        try {
+                            JSONObject obj = new JSONObject(s);
+                            msg.what = KEY;
+                            msg.obj = obj;
+                            Log.d("===图片张数", imgNums + "");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }finally {
+                            handler.sendMessage(msg);
+                        }
+                        Log.d("===  图片上传", s);
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                    }
+                });
+                MyApplication.getFileRequestQueue().add(request);
+            }
+        }.start();
+
+    }
 }

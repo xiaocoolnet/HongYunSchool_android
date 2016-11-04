@@ -89,9 +89,9 @@ public class ParentFragment extends Fragment {
      */
     private void getData() {
         String url = "";
-        if(type == 2){
+      /*  if(type == 2){
             url = NetConstantUrl.GET_PARENT_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1");
-        }else if(type == 3){
+        }else*/ if(type == 2||type == 3){
             url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context,LocalConstant.USER_ID,"")+"&schoolid="+SPUtils.get(context, LocalConstant.SCHOOL_ID, "");;
         }else{
             url = NetConstantUrl.GET_PARENT_BYCLASSID + "&classid=" + SPUtils.get(context,LocalConstant.USER_CLASSID,"");

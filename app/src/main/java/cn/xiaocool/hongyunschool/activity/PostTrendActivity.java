@@ -1,6 +1,7 @@
 package cn.xiaocool.hongyunschool.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.actionsheet.ActionSheet;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.finalteam.galleryfinal.GalleryFinal;
 import cn.finalteam.galleryfinal.model.PhotoInfo;
 import cn.xiaocool.hongyunschool.R;
@@ -43,6 +46,10 @@ public class PostTrendActivity extends BaseActivity {
     EditText activityPostTrendEdContent;
     @BindView(R.id.activity_post_trend_gv_addpic)
     NoScrollGridView activityPostTrendGvAddpic;
+    @BindView(R.id.addsn_tv_choose_class)
+    TextView addsnTvChooseClass;
+    @BindView(R.id.tv_select_count)
+    TextView tvSelectCount;
     private Context context;
     private ArrayList<PhotoInfo> mPhotoList;
     private ArrayList<PhotoWithPath> photoWithPaths;
@@ -50,16 +57,16 @@ public class PostTrendActivity extends BaseActivity {
     private final int REQUEST_CODE_CAMERA = 1000;
     private final int REQUEST_CODE_GALLERY = 1001;
     private GalleryFinalUtil galleryFinalUtil;
-    private String userid,classid;
+    private String userid, classid;
     private int type;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 0x110:
-                    if(msg.obj!=null){
-                        if (JsonResult.JSONparser(context, String.valueOf(msg.obj))){
+                    if (msg.obj != null) {
+                        if (JsonResult.JSONparser(context, String.valueOf(msg.obj))) {
                             finish();
                         }
                     }
@@ -85,8 +92,9 @@ public class PostTrendActivity extends BaseActivity {
         mPhotoList = new ArrayList<>();
         photoWithPaths = new ArrayList<>();
         galleryFinalUtil = new GalleryFinalUtil(9);
-        userid = SPUtils.get(context, LocalConstant.USER_ID,"").toString();
-        classid = SPUtils.get(context,LocalConstant.USER_CLASSID,"").toString();
+        userid = SPUtils.get(context, LocalConstant.USER_ID, "").toString();
+        classid = null;
+//        classid = SPUtils.get(context, LocalConstant.USER_CLASSID, "").toString();
         checkIdentity();
         setGrigView();
     }
@@ -98,19 +106,29 @@ public class PostTrendActivity extends BaseActivity {
      * 3-----老师
      */
     private void checkIdentity() {
-        if(SPUtils.get(context,LocalConstant.USER_TYPE,"").equals("0")){
+        if (SPUtils.get(context, LocalConstant.USER_TYPE, "").equals("0")) {
             type = 1;
-        }else if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")){
+        } else if (SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE, "").equals("y")) {
             type = 2;
-        }else{
+        } else {
             type = 3;
         }
     }
 
 
     private void sendTrend() {
-        if(activityPostTrendEdContent.getText().toString().trim().equals("")){
-            ToastUtil.showShort(context,"发送内容不能为空！");
+        if (activityPostTrendEdContent.getText().toString().trim().equals("")) {
+            ToastUtil.showShort(context, "发送内容不能为空！");
+            return;
+        }
+        if (classid==null){
+            ToastUtil.showShort(context, "请选择班级！");
+            return;
+        }
+        if (photoWithPaths.size()==0){
+            new SendRequest(context, handler).send_trend(userid,
+                    SPUtils.get(context, LocalConstant.SCHOOL_ID, "1").toString(),
+                    classid, activityPostTrendEdContent.getText().toString(), "null", 0x110);
             return;
         }
         //上传图片成功后发布
@@ -123,9 +141,9 @@ public class PostTrendActivity extends BaseActivity {
                     picArray.add(photo.getPicname());
                 }
                 String picname = StringJoint.arrayJointchar(picArray, ",");
-                new SendRequest(context,handler).send_trend(userid,
-                        SPUtils.get(context,LocalConstant.SCHOOL_ID,"1").toString(),
-                        classid, activityPostTrendEdContent.getText().toString(),picname,0x110);
+                new SendRequest(context, handler).send_trend(userid,
+                        SPUtils.get(context, LocalConstant.SCHOOL_ID, "1").toString(),
+                        classid, activityPostTrendEdContent.getText().toString(), picname, 0x110);
             }
 
             @Override
@@ -199,7 +217,6 @@ public class PostTrendActivity extends BaseActivity {
     }
 
 
-
     /**
      * 选择图片后 返回的图片数据
      */
@@ -217,6 +234,7 @@ public class PostTrendActivity extends BaseActivity {
                 activityPostTrendGvAddpic.setAdapter(localImgGridAdapter);
             }
         }
+
         @Override
         public void onHanlderFailure(int requestCode, String errorMsg) {
             Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show();
@@ -225,22 +243,23 @@ public class PostTrendActivity extends BaseActivity {
 
     /**
      * 授权权限
+     *
      * @param permsRequestCode
      * @param permissions
      * @param grantResults
      */
     @Override
-    public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults){
+    public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults) {
 
-        switch(permsRequestCode){
+        switch (permsRequestCode) {
 
             case 200:
 
-                boolean cameraAccepted = grantResults[0]== PackageManager.PERMISSION_GRANTED;
-                if(cameraAccepted){
+                boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                if (cameraAccepted) {
                     //授权成功之后，调用系统相机进行拍照操作等
                     galleryFinalUtil.openCamera(context, mPhotoList, REQUEST_CODE_CAMERA, mOnHanlderResultCallback);
-                }else{
+                } else {
                     //用户授权拒绝之后，友情提示一下就可以了
                     ToastUtil.showShort(this, "已拒绝进入相机，如想开启请到设置中开启！");
                 }
@@ -249,5 +268,54 @@ public class PostTrendActivity extends BaseActivity {
 
         }
 
+    }
+
+    @OnClick(R.id.addsn_tv_choose_class)
+    public void onClick() {
+        Intent intent = new Intent(PostTrendActivity.this, ChooseClassActivity.class);
+        intent.putExtra("type", "");
+        startActivityForResult(intent, 101);
+    }
+
+    /**
+     * 获取返回的接收人
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_CANCELED) {
+            switch (requestCode) {
+                case 101:
+                    if (data != null) {
+                        ArrayList<String> ids = data.getStringArrayListExtra("ids");
+                        ArrayList<String> names = data.getStringArrayListExtra("names");
+                        String haschoose = "";
+                        for (int i = 0; i < names.size(); i++) {
+                            if (i < 3) {
+                                if (names.get(i) != null || names.get(i) != "null") {
+                                    haschoose = haschoose + names.get(i) + "、";
+                                }
+                            } else if (i == 4) {
+                                haschoose = haschoose.substring(0, haschoose.length() - 1);
+                                haschoose = haschoose + "等...";
+                            }
+
+                        }
+
+                        classid =null;
+                        for (int i = 0; i < ids.size(); i++) {
+                            classid = classid + "," + ids.get(i);
+                        }
+                        classid = classid.substring(5, classid.length());
+                        tvSelectCount.setText("共选择" + ids.size() + "个班级");
+//                        addsnTvChooseClass.setText(haschoose);
+                    }
+
+                    break;
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

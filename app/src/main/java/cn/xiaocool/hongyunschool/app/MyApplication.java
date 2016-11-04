@@ -86,6 +86,7 @@ public class MyApplication extends Application {
         super.onCreate();
         //请求队列
         requestQueue = Volley.newRequestQueue(this);
+        requestQueueFile = Volley.newRequestQueue(this);
         myApplication = new MyApplication();
         instance = this;
         initImageLoder();

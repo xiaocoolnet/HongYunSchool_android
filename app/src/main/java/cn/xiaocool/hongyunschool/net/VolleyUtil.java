@@ -36,7 +36,7 @@ public class VolleyUtil {
      * @param callback
      */
     public static void VolleyGetRequest(final Context context, String url, final VolleyJsonCallback callback) {
-
+        LogUtils.e(URL, url);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override

@@ -50,8 +50,10 @@ public class NetConstantUrl {
     public static final String SEND_SCHOOL_NEWS = "http://hyx.xiaocool.net/index.php?g=apps&m=message&"+"a=send_message";
     /**
      * 发布动态
+     * http://hyx.xiaocool.net/index.php?g=apps&m=index&a=WriteMicroblog_else&type=1
+     * &userid=9188&content=%E6%A0%A1%E9%85%B7&schoolid=8&classid=91,92&picurl=1.jpg,2.jpg
      */
-    public static final String SEND_TREND = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=WriteMicroblog";
+    public static final String SEND_TREND = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=WriteMicroblog_else";
     /**
      * 发布校内通知
      */

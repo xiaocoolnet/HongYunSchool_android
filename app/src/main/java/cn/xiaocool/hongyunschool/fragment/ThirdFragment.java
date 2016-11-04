@@ -32,6 +32,7 @@ import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.activity.ImageDetailActivity;
 import cn.xiaocool.hongyunschool.activity.PostTrendActivity;
+import cn.xiaocool.hongyunschool.bean.ClassParent;
 import cn.xiaocool.hongyunschool.bean.Trends;
 import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
@@ -186,7 +187,7 @@ public class ThirdFragment extends BaseFragment {
                         if (JsonResult.JSONparser(context, result)) {
                             fragmentThirdSrlTrend.setRefreshing(false);
                             setAdapter(result);
-                        }else {
+                        } else {
                             fragmentThirdSrlTrend.setRefreshing(false);
                         }
                     }
@@ -234,10 +235,57 @@ public class ThirdFragment extends BaseFragment {
         checkIdentity();
         trendsList = new ArrayList<>();
         userid = SPUtils.get(context,LocalConstant.USER_ID,"").toString();
-        classid = SPUtils.get(context,LocalConstant.USER_CLASSID,"").toString();
+        if (type==1){
+            classid = SPUtils.get(context,LocalConstant.USER_CLASSID,"").toString();
+        }else {//TODO 判断是老师 获取对应班级
+            classid = getTeacherClassid();
+        }
+
         return rootView;
     }
 
+    private String getTeacherClassid() {
+        String url = NetConstantUrl.GET_SCHOOL_CLASS + SPUtils.get(context, LocalConstant.SCHOOL_ID,"1");
+        url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context,LocalConstant.USER_ID,"")+"&schoolid="+SPUtils.get(context, LocalConstant.SCHOOL_ID, "");
+        VolleyUtil.VolleyGetRequest(context, url, new VolleyUtil.VolleyJsonCallback() {
+            @Override
+            public void onSuccess(String result) {
+                if (JsonResult.JSONparser(context, result)) {
+                    List<ClassParent> classParents = getClassParentBeanFromJson(result);
+                    for (int i = 0; i < classParents.size(); i++) {
+
+                    }
+                } else {
+
+                }
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+        return null;
+    }
+
+    /**
+     * 字符串转模型
+     *
+     * @param result
+     * @return
+     */
+    private List<ClassParent> getClassParentBeanFromJson(String result) {
+        String data = "";
+        try {
+            JSONObject json = new JSONObject(result);
+            data = json.getString("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new Gson().fromJson(data, new TypeToken<List<ClassParent>>() {
+        }.getType());
+    }
     /**
      * 判断身份
      * 1-----家长
