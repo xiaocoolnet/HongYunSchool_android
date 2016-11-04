@@ -65,6 +65,7 @@ public class PostTrendActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0x110:
+                    ProgressUtil.dissmisLoadingDialog();
                     if (msg.obj != null) {
                         if (JsonResult.JSONparser(context, String.valueOf(msg.obj))) {
                             finish();
@@ -85,7 +86,6 @@ public class PostTrendActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 sendTrend();
-                ProgressUtil.showLoadingDialog(PostTrendActivity.this);
             }
         });
         context = this;
@@ -131,6 +131,7 @@ public class PostTrendActivity extends BaseActivity {
                     classid, activityPostTrendEdContent.getText().toString(), "null", 0x110);
             return;
         }
+        ProgressUtil.showLoadingDialog(PostTrendActivity.this);
         //上传图片成功后发布
         new PushImageUtil().setPushIamge(this, photoWithPaths, new PushImage() {
             @Override
@@ -149,6 +150,7 @@ public class PostTrendActivity extends BaseActivity {
             @Override
             public void error() {
                 ToastUtil.showShort(context, "图片上传失败!");
+                ProgressUtil.dissmisLoadingDialog();
             }
         });
     }
