@@ -110,6 +110,9 @@ public class ThirdFragment extends BaseFragment {
     @Override
     public void initData() {
         String url = "";
+
+
+
         beginId = 0;
         if(type == 1){
         }
