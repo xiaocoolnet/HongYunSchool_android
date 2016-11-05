@@ -92,7 +92,7 @@ public class GalleryFinalUtil {
             GalleryFinal.openCamera(key, functionConfig, mOnHanlderResultCallback);
 
         }else {
-            String[] perms = {"android.permission.CAMERA"};
+            String[] perms = {"android.permission.CAMERA","android.permission.WRITE_EXTERNAL_STORAGE","android.permission.MOUNT_UNMOUNT_FILESYSTEMS"};
 
             int permsRequestCode = 200;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

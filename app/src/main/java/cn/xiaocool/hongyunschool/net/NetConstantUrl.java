@@ -273,4 +273,9 @@ public class NetConstantUrl {
      * 获取轮播图
      */
     public static final String GET_SLIDER_URL = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=GetRotatePic&schoolid=";
+
+    /**
+     * 获取老师对应的班级
+     */
+    public static final String TC_GET_CLASS = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=TeacherGetClass";
 }

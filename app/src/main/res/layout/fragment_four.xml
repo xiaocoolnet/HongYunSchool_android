@@ -68,6 +68,35 @@
             </RelativeLayout>
             <include layout="@layout/divider_line_half"></include>
             <RelativeLayout
+                android:id="@+id/fragment_four_rl_changebaby"
+                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:layout_height="60dp"
+                android:visibility="gone">
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/tongxunlu"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="孩子切换"
+                    android:textSize="@dimen/font_title_main"
+                    android:textColor="@color/font_title_main"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50dp"/>
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_arrow_right"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"/>
+            </RelativeLayout>
+            <!--<include layout="@layout/divider_line_half"></include>-->
+            <RelativeLayout
                 android:id="@+id/fragment_four_rl_address"
                 android:layout_width="match_parent"
                 android:background="@color/white"

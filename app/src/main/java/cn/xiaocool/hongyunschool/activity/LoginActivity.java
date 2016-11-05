@@ -198,6 +198,7 @@ public class LoginActivity extends BaseActivity {
                         //checkisClassleader(result);
                         SPUtils.put(context, LocalConstant.USER_IS_PRINSIPLE, isPrinsiple);
                         SPUtils.put(context, LocalConstant.USER_IS_CLASSLEADER, "y");
+                        getClassInfomation();
                         /*//如果是班主任，获取所任班级信息，否则跳转到主页面
                         if (isClassleader.equals("y")) {
                             //获取班主任班级信息
@@ -251,7 +252,7 @@ public class LoginActivity extends BaseActivity {
      * 获取班主任所任班级信息
      */
     private void getClassInfomation() {
-        String url_classinfo = NetConstantUrl.GET_CLASSINFO + "&teacherid=" + loginReturn.getId();
+        /*String url_classinfo = NetConstantUrl.GET_CLASSINFO + "&teacherid=" + loginReturn.getId();
         VolleyUtil.VolleyGetRequest(context, url_classinfo, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
@@ -269,9 +270,47 @@ public class LoginActivity extends BaseActivity {
             public void onError() {
 
             }
+        });*/
+
+        String url = NetConstantUrl.TC_GET_CLASS + "&teacherid=" + SPUtils.get(context,LocalConstant.USER_ID,"");
+        VolleyUtil.VolleyGetRequest(context, url, new VolleyUtil.VolleyJsonCallback() {
+            @Override
+            public void onSuccess(String result) {
+                ProgressUtil.dissmisLoadingDialog();
+                if (JsonResult.JSONparser(context,result)){
+                    List<ClassInfo> classInfos = getClassListBeans(result);
+                    if (classInfos.size()>0){
+                        SPUtils.put(context,LocalConstant.USER_CLASSID,classInfos.get(0).getId().toString());
+                        SPUtils.put(context,LocalConstant.CLASS_NAME,classInfos.get(0).getClassname().toString());
+                    }
+                }else {
+
+                }
+            }
+
+            @Override
+            public void onError() {
+                ProgressUtil.dissmisLoadingDialog();
+            }
         });
     }
 
+    /**
+     * 获取老师默认班级ID 默认班级列表第一个
+     * @param result
+     * @return
+     */
+    public List<ClassInfo> getClassListBeans(String result) {
+        String data = "";
+        try {
+            JSONObject json = new JSONObject(result);
+            data = json.getString("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new Gson().fromJson(data, new TypeToken<List<ClassInfo>>() {
+        }.getType());
+    }
     /**
      * 判断是否为校长
      *

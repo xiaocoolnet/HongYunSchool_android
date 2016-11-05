@@ -15,6 +15,7 @@ public class ClassInfo {
      * classname : 小二班
      */
 
+    private String id;
     private String t_id;
     private String teacherid;
     private String schoolid;
@@ -77,5 +78,13 @@ public class ClassInfo {
 
     public void setClassname(String classname) {
         this.classname = classname;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

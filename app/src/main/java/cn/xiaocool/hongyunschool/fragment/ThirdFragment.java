@@ -12,9 +12,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -32,6 +35,7 @@ import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.activity.ImageDetailActivity;
 import cn.xiaocool.hongyunschool.activity.PostTrendActivity;
+import cn.xiaocool.hongyunschool.bean.ClassInfo;
 import cn.xiaocool.hongyunschool.bean.ClassParent;
 import cn.xiaocool.hongyunschool.bean.Trends;
 import cn.xiaocool.hongyunschool.net.LocalConstant;
@@ -42,11 +46,13 @@ import cn.xiaocool.hongyunschool.utils.BaseFragment;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.PopInputManager;
+import cn.xiaocool.hongyunschool.utils.ProgressUtil;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 import cn.xiaocool.hongyunschool.view.CommentPopupWindow;
 import cn.xiaocool.hongyunschool.view.RefreshLayout;
+import me.drakeet.materialdialog.MaterialDialog;
 
 
 /**
@@ -60,19 +66,24 @@ public class ThirdFragment extends BaseFragment {
     ListView fragmentThirdLvTrend;
     @BindView(R.id.fragment_third_srl_trend)
     RefreshLayout fragmentThirdSrlTrend;
+    @BindView(R.id.top_name)
+    TextView topName;
+    @BindView(R.id.fragment_third_tv_change)
+    TextView fragmentThirdTvChange;
     private Context context;
     private CommonAdapter adapter;
     private List<Trends> trendsList;
+    private List<ClassInfo> classInfoList;// TODO: 16/11/5 save classList
     private CommentPopupWindow commentPopupWindow;
     private int type;
     private static long lastClickTime;
-    private String userid,classid;
+    private String userid, classid;
     private int beginId;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 0x110:
                     if (msg.obj != null) {
                         if (JsonResult.JSONparser(context, String.valueOf(msg.obj))) {
@@ -85,7 +96,7 @@ public class ThirdFragment extends BaseFragment {
                     if (msg.obj != null) {
                         if (JsonResult.JSONparser(context, String.valueOf(msg.obj))) {
                             initData();
-                            ToastUtil.showShort(context, "取消点赞成功！");
+//                            ToastUtil.showShort(context, "取消点赞成功！");
                         }
                     }
                     break;
@@ -93,7 +104,7 @@ public class ThirdFragment extends BaseFragment {
                     if (msg.obj != null) {
                         if (JsonResult.JSONparser(context, String.valueOf(msg.obj))) {
                             initData();
-                            ToastUtil.showShort(context, "点赞成功！");
+//                            ToastUtil.showShort(context, "点赞成功！");
                         }
                     }
                     break;
@@ -110,29 +121,33 @@ public class ThirdFragment extends BaseFragment {
     @Override
     public void initData() {
         String url = "";
-
-
-
+        classid = SPUtils.get(context, LocalConstant.USER_CLASSID, "").toString();
         beginId = 0;
-        if(type == 1){
+        if (type == 1) {
         }
-        url = NetConstantUrl.GET_TRENDS_PARENT +SPUtils.get(context,LocalConstant.SCHOOL_ID,"1")
-                +setParams(userid,classid,beginId+"");
+        if (classid.equals("")) {
+            ToastUtil.showShort(mActivity, "您没有可查看的班级动态!");
+            return;
+        }
+        url = NetConstantUrl.GET_TRENDS_PARENT + SPUtils.get(context, LocalConstant.SCHOOL_ID, "1")
+                + setParams(userid, classid, beginId + "");
 
         VolleyUtil.VolleyGetRequest(context, url, new
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
                     public void onSuccess(String result) {
+                        ProgressUtil.dissmisLoadingDialog();
                         if (JsonResult.JSONparser(context, result)) {
                             fragmentThirdSrlTrend.setRefreshing(false);
                             setAdapter(result);
-                        }else {
+                        } else {
                             fragmentThirdSrlTrend.setRefreshing(false);
                         }
                     }
 
                     @Override
                     public void onError() {
+                        ProgressUtil.dissmisLoadingDialog();
 
                     }
                 });
@@ -179,9 +194,10 @@ public class ThirdFragment extends BaseFragment {
      */
     private void loadTrend() {
         String url = "";
+        classid = SPUtils.get(context, LocalConstant.USER_CLASSID, "").toString();
         beginId = trendsList.size();
-        url = NetConstantUrl.GET_TRENDS_PARENT +SPUtils.get(context,LocalConstant.SCHOOL_ID,"1")
-                +setParams(userid,classid,beginId+"");
+        url = NetConstantUrl.GET_TRENDS_PARENT + SPUtils.get(context, LocalConstant.SCHOOL_ID, "1")
+                + setParams(userid, classid, beginId + "");
 
         VolleyUtil.VolleyGetRequest(context, url, new
                 VolleyUtil.VolleyJsonCallback() {
@@ -204,11 +220,12 @@ public class ThirdFragment extends BaseFragment {
 
 
     private String setParams(String userid, String classid, String beginid) {
-        return "&userid="+userid+"&classid="+classid+"&beginid="+beginid;
+        return "&userid=" + userid + "&classid=" + classid + "&beginid=" + beginid;
     }
 
     /**
      * list 设置adapter
+     *
      * @param result
      */
     private void setAdapter(String result) {
@@ -228,7 +245,6 @@ public class ThirdFragment extends BaseFragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // TODO: inflate a fragment view
@@ -237,40 +253,14 @@ public class ThirdFragment extends BaseFragment {
         context = getActivity();
         checkIdentity();
         trendsList = new ArrayList<>();
-        userid = SPUtils.get(context,LocalConstant.USER_ID,"").toString();
-        if (type==1){
-            classid = SPUtils.get(context,LocalConstant.USER_CLASSID,"").toString();
-        }else {//TODO 判断是老师 获取对应班级
-            classid = getTeacherClassid();
-        }
+        classInfoList = new ArrayList<>();
+
+        userid = SPUtils.get(context, LocalConstant.USER_ID, "").toString();
+        classid = SPUtils.get(context, LocalConstant.USER_CLASSID, "").toString();
 
         return rootView;
     }
 
-    private String getTeacherClassid() {
-        String url = NetConstantUrl.GET_SCHOOL_CLASS + SPUtils.get(context, LocalConstant.SCHOOL_ID,"1");
-        url = NetConstantUrl.GET_PARENT_BYTEACHERID + "&teacherid=" + SPUtils.get(context,LocalConstant.USER_ID,"")+"&schoolid="+SPUtils.get(context, LocalConstant.SCHOOL_ID, "");
-        VolleyUtil.VolleyGetRequest(context, url, new VolleyUtil.VolleyJsonCallback() {
-            @Override
-            public void onSuccess(String result) {
-                if (JsonResult.JSONparser(context, result)) {
-                    List<ClassParent> classParents = getClassParentBeanFromJson(result);
-                    for (int i = 0; i < classParents.size(); i++) {
-
-                    }
-                } else {
-
-                }
-
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
-        return null;
-    }
 
     /**
      * 字符串转模型
@@ -289,6 +279,7 @@ public class ThirdFragment extends BaseFragment {
         return new Gson().fromJson(data, new TypeToken<List<ClassParent>>() {
         }.getType());
     }
+
     /**
      * 判断身份
      * 1-----家长
@@ -296,17 +287,21 @@ public class ThirdFragment extends BaseFragment {
      * 3-----校长
      */
     private void checkIdentity() {
-        if(SPUtils.get(context, LocalConstant.USER_TYPE,"").equals("0")){
+        if (SPUtils.get(context, LocalConstant.USER_TYPE, "").equals("0")) {
             type = 1;
-        }else if(SPUtils.get(context,LocalConstant.USER_IS_PRINSIPLE,"").equals("y")){
+            fragmentThirdTvChange.setVisibility(View.GONE);
+        } else if (SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE, "").equals("y")) {
             type = 3;
-        }else{
+            fragmentThirdTvChange.setVisibility(View.VISIBLE);
+        } else {
             type = 2;
+            fragmentThirdTvChange.setVisibility(View.VISIBLE);
         }
     }
 
     /**
      * 对item 操作
+     *
      * @param holder
      * @param datas
      */
@@ -314,16 +309,16 @@ public class ThirdFragment extends BaseFragment {
 
         //获取图片字符串数组
         final ArrayList<String> images = new ArrayList<>();
-        for (int i=0;i<datas.getPic().size();i++){
+        for (int i = 0; i < datas.getPic().size(); i++) {
             images.add(datas.getPic().get(i).getPictureurl());
         }
 
-        holder.setImageByUrl(R.id.trend_item_iv_avatar,datas.getPhoto())
+        holder.setImageByUrl(R.id.trend_item_iv_avatar, datas.getPhoto())
                 .setText(R.id.trend_item_tv_content, datas.getContent())
-                .setText(R.id.trend_item_tv_name,datas.getName())
-                .setTimeText(R.id.trend_item_tv_time,datas.getWrite_time())
-                .setText(R.id.trend_item_tv_praise,datas.getLike().size()+"")
-                .setText(R.id.trend_item_tv_comment,datas.getComment().size()+"")
+                .setText(R.id.trend_item_tv_name, datas.getName())
+                .setTimeText(R.id.trend_item_tv_time, datas.getWrite_time())
+                .setText(R.id.trend_item_tv_praise, datas.getLike().size() + "")
+                .setText(R.id.trend_item_tv_comment, datas.getComment().size() + "")
                 .setItemImages(context, R.id.trend_item_iv_onepic, R.id.trend_item_gv_anypic, images);
         holder.getView(R.id.trend_item_iv_onepic).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -357,7 +352,7 @@ public class ThirdFragment extends BaseFragment {
                         switch (v.getId()) {
                             case R.id.tv_comment:
                                 if (commentPopupWindow.ed_comment.getText().length() > 0) {
-                                    new SendRequest(context,handler).send_remark(datas.getMid(),userid,commentPopupWindow.ed_comment.getText().toString(),"1",0x110);
+                                    new SendRequest(context, handler).send_remark(datas.getMid(), userid, commentPopupWindow.ed_comment.getText().toString(), "1", 0x110);
                                     commentPopupWindow.dismiss();
                                     commentPopupWindow.ed_comment.setText("");
                                 } else {
@@ -382,9 +377,9 @@ public class ThirdFragment extends BaseFragment {
                     return;
                 } else {
                     if (isPraise(datas.getLike())) {
-                        new SendRequest(context,handler).DelPraise(userid,datas.getMid(),0x111);
+                        new SendRequest(context, handler).DelPraise(userid, datas.getMid(), 0x111);
                     } else {
-                        new SendRequest(context,handler).Praise(userid, datas.getMid(), 0x112);
+                        new SendRequest(context, handler).Praise(userid, datas.getMid(), 0x112);
                     }
                 }
             }
@@ -400,9 +395,9 @@ public class ThirdFragment extends BaseFragment {
     }
 
 
-
     /**
      * 字符串转模型
+     *
      * @param result
      * @return
      */
@@ -418,14 +413,10 @@ public class ThirdFragment extends BaseFragment {
         }.getType());
     }
 
-    @OnClick(R.id.fragment_third_iv_send)
-    //发布动态
-    public void onClick() {
-        getActivity().startActivity(new Intent(getActivity(), PostTrendActivity.class));
-    }
 
     /**
      * 防止快速点赞
+     *
      * @return
      */
     public boolean isFastClick() {
@@ -448,4 +439,106 @@ public class ThirdFragment extends BaseFragment {
         }
         return false;
     }
+
+    @OnClick({R.id.fragment_third_tv_change, R.id.fragment_third_iv_send})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fragment_third_tv_change:
+                checkIsHasClassOrBaby();// TODO: 16/11/5 判断是否有班级切换 or baby
+                break;
+            case R.id.fragment_third_iv_send:
+                getActivity().startActivity(new Intent(getActivity(), PostTrendActivity.class));
+                break;
+        }
+    }
+
+    /**
+     * 弹出选择班级的dialog
+     */
+    private void showChooseDialog() {
+        ListView listView = new ListView(mActivity);
+        listView.setDivider(null);
+        listView.setAdapter(new ArrayAdapter<String>(mActivity, R.layout.item_choose_class, getClassStringData()));
+        final MaterialDialog mMaterialDialog = new MaterialDialog(mActivity).setTitle("班级选择").setContentView(listView);
+        mMaterialDialog.setNegativeButton("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMaterialDialog.dismiss();
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mMaterialDialog.dismiss();
+                SPUtils.put(mActivity, LocalConstant.USER_CLASSID, classInfoList.get(i).getId().toString());
+                SPUtils.put(context, LocalConstant.CLASS_NAME, classInfoList.get(0).getClassname().toString());
+                topName.setText(classInfoList.get(i).getClassname());
+                ProgressUtil.showLoadingDialog(mActivity);
+                initData();
+
+            }
+        });
+        mMaterialDialog.show();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        topName.setText(SPUtils.get(context, LocalConstant.CLASS_NAME, "动态").toString());
+    }
+
+    private ArrayList<String> getClassStringData() {
+        ArrayList<String> strings = new ArrayList<>();
+        for (int i = 0; i < classInfoList.size(); i++) {
+            strings.add(classInfoList.get(i).getClassname());
+        }
+        return strings;
+    }
+
+    /**
+     * 判断是否有班级切换
+     */
+    private void checkIsHasClassOrBaby() {
+        if (type != 1) {// TODO: 16/11/5 teacher get class
+            ProgressUtil.showLoadingDialog(mActivity);
+            String url = NetConstantUrl.TC_GET_CLASS + "&teacherid=" + SPUtils.get(mActivity, LocalConstant.USER_ID, "");
+            VolleyUtil.VolleyGetRequest(mActivity, url, new VolleyUtil.VolleyJsonCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    ProgressUtil.dissmisLoadingDialog();
+                    if (JsonResult.JSONparser(mActivity, result)) {
+                        classInfoList.clear();
+                        classInfoList.addAll(getClassListBeans(result));
+                        showChooseDialog();// TODO: 16/11/5 展示选择列表
+                    } else {
+                        ToastUtil.showShort(mActivity, "暂无可切换选项!");
+                    }
+                }
+
+                @Override
+                public void onError() {
+                    ProgressUtil.dissmisLoadingDialog();
+                }
+            });
+
+        } else {// TODO: 16/11/5 parent get baby class
+
+        }
+
+    }
+
+    public List<ClassInfo> getClassListBeans(String result) {
+        String data = "";
+        try {
+            JSONObject json = new JSONObject(result);
+            data = json.getString("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new Gson().fromJson(data, new TypeToken<List<ClassInfo>>() {
+        }.getType());
+    }
+
+
 }

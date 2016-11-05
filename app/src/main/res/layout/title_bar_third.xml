@@ -11,6 +11,19 @@
         android:id="@+id/top_bar"
         android:layout_height="45dp">
 
+        <TextView
+            android:id="@+id/fragment_third_tv_change"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:text="切换"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/top_name"

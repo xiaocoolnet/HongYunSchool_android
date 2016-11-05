@@ -18,6 +18,9 @@ android {
         }
     }
 }
+repositories {
+    maven { url "https://jitpack.io" }
+}
 apply plugin: 'com.neenbedankt.android-apt'//增加这一句
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -48,5 +51,7 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.slider:library:1.1.5@aar'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
-    compile 'com.youth.banner:banner:1.4.1'  //最新版本
+    compile 'com.youth.banner:banner:1.4.1'  //TODO imageview lunbo show
+    compile 'me.drakeet.materialdialog:library:1.3.1' //TODO dialog to show list
+    compile 'com.github.valuesfeng:androidpicturepicker:1.0.0' //todo img select
 }
