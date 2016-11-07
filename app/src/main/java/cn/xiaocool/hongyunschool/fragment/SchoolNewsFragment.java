@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.andview.refreshview.XRefreshView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -34,6 +35,7 @@ import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.CustomHeader;
 import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 
@@ -46,7 +48,7 @@ public class SchoolNewsFragment extends Fragment {
     @BindView(R.id.school_news_lv)
     ListView schoolNewsLv;
     @BindView(R.id.school_news_srl)
-    RefreshLayout schoolNewsSrl;
+    XRefreshView schoolNewsSrl;
     private List<SchoolNewsReceiver> schoolNewsReceiverList;
     private List<SchoolNewsReceiver.ReceiveBean> receiveBeans;
     private CommonAdapter adapter;
@@ -74,39 +76,45 @@ public class SchoolNewsFragment extends Fragment {
      * 设置
      */
     private void settingRefresh() {
-        schoolNewsSrl.setColorSchemeResources(R.color.white);
-        schoolNewsSrl.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.themeColor));
-        schoolNewsSrl.setProgressViewOffset(true, 10, 100);
-        schoolNewsSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+        schoolNewsSrl.setPullRefreshEnable(true);
+        schoolNewsSrl.setPullLoadEnable(true);
+        schoolNewsSrl.setCustomHeaderView(new CustomHeader(context,2000));
+        schoolNewsSrl.setAutoRefresh(true);
+        schoolNewsSrl.setAutoLoadMore(false);
+        schoolNewsSrl.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
+
             @Override
             public void onRefresh() {
                 beginid = 0;
                 getData();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        schoolNewsSrl.setRefreshing(false);
+                        schoolNewsSrl.stopRefresh();
                     }
-                }, 5000);
+                }, 2000);
             }
-        });
-        //上拉加载
-        schoolNewsSrl.setOnLoadListener(new RefreshLayout.OnLoadListener() {
 
             @Override
-            public void onLoad() {
-                schoolNewsSrl.postDelayed(new Runnable() {
+            public void onLoadMore(boolean isSilence) {
+                beginid = receiveBeans.size();
+                getData();
+                new Handler().postDelayed(new Runnable() {
 
                     @Override
                     public void run() {
-                        beginid = receiveBeans.size();
-                        getData();
-                        schoolNewsSrl.setLoading(false);
+                        schoolNewsSrl.stopLoadMore();
                     }
-                }, 1000);
+                }, 2000);
+            }
+
+            @Override
+            public void onRelease(float direction) {
+                super.onRelease(direction);
             }
         });
+
 
 
     }
@@ -126,17 +134,18 @@ public class SchoolNewsFragment extends Fragment {
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
                     public void onSuccess(String result) {
+                        schoolNewsSrl.stopLoadMore();
+                        schoolNewsSrl.startRefresh();
                         if (JsonResult.JSONparser(context, result)) {
-                            schoolNewsSrl.setRefreshing(false);
                             setAdapter(result);
                         }else {
-                            schoolNewsSrl.setRefreshing(false);
                         }
                     }
 
                     @Override
                     public void onError() {
-
+                        schoolNewsSrl.stopLoadMore();
+                        schoolNewsSrl.startRefresh();
                     }
                 });
     }

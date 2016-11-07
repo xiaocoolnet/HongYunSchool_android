@@ -3,15 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/bg_main_gray"
-    tools:context="cn.xiaocool.baseApp.fragment.FirstFragment">
+    android:background="@color/bg_main_gray">
     <include layout="@layout/title_bar_first"></include>
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.andview.refreshview.XRefreshView
         android:id="@+id/school_news_srl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <cn.xiaocool.hongyunschool.view.ReboundScrollView
+        <com.andview.refreshview.XScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -31,8 +30,8 @@
             </LinearLayout>
 
 
-        </cn.xiaocool.hongyunschool.view.ReboundScrollView>
+        </com.andview.refreshview.XScrollView>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.andview.refreshview.XRefreshView>
 
 </LinearLayout>

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.andview.refreshview.XRefreshView;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.google.gson.Gson;
@@ -50,6 +51,7 @@ import cn.xiaocool.hongyunschool.net.VolleyUtil;
 import cn.xiaocool.hongyunschool.utils.BaseFragment;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
+import cn.xiaocool.hongyunschool.view.CustomHeader;
 import cn.xiaocool.hongyunschool.view.NoScrollListView;
 
 
@@ -72,7 +74,7 @@ public class FirstFragment extends BaseFragment implements BaseSliderView.OnSlid
     @BindView(R.id.slider)
     Banner slider;
     @BindView(R.id.school_news_srl)
-    SwipeRefreshLayout schoolNewsSrl;
+    XRefreshView schoolNewsSrl;
     private int tag = 0;
 
     private ArrayList<WebListInfo> announceList;
@@ -102,21 +104,36 @@ public class FirstFragment extends BaseFragment implements BaseSliderView.OnSlid
      * 设置
      */
     private void settingRefresh() {
-        schoolNewsSrl.setColorSchemeResources(R.color.white);
-        schoolNewsSrl.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.themeColor));
-        schoolNewsSrl.setProgressViewOffset(true, 10, 100);
-        schoolNewsSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        schoolNewsSrl.setPullRefreshEnable(true);
+        schoolNewsSrl.setPullLoadEnable(false);
+        schoolNewsSrl.setPinnedTime(2000);
+        schoolNewsSrl.setCustomHeaderView(new CustomHeader(mActivity,2000));
+        schoolNewsSrl.setAutoRefresh(false);
+        schoolNewsSrl.setAutoLoadMore(false);
+        schoolNewsSrl.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
+
             @Override
             public void onRefresh() {
                 initData();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        schoolNewsSrl.setRefreshing(false);
+                        schoolNewsSrl.stopRefresh();
                     }
-                }, 5000);
+                }, 2000);
             }
+
+            @Override
+            public void onLoadMore(boolean isSilence) {
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        schoolNewsSrl.stopLoadMore();
+                    }
+                }, 2000);
+            }
+
         });
 
     }
@@ -229,6 +246,8 @@ public class FirstFragment extends BaseFragment implements BaseSliderView.OnSlid
         VolleyUtil.VolleyGetRequest(mActivity, announceUrl, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
+                schoolNewsSrl.stopLoadMore();
+                schoolNewsSrl.startRefresh();
                 if (JsonResult.JSONparser(mActivity, result)) {
                     announceList.clear();
                     announceList.addAll(JsonParser(result));
@@ -277,7 +296,6 @@ public class FirstFragment extends BaseFragment implements BaseSliderView.OnSlid
             }
         });
 
-        schoolNewsSrl.setRefreshing(false);
     }
 
     /**

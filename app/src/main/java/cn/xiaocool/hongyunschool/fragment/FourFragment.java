@@ -69,6 +69,8 @@ public class FourFragment extends BaseFragment {
     RelativeLayout fragmentFourRlOnline;
     @BindView(R.id.fragment_four_rl_code)
     RelativeLayout fragmentFourRlCode;
+    @BindView(R.id.fragment_four_tv_change)
+    TextView fragmentFourTvChange;
     private Context context;
     private UserInfo userInfo;
 
@@ -102,6 +104,7 @@ public class FourFragment extends BaseFragment {
         // TODO: inflate a fragment view
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, rootView);
+        fragmentFourTvChange.setVisibility(View.GONE);
         return rootView;
     }
 
@@ -111,7 +114,7 @@ public class FourFragment extends BaseFragment {
         context = getActivity();
     }
 
-    @OnClick({R.id.fragment_four_iv_setting, R.id.fragment_four_iv_avatar, R.id.fragment_four_rl_service, R.id.fragment_four_rl_address, R.id.fragment_four_rl_jifen, R.id.fragment_four_rl_system, R.id.fragment_four_rl_online, R.id.fragment_four_rl_code})
+    @OnClick({R.id.fragment_four_iv_setting, R.id.fragment_four_iv_avatar, R.id.fragment_four_rl_service, R.id.fragment_four_rl_address, R.id.fragment_four_rl_jifen, R.id.fragment_four_rl_system, R.id.fragment_four_rl_online, R.id.fragment_four_rl_code, R.id.fragment_four_tv_change})
     public void onClick(View view) {
         switch (view.getId()) {
             //设置
@@ -124,7 +127,7 @@ public class FourFragment extends BaseFragment {
                 break;
             //服务购买
             case R.id.fragment_four_rl_service:
-                ToastUtil.showShort(context,"当前版本为试用版本");
+                ToastUtil.showShort(context, "当前版本为试用版本");
                 //context.startActivity(new Intent(context, ServiceBuyActivity.class));
                 break;
             //通讯录
@@ -148,7 +151,10 @@ public class FourFragment extends BaseFragment {
                 break;
             //客户端二维码
             case R.id.fragment_four_rl_code:
-                context.startActivity(new Intent(context,QRCodeActivity.class));
+                context.startActivity(new Intent(context, QRCodeActivity.class));
+                break;
+            case R.id.fragment_four_tv_change:// TODO: 16/11/7 家长切换孩子
+
                 break;
         }
     }

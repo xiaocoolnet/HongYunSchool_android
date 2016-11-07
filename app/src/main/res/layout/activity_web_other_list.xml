@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_main_gray"
     tools:context="cn.xiaocool.hongyunschool.activity.WebOtherListActivity">
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.andview.refreshview.XRefreshView
         android:id="@+id/web_list_swip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -18,5 +18,5 @@
         </ListView>
 
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.andview.refreshview.XRefreshView>
 </RelativeLayout>

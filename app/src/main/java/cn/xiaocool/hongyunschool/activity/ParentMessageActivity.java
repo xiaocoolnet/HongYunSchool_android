@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.andview.refreshview.XRefreshView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -37,6 +38,7 @@ import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 import cn.xiaocool.hongyunschool.view.CommentPopupWindow;
+import cn.xiaocool.hongyunschool.view.CustomHeader;
 import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 public class ParentMessageActivity extends BaseActivity {
@@ -45,7 +47,7 @@ public class ParentMessageActivity extends BaseActivity {
     @BindView(R.id.web_parent_lv)
     ListView webParentLv;
     @BindView(R.id.web_parent_swip)
-    RefreshLayout webParentSwip;
+    XRefreshView webParentSwip;
 
     private CommonAdapter adapter;
     private ArrayList<FeedbackSend> feedbackSends;
@@ -116,45 +118,47 @@ public class ParentMessageActivity extends BaseActivity {
      * 设置
      */
     private void settingRefresh() {
-        webParentSwip.setColorSchemeResources(R.color.white);
-        webParentSwip.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.themeColor));
-        webParentSwip.setProgressViewOffset(true, 10, 100);
-        webParentSwip.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        webParentSwip.setPullRefreshEnable(true);
+        webParentSwip.setPullLoadEnable(true);
+        webParentSwip.setCustomHeaderView(new CustomHeader(this,2000));
+        webParentSwip.setAutoRefresh(true);
+        webParentSwip.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
+
             @Override
             public void onRefresh() {
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        webParentSwip.setRefreshing(false);
-                    }
-                }, 5000);
                 beginid = 0;
                 requsetData();
-
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        webParentSwip.stopRefresh();
+                    }
+                }, 2000);
             }
-        });
-
-        //上拉加载
-        webParentSwip.setOnLoadListener(new RefreshLayout.OnLoadListener() {
 
             @Override
-            public void onLoad() {
-                webParentSwip.postDelayed(new Runnable() {
+            public void onLoadMore(boolean isSilence) {
+                if (type == 1) {
+                    beginid = feedbackSends.size();
+                } else if (type == 2||type ==3) {
+                    beginid = feedbackLeaders.size();
+                }
+                requsetData();
+                new Handler().postDelayed(new Runnable() {
 
                     @Override
                     public void run() {
-                        if (type == 1) {
-                            beginid = feedbackSends.size();
-                        } else if (type == 2||type ==3) {
-                            beginid = feedbackLeaders.size();
-                        }
-                        requsetData();
-                        webParentSwip.setLoading(false);
+                        webParentSwip.stopLoadMore();
                     }
-                }, 1000);
+                }, 2000);
+            }
+
+            @Override
+            public void onRelease(float direction) {
+                super.onRelease(direction);
             }
         });
+
     }
     @Override
     public void requsetData() {
@@ -170,7 +174,8 @@ public class ParentMessageActivity extends BaseActivity {
             @Override
             public void onSuccess(String result) {
                 if (JsonResult.JSONparser(ParentMessageActivity.this, result)) {
-                    webParentSwip.setRefreshing(false);
+                    webParentSwip.stopLoadMore();
+                    webParentSwip.startRefresh();
                     if (type == 1) {
                         feedbackSends.clear();
                         feedbackSends.addAll(getBeanFromJson(result));
@@ -182,7 +187,8 @@ public class ParentMessageActivity extends BaseActivity {
                         setAdapterLeader(result);
                     }
                 }else {
-                    webParentSwip.setRefreshing(false);
+                    webParentSwip.stopLoadMore();
+                    webParentSwip.startRefresh();
                 }
             }
 

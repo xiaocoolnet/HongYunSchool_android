@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     android:background="@color/bg_main_gray"
     android:orientation="vertical">
-    <cn.xiaocool.hongyunschool.view.RefreshLayout
+    <com.andview.refreshview.XRefreshView
         android:id="@+id/fragment_third_srl_trend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ListView
             android:id="@+id/fragment_third_lv_trend"
@@ -17,5 +17,5 @@
 
         </ListView>
 
-    </cn.xiaocool.hongyunschool.view.RefreshLayout>
+    </com.andview.refreshview.XRefreshView>
 </LinearLayout>

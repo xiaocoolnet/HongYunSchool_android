@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.andview.refreshview.XRefreshView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -35,6 +36,7 @@ import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.CustomHeader;
 import cn.xiaocool.hongyunschool.view.PopWindowManager;
 import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
@@ -44,7 +46,7 @@ public class ClassNewsActivity extends BaseActivity {
     @BindView(R.id.school_news_lv)
     ListView schoolNewsLv;
     @BindView(R.id.school_news_srl)
-    RefreshLayout schoolNewsSrl;
+    XRefreshView schoolNewsSrl;
 
     private CommonAdapter adapter;
     private List<ClassNewsSend> classNewsSends;
@@ -116,41 +118,44 @@ public class ClassNewsActivity extends BaseActivity {
      * 设置
      */
     private void settingRefresh() {
-        schoolNewsSrl.setColorSchemeResources(R.color.white);
-        schoolNewsSrl.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.themeColor));
-        schoolNewsSrl.setProgressViewOffset(true, 10, 100);
-        schoolNewsSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        schoolNewsSrl.setPullRefreshEnable(true);
+        schoolNewsSrl.setPullLoadEnable(true);
+        schoolNewsSrl.setCustomHeaderView(new CustomHeader(this,2000));
+        schoolNewsSrl.setAutoRefresh(true);
+        schoolNewsSrl.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
+
             @Override
             public void onRefresh() {
                 beginid = 0;
                 requsetData();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        schoolNewsSrl.setRefreshing(false);
+                        schoolNewsSrl.stopRefresh();
                     }
-                }, 5000);
+                }, 2000);
             }
-        });
-        //上拉加载
-        schoolNewsSrl.setOnLoadListener(new RefreshLayout.OnLoadListener() {
 
             @Override
-            public void onLoad() {
-                schoolNewsSrl.postDelayed(new Runnable() {
+            public void onLoadMore(boolean isSilence) {
+                if (type == 2||type == 4) {
+                    beginid = classNewsAlls.size();
+                } else if (type == 1) {
+                    beginid = classNewsReceives.size();
+                }
+                requsetData();
+                new Handler().postDelayed(new Runnable() {
 
                     @Override
                     public void run() {
-                        if (type == 2||type == 4) {
-                            beginid = classNewsAlls.size();
-                        } else if (type == 1) {
-                            beginid = classNewsReceives.size();
-                        }
-                        requsetData();
-                        schoolNewsSrl.setLoading(false);
+                        schoolNewsSrl.stopLoadMore();
                     }
-                }, 1000);
+                }, 2000);
+            }
+
+            @Override
+            public void onRelease(float direction) {
+                super.onRelease(direction);
             }
         });
 
@@ -172,17 +177,18 @@ public class ClassNewsActivity extends BaseActivity {
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
                     public void onSuccess(String result) {
+                        schoolNewsSrl.stopLoadMore();
+                        schoolNewsSrl.startRefresh();
                         if (JsonResult.JSONparser(getBaseContext(), result)) {
-                            schoolNewsSrl.setRefreshing(false);
                             setAdapter(result);
                         }else {
-                            schoolNewsSrl.setRefreshing(false);
                         }
                     }
 
                     @Override
                     public void onError() {
-
+                        schoolNewsSrl.stopLoadMore();
+                        schoolNewsSrl.startRefresh();
                     }
                 });
     }

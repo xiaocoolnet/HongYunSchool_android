@@ -6,10 +6,10 @@
     tools:context="cn.xiaocool.hongyunschool.activity.SchoolNewsActivity">
 
 
-    <cn.xiaocool.hongyunschool.view.RefreshLayout
+    <com.andview.refreshview.XRefreshView
         android:id="@+id/school_news_srl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 
         <ListView
@@ -21,6 +21,6 @@
         </ListView>
 
 
-    </cn.xiaocool.hongyunschool.view.RefreshLayout>
+    </com.andview.refreshview.XRefreshView>
 
 </RelativeLayout>

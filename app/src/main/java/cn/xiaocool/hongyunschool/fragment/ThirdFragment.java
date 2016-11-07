@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andview.refreshview.XRefreshView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -32,6 +33,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.activity.ImageDetailActivity;
 import cn.xiaocool.hongyunschool.activity.PostTrendActivity;
@@ -51,6 +53,7 @@ import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 import cn.xiaocool.hongyunschool.view.CommentPopupWindow;
+import cn.xiaocool.hongyunschool.view.CustomHeader;
 import cn.xiaocool.hongyunschool.view.RefreshLayout;
 import me.drakeet.materialdialog.MaterialDialog;
 
@@ -65,7 +68,7 @@ public class ThirdFragment extends BaseFragment {
     @BindView(R.id.fragment_third_lv_trend)
     ListView fragmentThirdLvTrend;
     @BindView(R.id.fragment_third_srl_trend)
-    RefreshLayout fragmentThirdSrlTrend;
+    XRefreshView fragmentThirdSrlTrend;
     @BindView(R.id.top_name)
     TextView topName;
     @BindView(R.id.fragment_third_tv_change)
@@ -126,7 +129,6 @@ public class ThirdFragment extends BaseFragment {
         if (type == 1) {
         }
         if (classid.equals("")) {
-            ToastUtil.showShort(mActivity, "您没有可查看的班级动态!");
             return;
         }
         url = NetConstantUrl.GET_TRENDS_PARENT + SPUtils.get(context, LocalConstant.SCHOOL_ID, "1")
@@ -137,18 +139,19 @@ public class ThirdFragment extends BaseFragment {
                     @Override
                     public void onSuccess(String result) {
                         ProgressUtil.dissmisLoadingDialog();
+                        fragmentThirdSrlTrend.stopRefresh();
+                        fragmentThirdSrlTrend.stopLoadMore();
                         if (JsonResult.JSONparser(context, result)) {
-                            fragmentThirdSrlTrend.setRefreshing(false);
                             setAdapter(result);
                         } else {
-                            fragmentThirdSrlTrend.setRefreshing(false);
                         }
                     }
 
                     @Override
                     public void onError() {
                         ProgressUtil.dissmisLoadingDialog();
-
+                        fragmentThirdSrlTrend.stopRefresh();
+                        fragmentThirdSrlTrend.stopLoadMore();
                     }
                 });
     }
@@ -156,35 +159,38 @@ public class ThirdFragment extends BaseFragment {
     @Override
     protected void initEvent() {
         super.initEvent();
-        fragmentThirdSrlTrend.setColorSchemeResources(R.color.white);
-        fragmentThirdSrlTrend.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.themeColor));
-        fragmentThirdSrlTrend.setProgressViewOffset(true, 10, 100);
-        fragmentThirdSrlTrend.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        fragmentThirdSrlTrend.setPullRefreshEnable(true);
+        fragmentThirdSrlTrend.setPullLoadEnable(true);
+        fragmentThirdSrlTrend.setCustomHeaderView(new CustomHeader(mActivity,2000));
+        fragmentThirdSrlTrend.setAutoRefresh(true);
+        fragmentThirdSrlTrend.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
+
             @Override
             public void onRefresh() {
                 initData();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        fragmentThirdSrlTrend.setRefreshing(false);
+                        fragmentThirdSrlTrend.stopRefresh();
                     }
-                }, 5000);
+                }, 2000);
             }
-        });
-        //上拉加载
-        fragmentThirdSrlTrend.setOnLoadListener(new RefreshLayout.OnLoadListener() {
 
             @Override
-            public void onLoad() {
-                fragmentThirdSrlTrend.postDelayed(new Runnable() {
+            public void onLoadMore(boolean isSilence) {
+                loadTrend();
+                new Handler().postDelayed(new Runnable() {
 
                     @Override
                     public void run() {
-                        loadTrend();
-                        fragmentThirdSrlTrend.setLoading(false);
+                        fragmentThirdSrlTrend.stopLoadMore();
                     }
-                }, 1000);
+                }, 2000);
+            }
+
+            @Override
+            public void onRelease(float direction) {
+                super.onRelease(direction);
             }
         });
     }
@@ -203,17 +209,18 @@ public class ThirdFragment extends BaseFragment {
                 VolleyUtil.VolleyJsonCallback() {
                     @Override
                     public void onSuccess(String result) {
+                        fragmentThirdSrlTrend.stopRefresh();
+                        fragmentThirdSrlTrend.stopLoadMore();
                         if (JsonResult.JSONparser(context, result)) {
-                            fragmentThirdSrlTrend.setRefreshing(false);
                             setAdapter(result);
                         } else {
-                            fragmentThirdSrlTrend.setRefreshing(false);
                         }
                     }
 
                     @Override
                     public void onError() {
-
+                        fragmentThirdSrlTrend.stopRefresh();
+                        fragmentThirdSrlTrend.stopLoadMore();
                     }
                 });
     }
@@ -257,7 +264,19 @@ public class ThirdFragment extends BaseFragment {
 
         userid = SPUtils.get(context, LocalConstant.USER_ID, "").toString();
         classid = SPUtils.get(context, LocalConstant.USER_CLASSID, "").toString();
-
+        if (!classid.equals("")){
+            fragmentThirdIvSend.setVisibility(View.VISIBLE);
+            fragmentThirdTvChange.setVisibility(View.VISIBLE);
+        }else {
+            ToastUtil.showShort(mActivity, "您没有可查看的班级动态!");
+            fragmentThirdIvSend.setVisibility(View.GONE);
+            fragmentThirdTvChange.setVisibility(View.GONE);
+        }
+        if (SPUtils.get(context, LocalConstant.USER_TYPE, "").toString().equals("0")){
+            fragmentThirdIvSend.setVisibility(View.GONE);
+        }else {
+            fragmentThirdIvSend.setVisibility(View.VISIBLE);
+        }
         return rootView;
     }
 
@@ -471,7 +490,7 @@ public class ThirdFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 mMaterialDialog.dismiss();
                 SPUtils.put(mActivity, LocalConstant.USER_CLASSID, classInfoList.get(i).getId().toString());
-                SPUtils.put(context, LocalConstant.CLASS_NAME, classInfoList.get(0).getClassname().toString());
+                SPUtils.put(context, LocalConstant.CLASS_NAME, classInfoList.get(i).getClassname().toString());
                 topName.setText(classInfoList.get(i).getClassname());
                 ProgressUtil.showLoadingDialog(mActivity);
                 initData();

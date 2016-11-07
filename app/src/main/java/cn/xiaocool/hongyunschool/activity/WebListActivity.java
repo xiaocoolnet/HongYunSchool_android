@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.andview.refreshview.XRefreshView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -31,6 +32,7 @@ import cn.xiaocool.hongyunschool.utils.ImgLoadUtil;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.CustomHeader;
 import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 public class WebListActivity extends BaseActivity {
@@ -38,7 +40,7 @@ public class WebListActivity extends BaseActivity {
     @BindView(R.id.web_list)
     ListView webList;
     @BindView(R.id.web_list_swip)
-    RefreshLayout webListSwip;
+    XRefreshView webListSwip;
     private int beginid = 0;
 
     private ArrayList<WebListInfo> webListInfoArrayList;
@@ -60,45 +62,49 @@ public class WebListActivity extends BaseActivity {
      * 设置
      */
     private void settingRefresh() {
-        webListSwip.setColorSchemeResources(R.color.white);
-        webListSwip.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.themeColor));
-        webListSwip.setProgressViewOffset(true, 10, 100);
-        webListSwip.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+        webListSwip.setPullRefreshEnable(true);
+        webListSwip.setPullLoadEnable(true);
+        webListSwip.setCustomHeaderView(new CustomHeader(this,2000));
+        webListSwip.setAutoRefresh(true);
+        webListSwip.setAutoLoadMore(false);
+        webListSwip.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
+
             @Override
             public void onRefresh() {
                 beginid = 0;
                 requsetData();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        webListSwip.setRefreshing(false);
+                        webListSwip.stopRefresh();
                     }
-                }, 5000);
+                }, 2000);
             }
-        });
-
-
-        //上拉加载
-        webListSwip.setOnLoadListener(new RefreshLayout.OnLoadListener() {
 
             @Override
-            public void onLoad() {
-                webListSwip.postDelayed(new Runnable() {
+            public void onLoadMore(boolean isSilence) {
+                if (getIntent().getStringExtra(LocalConstant.WEB_FLAG).equals(LocalConstant.SYSTEN_NEWS)) {
+                    beginid = systemNewses.size();
+                } else {
+                    beginid = webListInfoArrayList.size();
+                }
+                requsetData();
+                new Handler().postDelayed(new Runnable() {
 
                     @Override
                     public void run() {
-                        if (getIntent().getStringExtra(LocalConstant.WEB_FLAG).equals(LocalConstant.SYSTEN_NEWS)) {
-                            beginid = systemNewses.size();
-                        } else {
-                            beginid = webListInfoArrayList.size();
-                        }
-                        requsetData();
-                        webListSwip.setLoading(false);
+                        webListSwip.stopLoadMore();
                     }
-                }, 1000);
+                }, 2000);
+            }
+
+            @Override
+            public void onRelease(float direction) {
+                super.onRelease(direction);
             }
         });
+
         setTopName(getIntent().getStringExtra("title") != null ? getIntent().getStringExtra("title") : "列表");
 
         webList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -156,38 +162,40 @@ public class WebListActivity extends BaseActivity {
             VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
                 @Override
                 public void onSuccess(String result) {
+                    webListSwip.stopLoadMore();
+                    webListSwip.startRefresh();
                     if (JsonResult.JSONparser(WebListActivity.this, result)) {
                         systemNewses.clear();
                         systemNewses.addAll(getBeanFromJsonSystem(result));
-                        webListSwip.setRefreshing(false);
                         setSystemAdapter();
                     } else {
-                        webListSwip.setRefreshing(false);
                     }
                 }
 
                 @Override
                 public void onError() {
-
+                    webListSwip.stopLoadMore();
+                    webListSwip.startRefresh();
                 }
             });
         } else {
             VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
                 @Override
                 public void onSuccess(String result) {
+                    webListSwip.stopLoadMore();
+                    webListSwip.startRefresh();
                     if (JsonResult.JSONparser(WebListActivity.this, result)) {
                         webListInfoArrayList.clear();
                         webListInfoArrayList.addAll(getBeanFromJson(result));
-                        webListSwip.setRefreshing(false);
                         setAdapter();
                     } else {
-                        webListSwip.setRefreshing(false);
                     }
                 }
 
                 @Override
                 public void onError() {
-
+                    webListSwip.stopLoadMore();
+                    webListSwip.startRefresh();
                 }
             });
         }

@@ -2,11 +2,13 @@ package cn.xiaocool.hongyunschool.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.andview.refreshview.XRefreshView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -28,13 +30,14 @@ import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.CustomHeader;
 
 public class WebOtherListActivity extends BaseActivity {
 
     @BindView(R.id.web_list)
     ListView webList;
     @BindView(R.id.web_list_swip)
-    SwipeRefreshLayout webListSwip;
+    XRefreshView webListSwip;
 
     private Context context;
     private List<WebOther> webOthers;
@@ -54,13 +57,37 @@ public class WebOtherListActivity extends BaseActivity {
      * 设置
      */
     private void settingRefresh() {
-        webListSwip.setColorSchemeResources(R.color.white);
-        webListSwip.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.themeColor));
-        webListSwip.setProgressViewOffset(true, 10, 100);
-        webListSwip.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        webListSwip.setPullRefreshEnable(true);
+        webListSwip.setPullLoadEnable(true);
+        webListSwip.setCustomHeaderView(new CustomHeader(this,2000));
+        webListSwip.setAutoRefresh(true);
+        webListSwip.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
+
             @Override
             public void onRefresh() {
                 requsetData();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        webListSwip.stopRefresh();
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void onLoadMore(boolean isSilence) {
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        webListSwip.stopLoadMore();
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void onRelease(float direction) {
+                super.onRelease(direction);
             }
         });
 
@@ -105,7 +132,8 @@ public class WebOtherListActivity extends BaseActivity {
             @Override
             public void onSuccess(String result) {
                 if (JsonResult.JSONparser(WebOtherListActivity.this, result)) {
-                    webListSwip.setRefreshing(false);
+                    webListSwip.stopRefresh();
+                    webListSwip.stopLoadMore();
                     webOthers.clear();
                     webOthers.addAll(getBeanFromJson(result));
                     adapter = new CommonAdapter<WebOther>(context,webOthers,R.layout.item_other_web) {

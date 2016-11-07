@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ListView;
 
+import com.andview.refreshview.XRefreshView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -29,6 +30,7 @@ import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
+import cn.xiaocool.hongyunschool.view.CustomHeader;
 import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 public class OnlineCommentActivity extends BaseActivity {
@@ -36,7 +38,7 @@ public class OnlineCommentActivity extends BaseActivity {
     @BindView(R.id.fragment_third_lv_trend)
     ListView fragmentThirdLvTrend;
     @BindView(R.id.fragment_third_srl_trend)
-    RefreshLayout fragmentThirdSrlTrend;
+    XRefreshView fragmentThirdSrlTrend;
     private Context context;
     private List<OnlineComment> onlineComments;
     private CommonAdapter adapter;
@@ -62,20 +64,37 @@ public class OnlineCommentActivity extends BaseActivity {
      * 设置下拉刷新
      */
     private void setRefresh() {
-        fragmentThirdSrlTrend.setColorSchemeResources(R.color.white);
-        fragmentThirdSrlTrend.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.themeColor));
-        fragmentThirdSrlTrend.setProgressViewOffset(true, 10, 100);
-        fragmentThirdSrlTrend.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        fragmentThirdSrlTrend.setPullRefreshEnable(true);
+        fragmentThirdSrlTrend.setPullLoadEnable(true);
+        fragmentThirdSrlTrend.setCustomHeaderView(new CustomHeader(this,2000));
+        fragmentThirdSrlTrend.setAutoRefresh(true);
+        fragmentThirdSrlTrend.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
+
             @Override
             public void onRefresh() {
                 requsetData();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        fragmentThirdSrlTrend.setRefreshing(false);
+                        fragmentThirdSrlTrend.stopRefresh();
                     }
-                }, 5000);
+                }, 2000);
+            }
+
+            @Override
+            public void onLoadMore(boolean isSilence) {
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        fragmentThirdSrlTrend.stopLoadMore();
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void onRelease(float direction) {
+                super.onRelease(direction);
             }
         });
     }
@@ -86,8 +105,9 @@ public class OnlineCommentActivity extends BaseActivity {
         VolleyUtil.VolleyGetRequest(context, url, new VolleyUtil.VolleyJsonCallback() {
             @Override
             public void onSuccess(String result) {
+                fragmentThirdSrlTrend.stopRefresh();
+                fragmentThirdSrlTrend.stopLoadMore();
                 if (JsonResult.JSONparser(context, result)) {
-                    fragmentThirdSrlTrend.setRefreshing(false);
                     onlineComments.clear();
                     onlineComments.addAll(getBeanFromJson(result));
                     adapter = new CommonAdapter<OnlineComment>(context,onlineComments,R.layout.item_online_comment) {
@@ -103,13 +123,14 @@ public class OnlineCommentActivity extends BaseActivity {
                     };
                     fragmentThirdLvTrend.setAdapter(adapter);
                 }else {
-                    fragmentThirdSrlTrend.setRefreshing(false);
+
                 }
             }
 
             @Override
             public void onError() {
-
+                fragmentThirdSrlTrend.stopRefresh();
+                fragmentThirdSrlTrend.stopLoadMore();
             }
         });
     }
