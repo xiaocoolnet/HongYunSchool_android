@@ -273,9 +273,7 @@ public class ThirdFragment extends BaseFragment {
             fragmentThirdTvChange.setVisibility(View.GONE);
         }
         if (SPUtils.get(context, LocalConstant.USER_TYPE, "").toString().equals("0")){
-            fragmentThirdIvSend.setVisibility(View.GONE);
-        }else {
-            fragmentThirdIvSend.setVisibility(View.VISIBLE);
+            fragmentThirdTvChange.setVisibility(View.GONE);
         }
         return rootView;
     }
