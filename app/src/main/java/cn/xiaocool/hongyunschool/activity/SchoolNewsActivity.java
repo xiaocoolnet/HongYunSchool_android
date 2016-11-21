@@ -145,7 +145,7 @@ public class SchoolNewsActivity extends BaseActivity {
         String url = "";
         String schoolid = (String) SPUtils.get(context,LocalConstant.SCHOOL_ID,"");
         String classid = (String) SPUtils.get(context,LocalConstant.USER_CLASSID,"");
-        //判断身份并请求对应数据
+        //判断身份并请求对应数据 chuanru classid
         if(type == 1){
             url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid="+beginid + "&classid=" + classid;
         }else if(type == 2){
