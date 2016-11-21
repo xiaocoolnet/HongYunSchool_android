@@ -83,7 +83,7 @@
         <ImageView
             android:id="@+id/item_sn_onepic"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="300dp"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:scaleType="centerCrop" />
