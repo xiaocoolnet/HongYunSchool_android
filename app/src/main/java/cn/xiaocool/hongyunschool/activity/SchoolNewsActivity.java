@@ -3,7 +3,6 @@ package cn.xiaocool.hongyunschool.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -36,7 +35,6 @@ import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 import cn.xiaocool.hongyunschool.view.CustomHeader;
 import cn.xiaocool.hongyunschool.view.PopWindowManager;
-import cn.xiaocool.hongyunschool.view.RefreshLayout;
 
 public class SchoolNewsActivity extends BaseActivity {
 
@@ -145,13 +143,15 @@ public class SchoolNewsActivity extends BaseActivity {
     @Override
     public void requsetData() {
         String url = "";
+        String schoolid = (String) SPUtils.get(context,LocalConstant.SCHOOL_ID,"");
+        String classid = (String) SPUtils.get(context,LocalConstant.USER_CLASSID,"");
         //判断身份并请求对应数据
         if(type == 1){
-            url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid;
+            url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid="+beginid + "&classid=" + classid;
         }else if(type == 2){
-            url = NetConstantUrl.GET_SCHOOL_NEWS_SEND + "&send_user_id=" +SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid;
+            url = NetConstantUrl.GET_SCHOOL_NEWS_SEND + "&send_user_id=" +SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid + "&schoolid=" + schoolid;
         }else if(type == 3){
-            url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"") + "&type=1"+"&beginid=" + beginid;
+            url = NetConstantUrl.GET_SCHOOL_NEWS_RECEIVE + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"") + "&type=1"+"&beginid=" + beginid +"&classid=" + classid;
         }
         Log.e(TAG, url);
         VolleyUtil.VolleyGetRequest(this, url, new
