@@ -3,11 +3,13 @@ package cn.xiaocool.hongyunschool.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andview.refreshview.XRefreshView;
 import com.google.gson.Gson;
@@ -37,8 +39,9 @@ import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 import cn.xiaocool.hongyunschool.view.CustomHeader;
+import cn.xiaocool.hongyunschool.view.NiceDialog;
 import cn.xiaocool.hongyunschool.view.PopWindowManager;
-import cn.xiaocool.hongyunschool.view.RefreshLayout;
+
 
 public class ClassNewsActivity extends BaseActivity {
 
@@ -55,6 +58,9 @@ public class ClassNewsActivity extends BaseActivity {
     private Context context;
     private int type;
     private int beginid = 0;
+    private NiceDialog mDialog = null;
+    private String delet_url;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,16 +171,17 @@ public class ClassNewsActivity extends BaseActivity {
     public void requsetData() {
         String url = "";
         if(type == 2){
-            url = NetConstantUrl.GET_CLASS_NEWS_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1")+"&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid;
+            url = NetConstantUrl.GET_CLASS_NEWS_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1")
+                    +"&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid;
 //            url = NetConstantUrl.GET_CLASS_NEWS_SEND + "&userid=" + SPUtils.get(context,LocalConstant.USER_ID,"").toString();
         }else if(type == 1){
-            url = NetConstantUrl.GET_CLASS_NEWS_RECEIVE + "&receiverid=" + SPUtils.get(context,LocalConstant.USER_BABYID,"").toString()+"&userid="+SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid;
+            url = NetConstantUrl.GET_CLASS_NEWS_RECEIVE + "&receiverid=" + SPUtils.get(context,
+                    LocalConstant.USER_BABYID,"").toString()+"&userid="+SPUtils.get(context,LocalConstant.USER_ID,"")+"&beginid=" + beginid;
         }/*else if(type == 2||type == 4){
             url = NetConstantUrl.GET_CLASS_NEWS_ALL + SPUtils.get(context,LocalConstant.SCHOOL_ID,"1");
         }*/
         Log.e("getclassnew",url);
-        VolleyUtil.VolleyGetRequest(this, url, new
-                VolleyUtil.VolleyJsonCallback() {
+        VolleyUtil.VolleyGetRequest(this, url, new VolleyUtil.VolleyJsonCallback() {
                     @Override
                     public void onSuccess(String result) {
                         schoolNewsSrl.stopLoadMore();
@@ -194,6 +201,54 @@ public class ClassNewsActivity extends BaseActivity {
     }
 
     /**
+     * 设置删除Dialog
+     */
+    private void setVersionDialog(final String url) {
+        delet_url = NetConstantUrl.CLASS_NEWS_DELET + url;
+        mDialog = new NiceDialog(ClassNewsActivity.this);
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        WindowManager.LayoutParams layoutParams = mDialog.getWindow().getAttributes();
+        layoutParams.width = width-300;
+        layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        mDialog.getWindow().setAttributes(layoutParams);
+        mDialog.setTitle("提示");
+        mDialog.setContent("确认删除吗?");
+        mDialog.setOKButton("确定", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VolleyUtil.VolleyGetRequest(context, delet_url, new VolleyUtil.VolleyJsonCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+//                        schoolNewsSrl.stopLoadMore();
+//                        schoolNewsSrl.startRefresh();
+                        if (JsonResult.JSONparser(getBaseContext(), result)) {
+                            requsetData();
+                        }else {
+                            ToastUtil.show(context , "失败" , Toast.LENGTH_SHORT);
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
+                        schoolNewsSrl.stopLoadMore();
+                        schoolNewsSrl.startRefresh();
+
+                    }
+                });
+                mDialog.dismiss();
+            }
+        });
+        mDialog.setCancelButton("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.show();
+    }
+    /**
      * list 设置adapter
      * @param result
      */
@@ -205,13 +260,16 @@ public class ClassNewsActivity extends BaseActivity {
             Collections.sort(classNewsReceives, new Comparator<ClassNewsReceive>() {
                 @Override
                 public int compare(ClassNewsReceive lhs, ClassNewsReceive rhs) {
-                    return (int) (Long.parseLong(rhs.getHomework_info().get(0).getCreate_time()) - Long.parseLong(lhs.getHomework_info().get(0).getCreate_time()));
+                    return (int) (Long.parseLong(rhs.getHomework_info().get(0).getCreate_time()) -
+                            Long.parseLong(lhs.getHomework_info().get(0).getCreate_time()));
                 }
             });
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             } else {
-                adapter = new CommonAdapter<ClassNewsReceive>(getBaseContext(), classNewsReceives, R.layout.school_announcement_item) {
+                adapter = new CommonAdapter<ClassNewsReceive>(getBaseContext(), classNewsReceives,
+                        R.layout.school_announcement_item) {
+
                     @Override
                     public void convert(ViewHolder holder, ClassNewsReceive datas) {
                         setItemReceive(holder, datas);
@@ -267,7 +325,7 @@ public class ClassNewsActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setItemReceive(final ViewHolder holder, ClassNewsReceive datas) {
+    private void setItemReceive(final ViewHolder holder, final ClassNewsReceive datas) {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
@@ -281,7 +339,8 @@ public class ClassNewsActivity extends BaseActivity {
         final ArrayList<ClassNewsReceive.ReceiveListBean> alreadyReads = new ArrayList<>();
         if (datas.getReceive_list().size()>0){
             for (int i=0;i<datas.getReceive_list().size();i++){
-                if (datas.getReceive_list().get(i).getRead_time()==null||datas.getReceive_list().get(i).getRead_time().equals("null")){
+                if (datas.getReceive_list().get(i).getRead_time()==null||datas.getReceive_list().
+                        get(i).getRead_time().equals("null")){
                     notReads.add(datas.getReceive_list().get(i));
                 }else {
                     alreadyReads.add(datas.getReceive_list().get(i));
@@ -294,7 +353,8 @@ public class ClassNewsActivity extends BaseActivity {
         .setText(R.id.item_sn_nickname,datas.getHomework_info().get(0).getName())
                 .setItemImages(this, R.id.item_sn_onepic, R.id.item_sn_gridpic, images)
                 .setImageByUrl(R.id.item_sn_head_iv,datas.getHomework_info().get(0).getPhoto())
-                .setText(R.id.item_sn_read, "总发" + datas.getReceive_list().size() + " 已读" + alreadyReads.size() + " 未读" + notReads.size());
+                .setText(R.id.item_sn_read, "总发" + datas.getReceive_list().size() + " 已读" +
+                        alreadyReads.size() + " 未读" + notReads.size());
 
         //长按复制
         holder.getView(R.id.item_sn_content).setOnLongClickListener(new View.OnLongClickListener() {
@@ -304,6 +364,19 @@ public class ClassNewsActivity extends BaseActivity {
                 return true;
             }
         });
+
+        //判断是否本人
+        if(SPUtils.get(context , LocalConstant.USER_ID ,"").toString().equals(datas.getHomework_info().get(0).getUserid())){
+            holder.setMyVisibility(R.id.item_sn_delet,1);
+            holder.getView(R.id.item_sn_delet).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setVersionDialog(datas.getId());
+                }
+            });
+        }else{
+            holder.setMyVisibility(R.id.item_sn_delet,2);
+        }
     }
 
     /**
@@ -357,7 +430,7 @@ public class ClassNewsActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setItemAll(final ViewHolder holder, ClassNewsAll datas) {
+    private void setItemAll(final ViewHolder holder, final ClassNewsAll datas) {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
@@ -405,6 +478,19 @@ public class ClassNewsActivity extends BaseActivity {
                 return true;
             }
         });
+
+        //判断是否本人
+        if(SPUtils.get(context , LocalConstant.USER_ID ,"").toString().equals(datas.getUserid())){
+            holder.setMyVisibility(R.id.item_sn_delet,1);
+            holder.getView(R.id.item_sn_delet).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setVersionDialog(datas.getId());
+                }
+            });
+        }else{
+            holder.setMyVisibility(R.id.item_sn_delet,2);
+        }
     }
 
     /**

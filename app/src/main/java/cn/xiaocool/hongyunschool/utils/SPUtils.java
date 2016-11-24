@@ -7,6 +7,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+/**
+ * 存储
+ * @ SharedPreference
+ */
 public class SPUtils
 {
 	public SPUtils()

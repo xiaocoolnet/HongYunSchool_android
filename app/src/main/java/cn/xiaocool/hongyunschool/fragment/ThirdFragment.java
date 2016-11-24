@@ -7,15 +7,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +34,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.activity.ImageDetailActivity;
 import cn.xiaocool.hongyunschool.activity.PostTrendActivity;
@@ -54,7 +54,7 @@ import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 import cn.xiaocool.hongyunschool.view.CommentPopupWindow;
 import cn.xiaocool.hongyunschool.view.CustomHeader;
-import cn.xiaocool.hongyunschool.view.RefreshLayout;
+import cn.xiaocool.hongyunschool.view.NiceDialog;
 import me.drakeet.materialdialog.MaterialDialog;
 
 
@@ -82,6 +82,8 @@ public class ThirdFragment extends BaseFragment {
     private static long lastClickTime;
     private String userid, classid;
     private int beginId;
+    private NiceDialog mDialog = null;
+    private String delet_url;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -231,8 +233,54 @@ public class ThirdFragment extends BaseFragment {
     }
 
     /**
+     * 设置删除Dialog
+     */
+    private void setVersionDialog( String url) {
+        delet_url = NetConstantUrl.TREND_DELET + url;
+        mDialog = new NiceDialog(context);
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        WindowManager.LayoutParams layoutParams = mDialog.getWindow().getAttributes();
+        layoutParams.width = width-300;
+        layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        mDialog.getWindow().setAttributes(layoutParams);
+        mDialog.setTitle("提示");
+        mDialog.setContent("确认删除吗?");
+        mDialog.setOKButton("确定", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VolleyUtil.VolleyGetRequest(context, delet_url, new VolleyUtil.VolleyJsonCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        if (JsonResult.JSONparser(context ,result)) {
+                            initData();
+                        }else {
+                            ToastUtil.show(context , "失败" , Toast.LENGTH_SHORT);
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
+                        fragmentThirdSrlTrend.stopLoadMore();
+                        fragmentThirdSrlTrend.startRefresh();
+
+                    }
+                });
+                mDialog.dismiss();
+            }
+        });
+        mDialog.setCancelButton("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.show();
+    }
+
+    /**
      * list 设置adapter
-     *
      * @param result
      */
     private void setAdapter(String result) {
@@ -401,20 +449,32 @@ public class ThirdFragment extends BaseFragment {
                 }
             }
         });
-        //判断本人是否已经点赞
-        if (isPraise(datas.getLike())) {
-            //点赞成功后图片变红
-            holder.getView(R.id.trend_item_iv_praise).setSelected(true);
-        } else {
+            //判断本人是否已经点赞
+            if (isPraise(datas.getLike())) {
+                //点赞成功后图片变红
+                holder.getView(R.id.trend_item_iv_praise).setSelected(true);
+            } else {
             //取消点赞后
             holder.getView(R.id.trend_item_iv_praise).setSelected(false);
+        }
+
+        //判断是否本人
+        if(SPUtils.get(context , LocalConstant.USER_ID ,"").toString().equals(datas.getUserid())){
+            holder.setMyVisibility(R.id.item_sn_delet,1);
+            holder.getView(R.id.item_sn_delet).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setVersionDialog(datas.getMid());
+                }
+            });
+        }else{
+            holder.setMyVisibility(R.id.item_sn_delet,2);
         }
     }
 
 
     /**
      * 字符串转模型
-     *
      * @param result
      * @return
      */

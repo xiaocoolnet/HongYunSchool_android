@@ -34,16 +34,34 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="5dp"/>
 
-
-            <TextView
-                android:layout_marginTop="5dp"
-                android:id="@+id/item_sn_time"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/font_time_gray"
-                android:textSize="@dimen/font_time_main"
-                android:gravity="center_vertical"
-                android:paddingLeft="5dp"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/item_sn_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_time_gray"
+                    android:textSize="@dimen/font_time_main"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="5dp"/>
+
+                <TextView
+                    android:id="@+id/item_sn_delet"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/font_time_gray"
+                    android:textSize="@dimen/font_read"
+                    android:visibility="gone"
+                    android:text="删除"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 

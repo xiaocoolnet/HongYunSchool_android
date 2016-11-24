@@ -14,6 +14,7 @@ import cn.xiaocool.hongyunschool.R;
 /**
  * Created by Administrator on 2016/3/14.
  */
+
 public class ImgLoadUtil {
 
     private static DisplayImageOptions options =new DisplayImageOptions.Builder()

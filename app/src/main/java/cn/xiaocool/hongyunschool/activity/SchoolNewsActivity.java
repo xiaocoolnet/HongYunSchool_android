@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andview.refreshview.XRefreshView;
 import com.google.gson.Gson;
@@ -32,8 +35,10 @@ import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.CommonAdapter;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
+import cn.xiaocool.hongyunschool.utils.ToastUtil;
 import cn.xiaocool.hongyunschool.utils.ViewHolder;
 import cn.xiaocool.hongyunschool.view.CustomHeader;
+import cn.xiaocool.hongyunschool.view.NiceDialog;
 import cn.xiaocool.hongyunschool.view.PopWindowManager;
 
 public class SchoolNewsActivity extends BaseActivity {
@@ -46,6 +51,8 @@ public class SchoolNewsActivity extends BaseActivity {
     private Context context;
     private int type;
     private int beginid = 0;
+    private NiceDialog mDialog = null;
+    private String delet_url;
 
     private CommonAdapter adapter;
     private List<SchoolNewsSend> schoolNewsSendList;
@@ -175,6 +182,53 @@ public class SchoolNewsActivity extends BaseActivity {
     }
 
     /**
+     * 设置删除Dialog
+     */
+    private void setVersionDialog(String url) {
+        delet_url = NetConstantUrl.SCHOOL_MNEWS_DELET + url;
+        mDialog = new NiceDialog(SchoolNewsActivity.this);
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        WindowManager.LayoutParams layoutParams = mDialog.getWindow().getAttributes();
+        layoutParams.width = width-300;
+        layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        mDialog.getWindow().setAttributes(layoutParams);
+        mDialog.setTitle("提示");
+        mDialog.setContent("确认删除吗?");
+        mDialog.setOKButton("确定", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VolleyUtil.VolleyGetRequest(context, delet_url, new VolleyUtil.VolleyJsonCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        if (JsonResult.JSONparser(getBaseContext(), result)) {
+                            requsetData();
+                        }else {
+                            ToastUtil.show(context , "失败" , Toast.LENGTH_SHORT);
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
+                        schoolNewsSrl.stopLoadMore();
+                        schoolNewsSrl.startRefresh();
+
+                    }
+                });
+                mDialog.dismiss();
+            }
+        });
+        mDialog.setCancelButton("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.show();
+    }
+
+    /**
      * list 设置adapter
      * @param result
      */
@@ -233,7 +287,7 @@ public class SchoolNewsActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setReceiveItem(final ViewHolder holder, SchoolNewsReceiver.ReceiveBean datas) {
+    private void setReceiveItem(final ViewHolder holder,final SchoolNewsReceiver.ReceiveBean datas) {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
@@ -277,7 +331,7 @@ public class SchoolNewsActivity extends BaseActivity {
      * @param holder
      * @param datas
      */
-    private void setSendItem(final ViewHolder holder, SchoolNewsSend datas) {
+    private void setSendItem(final ViewHolder holder, final SchoolNewsSend datas) {
 
         //获取图片字符串数组
         ArrayList<String> images = new ArrayList<>();
@@ -325,6 +379,19 @@ public class SchoolNewsActivity extends BaseActivity {
                 return true;
             }
         });
+
+        //判断是否本人
+        if(SPUtils.get(context , LocalConstant.USER_ID ,"").toString().equals(datas.getSend_user_id())){
+            holder.setMyVisibility(R.id.item_sn_delet,1);
+            holder.getView(R.id.item_sn_delet).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setVersionDialog(datas.getId());
+                }
+            });
+        }else{
+            holder.setMyVisibility(R.id.item_sn_delet,2);
+        }
     }
 
     /**

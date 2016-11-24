@@ -278,4 +278,25 @@ public class NetConstantUrl {
      * 获取老师对应的班级
      */
     public static final String TC_GET_CLASS = "http://hyx.xiaocool.net/index.php?g=apps&m=teacher&a=TeacherGetClass";
+
+    /**
+     * 学校消息:
+     */
+    public static final String SCHOOL_MNEWS_DELET = "http://hyx.xiaocool.net/index.php?g=apps&m=message&a=delete&id=";
+
+    /**
+     * 班级消息
+     */
+    public static final String CLASS_NEWS_DELET = "http://hyx.xiaocool.net/index.php?g=apps&m=student&a=delete_homework&id=";
+
+     /**
+      * 学校公告
+      */
+    public static final String SCHOOL_ANNOUNCE_DELET = "http://hyx.xiaocool.net/index.php?g=apps&m=school&a=delete_notice&id=";
+
+    /**
+     * 动态
+     */
+    public static final String TREND_DELET = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=delete_mic&id=";
+
 }

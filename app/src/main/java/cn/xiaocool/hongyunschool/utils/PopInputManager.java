@@ -9,6 +9,7 @@ import java.util.TimerTask;
 
 /**
  * Created by Administrator on 2016/8/27 0027.
+ * 弹出系统输入法
  */
 public class PopInputManager {
     public static void popInput(final EditText editText){

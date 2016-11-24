@@ -100,6 +100,16 @@ public class ViewHolder {
         return this;
     }
 
+    public ViewHolder setMyVisibility(int viewId,int type){
+        View view = getView(viewId);
+        if(type == 1){
+            view.setVisibility(View.VISIBLE);
+        }else if(type == 2){
+            view.setVisibility(View.GONE);
+        }
+        return this;
+    }
+
     /**
      * 设置图片Resource
      * @param viewId

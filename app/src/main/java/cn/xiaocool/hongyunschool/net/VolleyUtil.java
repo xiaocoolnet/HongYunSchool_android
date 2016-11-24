@@ -64,7 +64,8 @@ public class VolleyUtil {
      * @param callback 返回数据的回调
      * @param params   参数
      */
-    public static void VolleyPostRequest(final Context context, String url, final VolleyJsonCallback callback, Map<String, String> params) {
+    public static void VolleyPostRequest(final Context context, String url, final VolleyJsonCallback callback,
+                                         Map<String, String> params) {
         LogUtils.e(URL, url);
         if (params != null) {
             LogUtils.e(PARAMS, params.toString());
