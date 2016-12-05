@@ -26,7 +26,7 @@ public class PayActivity extends BaseActivity {
 
     /**
      * 支付宝支付业务：入参app_id
-     */
+    */
     public static final String APPID = "2016090601857786";
 
     /**

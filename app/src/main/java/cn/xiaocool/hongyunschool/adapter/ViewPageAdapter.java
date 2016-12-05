@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +12,12 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 import java.util.List;
 
 import cn.finalteam.galleryfinal.widget.zoonview.PhotoViewAttacher;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
-import cn.xiaocool.hongyunschool.utils.ScreenUtils;
 
 
 public class ViewPageAdapter extends PagerAdapter {
@@ -52,7 +49,7 @@ public class ViewPageAdapter extends PagerAdapter {
                 imagesUrl = "http://wxt.xiaocool.net/data/upload/" + images.get(position);
             }
 
-            Picasso.with(context).load(imagesUrl).fit().config(Bitmap.Config.RGB_565).into(image, new Callback() {
+            Picasso.with(context).load(imagesUrl).config(Bitmap.Config.RGB_565).into(image, new Callback() {
                 @Override
                 public void onSuccess() {
                     photoViewAttacher.update();
