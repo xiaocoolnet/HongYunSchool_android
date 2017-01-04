@@ -135,7 +135,7 @@ public class SchoolNewsFragment extends Fragment {
                     @Override
                     public void onSuccess(String result) {
                         schoolNewsSrl.stopLoadMore();
-                        schoolNewsSrl.startRefresh();
+                        schoolNewsSrl.stopRefresh();
                         if (JsonResult.JSONparser(context, result)) {
                             setAdapter(result);
                         }else {
@@ -145,7 +145,7 @@ public class SchoolNewsFragment extends Fragment {
                     @Override
                     public void onError() {
                         schoolNewsSrl.stopLoadMore();
-                        schoolNewsSrl.startRefresh();
+                        schoolNewsSrl.stopRefresh();
                     }
                 });
     }

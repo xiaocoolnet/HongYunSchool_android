@@ -263,7 +263,7 @@ public class ThirdFragment extends BaseFragment {
                     @Override
                     public void onError() {
                         fragmentThirdSrlTrend.stopLoadMore();
-                        fragmentThirdSrlTrend.startRefresh();
+                        fragmentThirdSrlTrend.stopRefresh();
 
                     }
                 });

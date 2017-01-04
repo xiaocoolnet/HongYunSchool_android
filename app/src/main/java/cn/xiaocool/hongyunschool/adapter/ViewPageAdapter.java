@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,9 @@ import java.util.List;
 import cn.finalteam.galleryfinal.widget.zoonview.PhotoViewAttacher;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
+import cn.xiaocool.hongyunschool.utils.LogUtils;
+import cn.xiaocool.hongyunschool.utils.ProgressUtil;
+import cn.xiaocool.hongyunschool.utils.ToastUtil;
 
 
 public class ViewPageAdapter extends PagerAdapter {
@@ -49,15 +53,23 @@ public class ViewPageAdapter extends PagerAdapter {
                 imagesUrl = "http://wxt.xiaocool.net/data/upload/" + images.get(position);
             }
 
-            Picasso.with(context).load(imagesUrl).config(Bitmap.Config.RGB_565).into(image, new Callback() {
+            LogUtils.e("ProgressUtil");
+
+            ProgressUtil.showLoadingDialog((Activity) context);
+            Picasso.with(context)
+                    .load(imagesUrl)
+                    .config(Bitmap.Config.RGB_565)
+                    .placeholder(R.drawable.hyx_default)
+                    .into(image, new Callback() {
                 @Override
                 public void onSuccess() {
+                    ProgressUtil.dissmisLoadingDialog();
                     photoViewAttacher.update();
                 }
-
                 @Override
                 public void onError() {
-
+                    ProgressUtil.dissmisLoadingDialog();
+                    ToastUtil.showShort(context,"加载图片失败/(ㄒoㄒ)/~~");
                 }
             });
 

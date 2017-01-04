@@ -17,6 +17,11 @@ public class ProgressUtil {
         loadingDialog = new AppLoadingDialog(activity, R.style.alert_dialog);
         return loadingDialog;
 
+//            if (loadingDialog == null) {
+//                loadingDialog = new AppLoadingDialog(activity, R.style.alert_dialog);
+//            }
+
+//        return loadingDialog;
     }
 
     public static void showLoadingDialog(Activity activity) {

@@ -154,7 +154,7 @@ public class SchoolAnnounceActivity extends BaseActivity {
                     @Override
                     public void onSuccess(String result) {
                         schoolNewsSrl.stopLoadMore();
-                        schoolNewsSrl.startRefresh();
+                        schoolNewsSrl.stopRefresh();
                         if (JsonResult.JSONparser(getBaseContext(), result)) {
                             setAdapter(result);
                         }else {
@@ -164,7 +164,7 @@ public class SchoolAnnounceActivity extends BaseActivity {
                     @Override
                     public void onError() {
                         schoolNewsSrl.stopLoadMore();
-                        schoolNewsSrl.startRefresh();
+                        schoolNewsSrl.stopRefresh();
                     }
                 });
     }

@@ -175,7 +175,7 @@ public class ParentMessageActivity extends BaseActivity {
             public void onSuccess(String result) {
                 if (JsonResult.JSONparser(ParentMessageActivity.this, result)) {
                     webParentSwip.stopLoadMore();
-                    webParentSwip.startRefresh();
+                    webParentSwip.stopRefresh();
                     if (type == 1) {
                         feedbackSends.clear();
                         feedbackSends.addAll(getBeanFromJson(result));
@@ -188,7 +188,7 @@ public class ParentMessageActivity extends BaseActivity {
                     }
                 }else {
                     webParentSwip.stopLoadMore();
-                    webParentSwip.startRefresh();
+                    webParentSwip.stopRefresh();
                 }
             }
 

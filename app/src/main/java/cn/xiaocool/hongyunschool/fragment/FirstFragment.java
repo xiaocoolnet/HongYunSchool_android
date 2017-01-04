@@ -247,7 +247,7 @@ public class FirstFragment extends BaseFragment implements BaseSliderView.OnSlid
             @Override
             public void onSuccess(String result) {
                 schoolNewsSrl.stopLoadMore();
-                schoolNewsSrl.startRefresh();
+                schoolNewsSrl.stopRefresh();
                 if (JsonResult.JSONparser(mActivity, result)) {
                     announceList.clear();
                     announceList.addAll(JsonParser(result));

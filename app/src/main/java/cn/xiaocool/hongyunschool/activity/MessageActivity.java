@@ -205,11 +205,11 @@ public class MessageActivity extends BaseActivity {
                     public void onSuccess(String result) {
                         if (JsonResult.JSONparser(getBaseContext(), result)) {
                             schoolNewsSrl.stopLoadMore();
-                            schoolNewsSrl.startRefresh();
+                            schoolNewsSrl.stopRefresh();
                             setAdapter(result);
                         } else {
                             schoolNewsSrl.stopLoadMore();
-                            schoolNewsSrl.startRefresh();
+                            schoolNewsSrl.stopRefresh();
                         }
                     }
 
