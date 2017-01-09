@@ -128,7 +128,7 @@ public class PostTrendActivity extends BaseActivity {
         if (photoWithPaths.size()==0){
             new SendRequest(context, handler).send_trend(userid,
                     SPUtils.get(context, LocalConstant.SCHOOL_ID, "1").toString(),
-                    classid, activityPostTrendEdContent.getText().toString(), "null", 0x110);
+                    classid, activityPostTrendEdContent.getText().toString(), "null", "","",0x110);
             return;
         }
         ProgressUtil.showLoadingDialog(PostTrendActivity.this);
@@ -144,7 +144,7 @@ public class PostTrendActivity extends BaseActivity {
                 String picname = StringJoint.arrayJointchar(picArray, ",");
                 new SendRequest(context, handler).send_trend(userid,
                         SPUtils.get(context, LocalConstant.SCHOOL_ID, "1").toString(),
-                        classid, activityPostTrendEdContent.getText().toString(), picname, 0x110);
+                        classid, activityPostTrendEdContent.getText().toString(), picname,"","", 0x110);
             }
 
             @Override

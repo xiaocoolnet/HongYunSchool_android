@@ -3,6 +3,9 @@ package cn.xiaocool.hongyunschool.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,15 +18,18 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andview.refreshview.XRefreshView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,8 +41,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaocool.hongyunschool.R;
+import cn.xiaocool.hongyunschool.activity.AddGroupMessageActivity;
 import cn.xiaocool.hongyunschool.activity.ImageDetailActivity;
 import cn.xiaocool.hongyunschool.activity.PostTrendActivity;
+import cn.xiaocool.hongyunschool.activity.PostVideoActivity;
 import cn.xiaocool.hongyunschool.bean.ClassInfo;
 import cn.xiaocool.hongyunschool.bean.ClassParent;
 import cn.xiaocool.hongyunschool.bean.Trends;
@@ -55,7 +63,11 @@ import cn.xiaocool.hongyunschool.utils.ViewHolder;
 import cn.xiaocool.hongyunschool.view.CommentPopupWindow;
 import cn.xiaocool.hongyunschool.view.CustomHeader;
 import cn.xiaocool.hongyunschool.view.NiceDialog;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import me.drakeet.materialdialog.MaterialDialog;
+
+import static android.content.Context.SENSOR_SERVICE;
 
 
 /**
@@ -84,6 +96,8 @@ public class ThirdFragment extends BaseFragment {
     private int beginId;
     private NiceDialog mDialog = null;
     private String delet_url;
+    SensorManager sensorManager;
+    JCVideoPlayer.JCAutoFullscreenListener sensorEventListener;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -122,9 +136,17 @@ public class ThirdFragment extends BaseFragment {
 
         return inflater.inflate(R.layout.fragment_third, container, false);
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(sensorEventListener);
+        JCVideoPlayer.releaseAllVideos();
+    }
 
     @Override
     public void initData() {
+        Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         String url = "";
         classid = SPUtils.get(context, LocalConstant.USER_CLASSID, "").toString();
         beginId = 0;
@@ -161,6 +183,10 @@ public class ThirdFragment extends BaseFragment {
     @Override
     protected void initEvent() {
         super.initEvent();
+        JCVideoPlayer.ACTION_BAR_EXIST = false;
+        JCVideoPlayer.TOOL_BAR_EXIST = false;
+        sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
+        sensorEventListener = new JCVideoPlayer.JCAutoFullscreenListener();
         fragmentThirdSrlTrend.setPullRefreshEnable(true);
         fragmentThirdSrlTrend.setPullLoadEnable(true);
         fragmentThirdSrlTrend.setCustomHeaderView(new CustomHeader(mActivity,2000));
@@ -470,6 +496,20 @@ public class ThirdFragment extends BaseFragment {
         }else{
             holder.setMyVisibility(R.id.item_sn_delet,2);
         }
+
+        JCVideoPlayerStandard jcVideoPlayer = holder.getView(R.id.videoplayer);
+        if (datas.getVideo().equals("")||datas.getVideo_phone().equals("")){
+            jcVideoPlayer.setVisibility(View.GONE);
+
+        }else {
+            jcVideoPlayer.setVisibility(View.VISIBLE);
+            jcVideoPlayer.setUp(
+                    NetConstantUrl.VIDEO_URL+datas.getVideo(), JCVideoPlayer.SCREEN_LAYOUT_LIST,
+                    "");
+            Picasso.with(context)
+                    .load(NetConstantUrl.VIDEO_URL+datas.getVideo_phone())
+                    .into(jcVideoPlayer.thumbImageView);
+        }
     }
 
 
@@ -524,7 +564,7 @@ public class ThirdFragment extends BaseFragment {
                 checkIsHasClassOrBaby();// TODO: 16/11/5 判断是否有班级切换 or baby
                 break;
             case R.id.fragment_third_iv_send:
-                getActivity().startActivity(new Intent(getActivity(), PostTrendActivity.class));
+                showPopupMenu();
                 break;
         }
     }
@@ -617,5 +657,79 @@ public class ThirdFragment extends BaseFragment {
         }.getType());
     }
 
+    /**
+     *显示选择菜单
+     * */
+    private void showPopupMenu() {
 
+        //自定义布局
+        View layout = LayoutInflater.from(context).inflate(R.layout.address_add_menu, null);
+        //初始化popwindow
+        final PopupWindow popupWindow = new PopupWindow(layout, FrameLayout.LayoutParams.WRAP_CONTENT,FrameLayout.LayoutParams.WRAP_CONTENT);
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+
+        //设置弹出位置
+        int[] location = new int[2];
+        getView().findViewById(R.id.fragment_third_iv_send).getLocationOnScreen(location);
+
+        popupWindow.showAsDropDown(getView().findViewById(R.id.fragment_third_iv_send));
+
+        final TextView add_qun = (TextView)layout.findViewById(R.id.add_qun);
+        TextView tong_bu = (TextView)layout.findViewById(R.id.tong_bu);
+
+        add_qun.setText("图文");
+        tong_bu.setText("小视频");
+
+        // 设置背景颜色变暗
+        final WindowManager.LayoutParams lp = mActivity.getWindow().getAttributes();
+        lp.alpha = 0.7f;
+        mActivity.getWindow().setAttributes(lp);
+        //监听popwindow消失事件，取消遮盖层
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                lp.alpha = 1.0f;
+                mActivity.getWindow().setAttributes(lp);
+            }
+        });
+
+        add_qun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                history();
+                popupWindow.dismiss();
+            }
+        });
+        tong_bu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tongbu();
+                popupWindow.dismiss();
+            }
+        });
+
+
+
+    }
+
+    /**
+     * 图文
+     * */
+    private void tongbu() {
+
+        Intent intent = new Intent(mActivity,PostTrendActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * 小视频
+     * */
+    private void history() {
+
+
+        Intent intent = new Intent(mActivity,PostVideoActivity.class);
+        startActivity(intent);
+    }
 }

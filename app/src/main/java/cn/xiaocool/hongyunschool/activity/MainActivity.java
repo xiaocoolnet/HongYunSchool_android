@@ -39,6 +39,7 @@ import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
 import cn.xiaocool.hongyunschool.view.NiceDialog;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 
 
 public class MainActivity extends BaseActivity {
@@ -75,6 +76,10 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         hideTopView();
         context = this;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayUseLogoEnabled(false);
         setVersionDialog();
         init();
         Log.e("TAG", SPUtils.get(context, LocalConstant.USER_IS_PRINSIPLE,"").toString()
@@ -88,6 +93,18 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (JCVideoPlayer.backPress()) {
+            return;
+        }
+        super.onBackPressed();
+    }
     private void setVersionDialog() {
         mDialog = new NiceDialog(MainActivity.this);
         WindowManager wm = (WindowManager) context

@@ -31,6 +31,8 @@ public class Trends {
     private String content;
     private String write_time;
     private String photo;
+    private String video;
+    private String video_phone;
     /**
      * pictureurl : hyx7991472717935446.jpg
      */
@@ -146,6 +148,22 @@ public class Trends {
 
     public void setComment(List<CommentBean> comment) {
         this.comment = comment;
+    }
+
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
+    }
+
+    public String getVideo_phone() {
+        return video_phone;
+    }
+
+    public void setVideo_phone(String video_phone) {
+        this.video_phone = video_phone;
     }
 
     public static class PicBean {

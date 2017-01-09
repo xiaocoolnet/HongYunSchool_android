@@ -75,7 +75,7 @@ public class SendRequest {
      * @param picurl
      * @param KEY
      */
-    public void send_trend(final String userid, final String schoolid, final String classid, final String content, final String picurl, final int KEY) {
+    public void send_trend(final String userid, final String schoolid, final String classid, final String content, final String picurl, final String videoName, final String videoImgName,final int KEY) {
         new Thread() {
             Message msg = Message.obtain();
 
@@ -84,10 +84,10 @@ public class SendRequest {
                 String data = "";
                 if (picurl.equals("null")) {
                     data = "&userid=" + userid + "&schoolid=" + schoolid + "&type=" + "1"
-                            + "&content=" + content + "&classid=" + classid;
+                            + "&content=" + content + "&classid=" + classid + "&video_phone=" + videoImgName + "&video=" + videoName;
                 } else {
                     data = "&userid=" + userid + "&schoolid=" + schoolid + "&type=" + "1"
-                            + "&content=" + content + "&classid=" + classid + "&picurl=" + picurl;
+                            + "&content=" + content + "&classid=" + classid + "&picurl=" + picurl + "&video_phone=" + videoImgName + "&video=" + videoName;
                 }
                 String result_data = NetUtil.getResponse(NetConstantUrl.SEND_TREND, data);
                 Log.e("send_trend-----",result_data);

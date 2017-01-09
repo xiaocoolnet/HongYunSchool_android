@@ -44,6 +44,7 @@ public class NetConstantUrl {
      * 上传图片地址
      */
     public static final String PUSH_IMAGE = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=WriteMicroblog_upload";
+    public static final String PUSH_VIDEO= "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=video_upload";
     /**
      * 发布学校信息
      */
@@ -299,4 +300,5 @@ public class NetConstantUrl {
      */
     public static final String TREND_DELET = "http://hyx.xiaocool.net/index.php?g=apps&m=index&a=delete_mic&id=";
 
+    public static final String VIDEO_URL = "http://hyx.xiaocool.net/data/upload/video/";
 }

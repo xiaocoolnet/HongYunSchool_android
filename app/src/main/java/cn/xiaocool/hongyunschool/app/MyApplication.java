@@ -3,6 +3,7 @@ package cn.xiaocool.hongyunschool.app;
 import android.app.Activity;
 import android.app.Application;
 import android.graphics.Bitmap;
+import android.os.Environment;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -16,6 +17,8 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.yixia.camera.VCamera;
+import com.yixia.camera.util.DeviceUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -92,6 +95,33 @@ public class MyApplication extends Application {
         initImageLoder();
         setWeShare();
         setJpush();
+        setViedioFilePath();
+    }
+
+    /**
+     *  设置拍摄视频缓存路径
+     */
+    private void setViedioFilePath() {
+        File dcim = Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        if (DeviceUtils.isZte()) {
+            if (dcim.exists()) {
+                VCamera.setVideoCachePath(dcim + "/recoder/");
+            } else {
+                VCamera.setVideoCachePath(dcim.getPath().replace("/sdcard/",
+                        "/sdcard-ext/")
+                        + "/recoder/");
+            }
+        } else {
+            VCamera.setVideoCachePath(dcim + "/hyxJuns/");
+        }
+
+//		VCamera.setVideoCachePath(FileUtils.getRecorderPath());
+        // 开启log输出,ffmpeg输出到logcat
+        VCamera.setDebugMode(true);
+        // 初始化拍摄SDK，必须
+        VCamera.initialize(this);
+
     }
 
     /**
