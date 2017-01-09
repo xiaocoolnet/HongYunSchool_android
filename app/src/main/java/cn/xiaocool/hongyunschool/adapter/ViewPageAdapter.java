@@ -54,7 +54,7 @@ public class ViewPageAdapter extends PagerAdapter {
             }
 
             LogUtils.e("ProgressUtil");
-
+            ProgressUtil.dissmisLoadingDialog();
             ProgressUtil.showLoadingDialog((Activity) context);
             Picasso.with(context)
                     .load(imagesUrl)
