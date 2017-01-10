@@ -1,11 +1,15 @@
 package cn.xiaocool.hongyunschool.activity;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -19,6 +23,8 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -26,16 +32,20 @@ import cn.jpush.android.api.JPushInterface;
 import cn.xiaocool.hongyunschool.R;
 import cn.xiaocool.hongyunschool.app.MyApplication;
 import cn.xiaocool.hongyunschool.bean.CheckVersionModel;
+import cn.xiaocool.hongyunschool.callback.VersionUpdateImpl;
 import cn.xiaocool.hongyunschool.net.LocalConstant;
 import cn.xiaocool.hongyunschool.net.NetConstantUrl;
 import cn.xiaocool.hongyunschool.net.VolleyUtil;
+import cn.xiaocool.hongyunschool.service.DownloadService;
 import cn.xiaocool.hongyunschool.utils.BaseActivity;
 import cn.xiaocool.hongyunschool.utils.JsonResult;
 import cn.xiaocool.hongyunschool.utils.ProgressUtil;
 import cn.xiaocool.hongyunschool.utils.SPUtils;
+import cn.xiaocool.hongyunschool.utils.ToastUtil;
+import cn.xiaocool.hongyunschool.utils.VersionUpdate;
 import cn.xiaocool.hongyunschool.view.NiceDialog;
 
-public class SettingActivity extends BaseActivity {
+public class SettingActivity extends BaseActivity implements VersionUpdateImpl {
     @BindView(R.id.activity_setting_rl_help)
     RelativeLayout activitySettingRlHelp;
     @BindView(R.id.activity_setting_rl_feedback)
@@ -229,17 +239,33 @@ public class SettingActivity extends BaseActivity {
      * 启动下载
      */
     private void startDownload() {
-        Uri uri = Uri.parse(APK_DOWNLOAD_URL);
-        Intent it = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(it);
+//        Uri uri = Uri.parse(APK_DOWNLOAD_URL);
+//        Intent it = new Intent(Intent.ACTION_VIEW, uri);
+//        startActivity(it);
 //        Intent it = new Intent(SettingActivity.this, UpdateService.class);
 //        //下载地址
 //        Log.e("apkUrl",versionModel.getUrl());
 //        it.putExtra("apkUrl", APK_DOWNLOAD_URL);
 //        startService(it);
+
+        removeOldApk();
+
+        VersionUpdate.checkVersion(this,versionModel.getUrl());
         mDialog.dismiss();
     }
+    /**
+     * 删除上次更新存储在本地的apk
+     */
+    private void removeOldApk() {
+        //获取老ＡＰＫ的存储路径
+        File fileName = new File((String) SPUtils.get(context,LocalConstant.SP_DOWNLOAD_PATH, ""));
+//        Log.i(TAG, "老APK的存储路径 =" + SPUtils.get(context,LocalConstant.SP_DOWNLOAD_PATH, ""));
 
+        if (fileName != null && fileName.exists() && fileName.isFile()) {
+            fileName.delete();
+//            Log.i(TAG, "存储器内存在老APK，进行删除操作");
+        }
+    }
     /**
      * 字符串转模型
      * @param result
@@ -256,4 +282,43 @@ public class SettingActivity extends BaseActivity {
         return new Gson().fromJson(data, new TypeToken<CheckVersionModel>() {
         }.getType());
     }
+
+    @Override
+    public void bindService(String apkUrl) {
+        Intent intent = new Intent(this, DownloadService.class);
+        intent.putExtra(DownloadService.BUNDLE_KEY_DOWNLOAD_URL, apkUrl);
+        isBindService = bindService(intent, conn, BIND_AUTO_CREATE);
+    }
+
+    private boolean isBindService;
+
+    private ServiceConnection conn = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            DownloadService.DownloadBinder binder = (DownloadService.DownloadBinder) service;
+            DownloadService downloadService = binder.getService();
+
+            //接口回调，下载进度
+            downloadService.setOnProgressListener(new DownloadService.OnProgressListener() {
+                @Override
+                public void onProgress(float fraction) {
+//                    Log.i(TAG, "下载进度：" + fraction);
+
+
+                    //判断是否真的下载完成进行安装了，以及是否注册绑定过服务
+                    if (fraction == DownloadService.UNBIND_SERVICE && isBindService) {
+                        unbindService(conn);
+                        isBindService = false;
+                        ToastUtil.showShort(context,"下载完成！");
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 }

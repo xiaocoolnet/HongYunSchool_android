@@ -19,7 +19,6 @@ import cn.xiaocool.hongyunschool.app.MyApplication;
 
 
 public abstract class BaseActivity extends AppCompatActivity {
-
     /** 是否沉浸状态栏 **/
     private boolean isSetStatusBar = true;
 

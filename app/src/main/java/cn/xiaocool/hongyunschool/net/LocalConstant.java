@@ -1,5 +1,7 @@
 package cn.xiaocool.hongyunschool.net;
 
+import android.content.Context;
+
 /**
  * 用户缓存到本地的数据KEY
  * Created by Administrator on 2016/8/24.
@@ -101,4 +103,5 @@ public class LocalConstant {
     public static final String SYSTEN_NEWS = "SYSTEN_NEWS";
 
     public static final String PARENT_MESSAGE_FLAG = "PARENT_MESSAGE_FLAG";
+    public static final String SP_DOWNLOAD_PATH = "hyxapk.path";
 }
