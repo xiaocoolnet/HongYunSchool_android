@@ -6,15 +6,30 @@ android {
 
     defaultConfig {
         applicationId "cn.xiaocool.hongyunschool"
-        minSdkVersion 16
-        targetSdkVersion 23
+        minSdkVersion 15
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        ndk {abiFilters "armeabi", "armeabi-v7a"}
+    }
+
+    signingConfigs {
+        config {
+            keyAlias 'hongyunxiao'
+            keyPassword 'love@1314'
+            storeFile file('/Users/xiaocool/Desktop/HongYunSchool_android/app/hongyunxiao.jks')
+            storePassword 'love@1314'
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.config
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            signingConfig signingConfigs.config
         }
     }
 }
@@ -24,6 +39,9 @@ repositories {
 apply plugin: 'com.neenbedankt.android-apt'//增加这一句
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.1.0'

@@ -718,9 +718,9 @@ public class ThirdFragment extends BaseFragment {
      * 图文
      * */
     private void tongbu() {
-
-        Intent intent = new Intent(mActivity,PostTrendActivity.class);
+        Intent intent = new Intent(mActivity,PostVideoActivity.class);
         startActivity(intent);
+
     }
 
     /**
@@ -728,8 +728,8 @@ public class ThirdFragment extends BaseFragment {
      * */
     private void history() {
 
-
-        Intent intent = new Intent(mActivity,PostVideoActivity.class);
+        Intent intent = new Intent(mActivity,PostTrendActivity.class);
         startActivity(intent);
+
     }
 }
