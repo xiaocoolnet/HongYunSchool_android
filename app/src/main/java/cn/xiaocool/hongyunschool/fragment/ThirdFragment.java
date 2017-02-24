@@ -150,11 +150,11 @@ public class ThirdFragment extends BaseFragment {
         String url = "";
         classid = SPUtils.get(context, LocalConstant.USER_CLASSID, "").toString();
         beginId = 0;
-        if (type == 1) {
-        }
-        if (classid.equals("")) {
-            return;
-        }
+//        if (type == 1) {
+//        }
+//        if (classid.equals("")) {
+//            return;
+//        }
         url = NetConstantUrl.GET_TRENDS_PARENT + SPUtils.get(context, LocalConstant.SCHOOL_ID, "1")
                 + setParams(userid, classid, beginId + "");
 
@@ -342,7 +342,7 @@ public class ThirdFragment extends BaseFragment {
             fragmentThirdIvSend.setVisibility(View.VISIBLE);
             fragmentThirdTvChange.setVisibility(View.VISIBLE);
         }else {
-            ToastUtil.showShort(mActivity, "您没有可查看的班级动态!");
+//            ToastUtil.showShort(mActivity, "您没有可查看的班级动态!");
             fragmentThirdIvSend.setVisibility(View.GONE);
             fragmentThirdTvChange.setVisibility(View.GONE);
         }
